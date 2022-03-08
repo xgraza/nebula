@@ -68,7 +68,12 @@ public class HoleManager implements Globals {
                             return;
                         }
 
-                        if (!BlockUtil.canBreak(extendedNeighbor)) {
+                        // if the neighboring block can be exploded, this cant be a hole
+                        if (BlockUtil.canExplode(extendedNeighbor)) {
+                            return;
+                        }
+
+                        if (!BlockUtil.canBreak(extendedNeighbor) || !BlockUtil.canBreak(extendedNeighbor)) {
                             ++doubleSafety;
                         }
                     }
@@ -78,7 +83,7 @@ public class HoleManager implements Globals {
 
                     return;
                 } else {
-                    if (!BlockUtil.canBreak(neighbor)) {
+                    if (!BlockUtil.canExplode(neighbor) || !BlockUtil.canBreak(neighbor)) {
                         ++singleSafety;
                     }
                 }
