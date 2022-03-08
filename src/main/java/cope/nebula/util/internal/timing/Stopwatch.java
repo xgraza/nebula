@@ -109,7 +109,7 @@ public class Stopwatch {
      * @return The elapsed time in the time format
      */
     public long getTime(TimeFormat format) {
-        long elapsedNs = System.nanoTime();
+        long elapsedNs = System.nanoTime() - lastTime;
 
         switch (format) {
             case SECONDS: return elapsedNs / S_TO_MS;

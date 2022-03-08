@@ -31,6 +31,7 @@ public class Nebula {
         LOGGER.info("Loading {} v{}...", NAME, VERSION);
 
         Stopwatch stopwatch = new Stopwatch();
+        stopwatch.resetTime();
 
         new ForgeEventManager();
         moduleManager = new ModuleManager();
