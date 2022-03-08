@@ -2,6 +2,7 @@ package cope.nebula.client;
 
 import cope.nebula.client.manager.ForgeEventManager;
 import cope.nebula.client.manager.ModuleManager;
+import cope.nebula.client.manager.hole.HoleManager;
 import cope.nebula.util.internal.timing.Stopwatch;
 import cope.nebula.util.internal.timing.TimeFormat;
 import net.minecraftforge.fml.common.Mod;
@@ -24,6 +25,7 @@ public class Nebula {
     private static final Logger LOGGER = LogManager.getLogger(NAME);
 
     private ModuleManager moduleManager;
+    private HoleManager holeManager;
 
     @EventHandler
     public void init(FMLInitializationEvent event) {
@@ -34,7 +36,9 @@ public class Nebula {
         stopwatch.resetTime();
 
         new ForgeEventManager();
+
         moduleManager = new ModuleManager();
+        holeManager = new HoleManager();
 
         // Goddamn, Roxanne... Never gonna love me but it's alright
         LOGGER.info("Completed setup of {} in {}ms", NAME, stopwatch.getTime(TimeFormat.MILLISECONDS));
@@ -52,5 +56,9 @@ public class Nebula {
 
     public ModuleManager getModuleManager() {
         return moduleManager;
+    }
+
+    public HoleManager getHoleManager() {
+        return holeManager;
     }
 }

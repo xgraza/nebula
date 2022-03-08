@@ -26,6 +26,8 @@ public class ForgeEventManager implements Globals {
                     mc.profiler.endSection();
                 }
             });
+
+            getNebula().getHoleManager().onTick();
         }
     }
 
