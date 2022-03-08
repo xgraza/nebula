@@ -61,7 +61,14 @@ public class NoSlowDown extends Module {
                 mc.player.turn(yaw, pitch * i);
             }
 
-            KeyBinding[] binds = { mc.gameSettings.keyBindForward, mc.gameSettings.keyBindBack, mc.gameSettings.keyBindRight, mc.gameSettings.keyBindLeft };
+            KeyBinding[] binds = {
+                    mc.gameSettings.keyBindForward,
+                    mc.gameSettings.keyBindBack,
+                    mc.gameSettings.keyBindRight,
+                    mc.gameSettings.keyBindLeft,
+                    mc.gameSettings.keyBindJump
+            };
+
             for (KeyBinding binding : binds) {
                 KeyBinding.setKeyBindState(binding.getKeyCode(), Keyboard.isKeyDown(binding.getKeyCode()));
             }

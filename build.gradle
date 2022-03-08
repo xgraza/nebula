@@ -79,21 +79,21 @@ dependencies {
     embed('com.mojang:brigadier:1.0.18')
 }
 
-//processResources {
-//    inputs.property 'version', project.version
-//
-//    from(sourceSets.main.resources.srcDirs) {
-//        include 'mcmod.info'
-//        // Replace version.
-//        expand 'version': project.version
-//    }
-//
-//    from(sourceSets.main.resources.srcDirs) {
-//        exclude 'mcmod.info'
-//    }
-//
-//    rename '(.+_at.cfg)', 'META-INF/$1'
-//}
+processResources {
+    inputs.property 'version', project.version
+
+    from(sourceSets.main.resources.srcDirs) {
+        include 'mcmod.info'
+        // Replace version.
+        expand 'version': project.version
+    }
+
+    from(sourceSets.main.resources.srcDirs) {
+        exclude 'mcmod.info'
+    }
+
+    rename '(.+_at.cfg)', 'META-INF/$1'
+}
 
 jar {
     from(configurations.embed.collect {
