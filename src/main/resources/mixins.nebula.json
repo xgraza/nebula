@@ -1,0 +1,18 @@
+{
+    "required": true,
+    "priority": 2147483647,
+    "mixinPriority": 2147483647,
+    "minVersion": "0.7-SNAPSHOT",
+    "compatibilityLevel": "JAVA_8",
+    "package": "cope.nebula.asm.mixins",
+    "refmap": "mixins.nebula.refmap.json",
+    "verbose": true,
+    "mixins": [
+        "input.MixinKeyBinding",
+
+        "network.MixinNetworkManager"
+    ],
+    "injectors": {
+        "maxShiftBy": 10
+    }
+}
