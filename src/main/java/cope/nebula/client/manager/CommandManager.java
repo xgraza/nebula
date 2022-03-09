@@ -7,6 +7,8 @@ import cope.nebula.client.Nebula;
 import cope.nebula.client.events.PacketEvent;
 import cope.nebula.client.events.PacketEvent.Direction;
 import cope.nebula.client.feature.command.Command;
+import cope.nebula.client.feature.command.impl.Bind;
+import cope.nebula.client.feature.command.impl.MacroCommand;
 import cope.nebula.client.feature.command.impl.Toggle;
 import cope.nebula.util.Globals;
 import net.minecraft.network.play.client.CPacketChatMessage;
@@ -22,7 +24,7 @@ import java.util.ArrayList;
  */
 public class CommandManager implements Globals {
     private final CommandDispatcher<Object> dispatcher = new CommandDispatcher<>();
-    private final ArrayList<Command> commands = Lists.newArrayList(new Toggle());
+    private final ArrayList<Command> commands = Lists.newArrayList(new Bind(), new MacroCommand(), new Toggle());
 
     private String prefix = ",";
 

@@ -46,6 +46,10 @@ public class Module extends ToggleableFeature {
 
     }
 
+    public void setKeyBind(int keyCode) {
+        bind.setValue(keyCode);
+    }
+
     public int getKeyBind() {
         return bind.getValue();
     }
