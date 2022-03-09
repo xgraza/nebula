@@ -4,6 +4,7 @@ import cope.nebula.client.manager.CommandManager;
 import cope.nebula.client.manager.ForgeEventManager;
 import cope.nebula.client.manager.ModuleManager;
 import cope.nebula.client.manager.hole.HoleManager;
+import cope.nebula.client.manager.macro.MacroManager;
 import cope.nebula.util.internal.timing.Stopwatch;
 import cope.nebula.util.internal.timing.TimeFormat;
 import net.minecraftforge.fml.common.Mod;
@@ -27,6 +28,7 @@ public class Nebula {
 
     private ModuleManager moduleManager;
     private CommandManager commandManager;
+    private MacroManager macroManager;
     private HoleManager holeManager;
 
     @EventHandler
@@ -41,6 +43,7 @@ public class Nebula {
 
         moduleManager = new ModuleManager();
         commandManager = new CommandManager();
+        macroManager = new MacroManager();
         holeManager = new HoleManager();
 
         // Goddamn, Roxanne... Never gonna love me but it's alright
@@ -63,6 +66,10 @@ public class Nebula {
 
     public CommandManager getCommandManager() {
         return commandManager;
+    }
+
+    public MacroManager getMacroManager() {
+        return macroManager;
     }
 
     public HoleManager getHoleManager() {
