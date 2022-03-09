@@ -1,5 +1,6 @@
 package cope.nebula.client;
 
+import cope.nebula.client.manager.CommandManager;
 import cope.nebula.client.manager.ForgeEventManager;
 import cope.nebula.client.manager.ModuleManager;
 import cope.nebula.client.manager.hole.HoleManager;
@@ -25,6 +26,7 @@ public class Nebula {
     private static final Logger LOGGER = LogManager.getLogger(NAME);
 
     private ModuleManager moduleManager;
+    private CommandManager commandManager;
     private HoleManager holeManager;
 
     @EventHandler
@@ -38,6 +40,7 @@ public class Nebula {
         new ForgeEventManager();
 
         moduleManager = new ModuleManager();
+        commandManager = new CommandManager();
         holeManager = new HoleManager();
 
         // Goddamn, Roxanne... Never gonna love me but it's alright
@@ -56,6 +59,10 @@ public class Nebula {
 
     public ModuleManager getModuleManager() {
         return moduleManager;
+    }
+
+    public CommandManager getCommandManager() {
+        return commandManager;
     }
 
     public HoleManager getHoleManager() {
