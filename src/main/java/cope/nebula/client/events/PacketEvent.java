@@ -14,8 +14,8 @@ public class PacketEvent extends Event {
         this.direction = direction;
     }
 
-    public Packet<?> getPacket() {
-        return packet;
+    public <T extends Packet<?>> T getPacket() {
+        return (T) packet;
     }
 
     public Direction getDirection() {

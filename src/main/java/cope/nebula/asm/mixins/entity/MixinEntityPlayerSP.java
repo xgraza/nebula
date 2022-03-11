@@ -1,12 +1,14 @@
 package cope.nebula.asm.mixins.entity;
 
 import com.mojang.authlib.GameProfile;
+import cope.nebula.client.events.MotionEvent;
 import cope.nebula.client.events.MotionUpdateEvent;
 import cope.nebula.client.events.MotionUpdateEvent.Era;
 import cope.nebula.util.Globals;
 import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.network.NetHandlerPlayClient;
+import net.minecraft.entity.MoverType;
 import net.minecraft.network.play.client.CPacketEntityAction;
 import net.minecraft.network.play.client.CPacketEntityAction.Action;
 import net.minecraft.network.play.client.CPacketPlayer;
@@ -19,6 +21,7 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(EntityPlayerSP.class)
@@ -41,6 +44,16 @@ public abstract class MixinEntityPlayerSP extends AbstractClientPlayer {
     }
 
     @Shadow protected abstract boolean isCurrentViewEntity();
+
+    @Redirect(method = "move", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/entity/AbstractClientPlayer;move(Lnet/minecraft/entity/MoverType;DDD)V"))
+    public void move(AbstractClientPlayer player, MoverType type, double x, double y, double z) {
+        MotionEvent event = new MotionEvent(x, y, z);
+        Globals.EVENT_BUS.post(event);
+
+        if (!event.isCanceled()) {
+            super.move(type, event.getX(), event.getY(), event.getZ());
+        }
+    }
 
     @Inject(method = "onUpdateWalkingPlayer", at = @At("HEAD"), cancellable = true)
     public void onUpdateWalkingPlayerPre(CallbackInfo info) {
