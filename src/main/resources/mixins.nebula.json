@@ -14,9 +14,12 @@
 
         "input.MixinKeyBinding",
 
+        "network.packet.c2s.ICPacketPlayer",
         "network.packet.s2c.ISPacketEntityVelocity",
         "network.packet.s2c.ISPacketExplosion",
-        "network.MixinNetworkManager"
+        "network.MixinNetworkManager",
+
+        "render.MixinRenderPlayer"
     ],
     "injectors": {
         "maxShiftBy": 10

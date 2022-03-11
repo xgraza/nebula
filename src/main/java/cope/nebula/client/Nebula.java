@@ -1,9 +1,6 @@
 package cope.nebula.client;
 
-import cope.nebula.client.manager.CommandManager;
-import cope.nebula.client.manager.ForgeEventManager;
-import cope.nebula.client.manager.HotbarManager;
-import cope.nebula.client.manager.ModuleManager;
+import cope.nebula.client.manager.*;
 import cope.nebula.client.manager.hole.HoleManager;
 import cope.nebula.client.manager.macro.MacroManager;
 import cope.nebula.util.internal.timing.Stopwatch;
@@ -32,6 +29,7 @@ public class Nebula {
     private MacroManager macroManager;
     private HoleManager holeManager;
 
+    private RotationManager rotationManager;
     private HotbarManager hotbarManager;
 
     @EventHandler
@@ -49,6 +47,7 @@ public class Nebula {
         macroManager = new MacroManager();
         holeManager = new HoleManager();
 
+        rotationManager = new RotationManager();
         hotbarManager = new HotbarManager();
 
         // Goddamn, Roxanne... Never gonna love me but it's alright
@@ -79,6 +78,10 @@ public class Nebula {
 
     public HoleManager getHoleManager() {
         return holeManager;
+    }
+
+    public RotationManager getRotationManager() {
+        return rotationManager;
     }
 
     public HotbarManager getHotbarManager() {

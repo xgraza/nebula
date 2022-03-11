@@ -8,6 +8,11 @@ package cope.nebula.util.world.entity.player.rotation;
  */
 public class Rotation {
     /**
+     * A completely invalid rotation object
+     */
+    public static final Rotation INVALID_ROTATION = new Rotation(Float.NaN, Float.NaN);
+
+    /**
      * The yaw and pitch rotation values
      */
     private final float yaw, pitch;

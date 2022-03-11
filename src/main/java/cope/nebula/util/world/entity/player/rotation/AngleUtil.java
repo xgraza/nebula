@@ -77,7 +77,7 @@ public class AngleUtil implements Globals {
      */
     public static Vec3d getEyes(Entity entity, Bone bone) {
         double x = interpolate(entity.posX, entity.prevPosX);
-        double y = interpolate(entity.posY, entity.prevPosZ);
+        double y = interpolate(entity.posY, entity.prevPosY);
         double z = interpolate(entity.posZ, entity.prevPosZ);
 
         switch (bone) {
