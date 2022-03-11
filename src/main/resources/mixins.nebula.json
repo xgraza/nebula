@@ -8,10 +8,14 @@
     "refmap": "mixins.nebula.refmap.json",
     "verbose": true,
     "mixins": [
-        "entity.MixinEntityPlayerSP",
+        "entity.player.MixinEntityPlayer",
+        "entity.player.MixinEntityPlayerSP",
+        "entity.MixinEntity",
 
         "input.MixinKeyBinding",
 
+        "network.packet.s2c.ISPacketEntityVelocity",
+        "network.packet.s2c.ISPacketExplosion",
         "network.MixinNetworkManager"
     ],
     "injectors": {

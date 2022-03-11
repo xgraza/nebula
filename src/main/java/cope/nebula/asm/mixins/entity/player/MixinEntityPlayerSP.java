@@ -1,4 +1,4 @@
-package cope.nebula.asm.mixins.entity;
+package cope.nebula.asm.mixins.entity.player;
 
 import com.mojang.authlib.GameProfile;
 import cope.nebula.client.events.MotionEvent;
