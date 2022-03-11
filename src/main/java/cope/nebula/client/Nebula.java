@@ -2,6 +2,7 @@ package cope.nebula.client;
 
 import cope.nebula.client.manager.CommandManager;
 import cope.nebula.client.manager.ForgeEventManager;
+import cope.nebula.client.manager.HotbarManager;
 import cope.nebula.client.manager.ModuleManager;
 import cope.nebula.client.manager.hole.HoleManager;
 import cope.nebula.client.manager.macro.MacroManager;
@@ -31,6 +32,8 @@ public class Nebula {
     private MacroManager macroManager;
     private HoleManager holeManager;
 
+    private HotbarManager hotbarManager;
+
     @EventHandler
     public void init(FMLInitializationEvent event) {
         // Roxanne, Roxanne... All she wanna do is party all night
@@ -45,6 +48,8 @@ public class Nebula {
         commandManager = new CommandManager();
         macroManager = new MacroManager();
         holeManager = new HoleManager();
+
+        hotbarManager = new HotbarManager();
 
         // Goddamn, Roxanne... Never gonna love me but it's alright
         LOGGER.info("Completed setup of {} in {}ms", NAME, stopwatch.getTime(TimeFormat.MILLISECONDS));
@@ -74,5 +79,9 @@ public class Nebula {
 
     public HoleManager getHoleManager() {
         return holeManager;
+    }
+
+    public HotbarManager getHotbarManager() {
+        return hotbarManager;
     }
 }

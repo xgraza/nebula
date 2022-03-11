@@ -8,6 +8,8 @@
     "refmap": "mixins.nebula.refmap.json",
     "verbose": true,
     "mixins": [
+        "entity.MixinEntityPlayerSP",
+
         "input.MixinKeyBinding",
 
         "network.MixinNetworkManager"
