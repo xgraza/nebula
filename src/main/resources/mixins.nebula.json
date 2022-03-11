@@ -19,7 +19,8 @@
         "network.packet.s2c.ISPacketExplosion",
         "network.MixinNetworkManager",
 
-        "render.MixinRenderPlayer"
+        "render.MixinRenderPlayer",
+        "IMinecraft"
     ],
     "injectors": {
         "maxShiftBy": 10

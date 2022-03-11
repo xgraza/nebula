@@ -9,6 +9,7 @@ import cope.nebula.client.feature.module.movement.NoSlowDown;
 import cope.nebula.client.feature.module.movement.PacketFly;
 import cope.nebula.client.feature.module.movement.Sprint;
 import cope.nebula.client.feature.module.movement.Velocity;
+import cope.nebula.client.feature.module.player.FastPlace;
 import cope.nebula.client.feature.module.render.Brightness;
 import cope.nebula.util.Globals;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
@@ -36,6 +37,9 @@ public class ModuleManager implements Globals {
             new PacketFly(),
             new Sprint(),
             new Velocity(),
+
+            // Player
+            new FastPlace(),
 
             // Render
             new Brightness()
