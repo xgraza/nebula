@@ -38,6 +38,7 @@ public class ModuleManager implements Globals {
             // Movement
             new NoSlowDown(),
             new PacketFly(),
+            new Speed(),
             new Sprint(),
             new TickShift(),
             new Velocity(),

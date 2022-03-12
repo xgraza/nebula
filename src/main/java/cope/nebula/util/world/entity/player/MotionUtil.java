@@ -29,6 +29,21 @@ public class MotionUtil implements Globals {
         float strafe = mc.player.movementInput.moveStrafe;
         float yaw = (float) AngleUtil.interpolate(mc.player.rotationYaw, mc.player.prevRotationYaw);
 
+        if (forward != 0.0f) {
+            if (strafe > 0.0f) {
+                yaw += forward > 0.0f ? -45.0f : 45.0f;
+            } else if (strafe < 0.0f) {
+                yaw += forward > 0.0f ? 45.0f : -45.0f;
+            }
+
+            strafe = 0.0f;
+            if (forward > 0.0f) {
+                forward = 1.0f;
+            } else if (forward < 0.0f) {
+                forward = -1.0f;
+            }
+        }
+
         double rad = Math.toRadians(yaw);
 
         double sin = -Math.sin(rad);
