@@ -2,6 +2,7 @@ package cope.nebula.client.manager;
 
 import cope.nebula.util.Globals;
 import net.minecraft.client.renderer.GlStateManager;
+import net.minecraftforge.client.event.RenderGameOverlayEvent.Text;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
 import net.minecraftforge.event.entity.living.LivingEvent.LivingUpdateEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
@@ -47,6 +48,17 @@ public class ForgeEventManager implements Globals {
                 }
             });
         }
+    }
+
+    @SubscribeEvent
+    public void onRenderText(Text event) {
+        getNebula().getModuleManager().getModules().forEach((module) -> {
+            if (module.isOn()) {
+                mc.profiler.startSection("module_renderhud_" + module.getName());
+                module.onRender2d();
+                mc.profiler.endSection();
+            }
+        });
     }
 
     @SubscribeEvent

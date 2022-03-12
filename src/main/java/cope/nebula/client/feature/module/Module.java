@@ -47,6 +47,13 @@ public class Module extends ToggleableFeature {
     }
 
     /**
+     * Called upon a HUD render
+     */
+    public void onRender2d() {
+
+    }
+
+    /**
      * Called upon a world render
      */
     public void onRender3d() {
