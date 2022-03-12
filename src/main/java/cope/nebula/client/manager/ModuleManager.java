@@ -7,6 +7,7 @@ import cope.nebula.client.feature.module.combat.Aura;
 import cope.nebula.client.feature.module.combat.AutoTotem;
 import cope.nebula.client.feature.module.combat.Criticals;
 import cope.nebula.client.feature.module.combat.SelfFill;
+import cope.nebula.client.feature.module.exploit.ChorusControl;
 import cope.nebula.client.feature.module.exploit.PacketFly;
 import cope.nebula.client.feature.module.exploit.TickShift;
 import cope.nebula.client.feature.module.movement.*;
@@ -39,9 +40,14 @@ public class ModuleManager implements Globals {
             new Criticals(),
             new SelfFill(),
 
+            // Exploit
+            new ChorusControl(),
+            new PacketFly(),
+            new PearlBait(),
+            new TickShift(),
+
             // Movement
             new NoSlowDown(),
-            new PacketFly(),
             new Speed(),
             new Sprint(),
             new TickShift(),
@@ -54,7 +60,6 @@ public class ModuleManager implements Globals {
             // World
             new FastBreak(),
             new FastPlace(),
-            new PearlBait(),
             new Timer()
     );
 

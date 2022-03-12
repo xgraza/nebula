@@ -17,6 +17,7 @@
 
         "input.MixinKeyBinding",
         "input.MixinPlayerControllerMP",
+        "item.MixinItemFood",
 
         "network.packet.c2s.ICPacketPlayer",
         "network.packet.s2c.ISPacketEntityVelocity",
