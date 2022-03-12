@@ -1,4 +1,4 @@
-package cope.nebula.client.feature.module.player;
+package cope.nebula.client.feature.module.world;
 
 import cope.nebula.asm.mixins.IMinecraft;
 import cope.nebula.client.feature.module.Module;
@@ -12,7 +12,7 @@ import net.minecraft.util.EnumHand;
 
 public class FastPlace extends Module {
     public FastPlace() {
-        super("FastPlace", ModuleCategory.PLAYER, "Places items faster");
+        super("FastPlace", ModuleCategory.WORLD, "Places items faster");
     }
 
     public static final Value<Integer> speed = new Value<>("Speed", 4, 0, 4);
