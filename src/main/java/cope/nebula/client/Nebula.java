@@ -30,6 +30,7 @@ public class Nebula {
     private HoleManager holeManager;
 
     private RotationManager rotationManager;
+    private InteractionManager interactionManager;
     private HotbarManager hotbarManager;
 
     @EventHandler
@@ -48,6 +49,7 @@ public class Nebula {
         holeManager = new HoleManager();
 
         rotationManager = new RotationManager();
+        interactionManager = new InteractionManager();
         hotbarManager = new HotbarManager();
 
         // Goddamn, Roxanne... Never gonna love me but it's alright
@@ -82,6 +84,10 @@ public class Nebula {
 
     public RotationManager getRotationManager() {
         return rotationManager;
+    }
+
+    public InteractionManager getInteractionManager() {
+        return interactionManager;
     }
 
     public HotbarManager getHotbarManager() {

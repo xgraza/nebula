@@ -6,6 +6,7 @@ import cope.nebula.client.feature.module.Module;
 import cope.nebula.client.feature.module.combat.Aura;
 import cope.nebula.client.feature.module.combat.AutoTotem;
 import cope.nebula.client.feature.module.combat.Criticals;
+import cope.nebula.client.feature.module.combat.SelfFill;
 import cope.nebula.client.feature.module.movement.NoSlowDown;
 import cope.nebula.client.feature.module.movement.PacketFly;
 import cope.nebula.client.feature.module.movement.Sprint;
@@ -34,6 +35,7 @@ public class ModuleManager implements Globals {
             new Aura(),
             new AutoTotem(),
             new Criticals(),
+            new SelfFill(),
 
             // Movement
             new NoSlowDown(),

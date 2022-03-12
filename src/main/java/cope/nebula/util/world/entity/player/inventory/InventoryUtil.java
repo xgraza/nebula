@@ -24,7 +24,7 @@ public class InventoryUtil implements Globals {
      * Gets an inventory slot
      * @param inventorySpace The space to look inside for the filter
      * @param filter Determines if this is the item we're looking for
-     * @return a slot id or -1 if none found
+     * @return a slot id or -1 if none found or InventoryUtil#OFFHAND_SLOT if it is in the offhand
      */
     public static int getSlot(InventorySpace inventorySpace, Predicate<ItemStack> filter) {
         int i = inventorySpace.getStart();
@@ -33,12 +33,16 @@ public class InventoryUtil implements Globals {
         }
 
         while (i < inventorySpace.getEnd()) {
-            ++i;
-
             ItemStack stack = mc.player.inventory.getStackInSlot(i);
             if (filter.test(stack)) {
                 return i;
             }
+
+            ++i;
+        }
+
+        if (filter.test(getHeld(EnumHand.OFF_HAND))) {
+            return OFFHAND_SLOT;
         }
 
         return -1;

@@ -32,11 +32,22 @@ public class AngleUtil implements Globals {
      * @return a rotation object to the block
      */
     public static Rotation toBlock(BlockPos pos, EnumFacing facing) {
-        return toVec(new Vec3d(
-                pos.getX() + 0.5 - mc.player.posX + mc.player.motionX + facing.getXOffset() / 2.0,
+        Vec3d diff = new Vec3d(
+                pos.getX() + 0.5 - mc.player.posX + facing.getXOffset() / 2.0,
                 pos.getY() + 0.5,
-                pos.getZ() + 0.5 - mc.player.posZ + mc.player.motionZ + facing.getZOffset() / 2.0
-        ));
+                pos.getZ() + 0.5 - mc.player.posZ + facing.getZOffset() / 2.0
+        );
+
+        double distance = MathHelper.sqrt(diff.x * diff.x + diff.z * diff.z);
+
+        float yaw = (float) (Math.atan2(diff.z, diff.x) * 180.0 / Math.PI - 90.0);
+        float pitch = (float) (Math.atan2(mc.player.posY + mc.player.getEyeHeight() - diff.y, distance) * 180.0 / Math.PI);
+
+        if (yaw < 0.0f) {
+            yaw += 360.0f;
+        }
+
+        return new Rotation(yaw, pitch);
     }
 
     /**
