@@ -64,7 +64,7 @@ public class SelfFill extends Module {
         getNebula().getInteractionManager().placeBlock(pos, hand, rotate.getValue(), swing.getValue());
 
         if (flag.getValue()) {
-            mc.player.connection.sendPacket(new Position(mc.player.posX, pos.getY() + 3.0, mc.player.posZ, false));
+            mc.player.connection.sendPacket(new Position(mc.player.posX, pos.getY() + 2.3, mc.player.posZ, false));
         } else {
             if (!mc.world.getBlockState(pos).getMaterial().isReplaceable()) {
                 mc.player.setPosition(pos.getX(), pos.getY() + 1.0, pos.getZ());
