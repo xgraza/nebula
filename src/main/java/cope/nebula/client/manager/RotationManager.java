@@ -10,7 +10,6 @@ import cope.nebula.util.Globals;
 import cope.nebula.util.internal.timing.Stopwatch;
 import cope.nebula.util.internal.timing.TimeFormat;
 import cope.nebula.util.world.entity.player.rotation.Rotation;
-import cope.nebula.util.world.entity.player.rotation.RotationType;
 import net.minecraft.network.play.client.CPacketPlayer;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
@@ -31,10 +30,10 @@ public class RotationManager implements Globals {
     @SubscribeEvent
     public void onPacket(PacketEvent event) {
         if (event.getDirection().equals(Direction.OUTGOING) && event.getPacket() instanceof CPacketPlayer) {
-            ICPacketPlayer packet = event.getPacket();
-            if (packet.isRotating() && rotation.isValid()) {
-                packet.setYaw(rotation.getYaw());
-                packet.setPitch(rotation.getPitch());
+            CPacketPlayer packet = event.getPacket();
+            if (((ICPacketPlayer) packet).isRotating() && rotation.isValid()) {
+                ((ICPacketPlayer) packet).setYaw(rotation.getYaw());
+                ((ICPacketPlayer) packet).setPitch(rotation.getPitch());
             }
         }
     }

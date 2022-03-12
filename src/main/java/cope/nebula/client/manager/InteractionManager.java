@@ -8,6 +8,7 @@ import cope.nebula.util.world.entity.player.rotation.RotationType;
 import net.minecraft.network.play.client.CPacketAnimation;
 import net.minecraft.network.play.client.CPacketEntityAction;
 import net.minecraft.network.play.client.CPacketEntityAction.Action;
+import net.minecraft.network.play.client.CPacketPlayer;
 import net.minecraft.network.play.client.CPacketPlayerTryUseItemOnBlock;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
@@ -46,6 +47,7 @@ public class InteractionManager implements Globals {
         if (!rotationType.equals(RotationType.NONE)) {
             Rotation rotation = AngleUtil.toBlock(neighbor, facing);
             if (rotation.isValid()) {
+                mc.player.connection.sendPacket(new CPacketPlayer.Rotation(rotation.getYaw(), rotation.getPitch(), mc.player.onGround));
                 getNebula().getRotationManager().setRotation(rotation.setType(rotationType));
             }
         }
