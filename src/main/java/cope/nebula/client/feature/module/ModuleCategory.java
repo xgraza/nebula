@@ -8,9 +8,9 @@ package cope.nebula.client.feature.module;
  */
 public enum ModuleCategory {
     COMBAT("Combat"),
+    EXPLOIT("Exploit"),
     MOVEMENT("Movement"),
     OTHER("Other"),
-    PLAYER("Player"),
     RENDER("Render"),
     WORLD("World");
 
