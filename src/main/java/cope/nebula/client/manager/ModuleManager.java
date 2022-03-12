@@ -7,15 +7,12 @@ import cope.nebula.client.feature.module.combat.Aura;
 import cope.nebula.client.feature.module.combat.AutoTotem;
 import cope.nebula.client.feature.module.combat.Criticals;
 import cope.nebula.client.feature.module.combat.SelfFill;
-import cope.nebula.client.feature.module.exploit.ChorusControl;
-import cope.nebula.client.feature.module.exploit.PacketFly;
-import cope.nebula.client.feature.module.exploit.TickShift;
+import cope.nebula.client.feature.module.exploit.*;
 import cope.nebula.client.feature.module.movement.*;
 import cope.nebula.client.feature.module.render.ClickGUI;
 import cope.nebula.client.feature.module.world.FastPlace;
 import cope.nebula.client.feature.module.render.Brightness;
 import cope.nebula.client.feature.module.world.FastBreak;
-import cope.nebula.client.feature.module.exploit.PearlBait;
 import cope.nebula.client.feature.module.world.Timer;
 import cope.nebula.util.Globals;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
@@ -44,6 +41,7 @@ public class ModuleManager implements Globals {
             new ChorusControl(),
             new PacketFly(),
             new PearlBait(),
+            new PingSpoof(),
             new TickShift(),
 
             // Movement
