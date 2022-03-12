@@ -1,6 +1,6 @@
 package cope.nebula.client.feature.module.world;
 
-import cope.nebula.asm.mixins.IMinecraft;
+import cope.nebula.asm.mixins.client.IMinecraft;
 import cope.nebula.client.feature.module.Module;
 import cope.nebula.client.feature.module.ModuleCategory;
 import cope.nebula.client.value.Value;

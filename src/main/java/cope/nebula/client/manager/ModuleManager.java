@@ -7,10 +7,7 @@ import cope.nebula.client.feature.module.combat.Aura;
 import cope.nebula.client.feature.module.combat.AutoTotem;
 import cope.nebula.client.feature.module.combat.Criticals;
 import cope.nebula.client.feature.module.combat.SelfFill;
-import cope.nebula.client.feature.module.movement.NoSlowDown;
-import cope.nebula.client.feature.module.movement.PacketFly;
-import cope.nebula.client.feature.module.movement.Sprint;
-import cope.nebula.client.feature.module.movement.Velocity;
+import cope.nebula.client.feature.module.movement.*;
 import cope.nebula.client.feature.module.world.FastPlace;
 import cope.nebula.client.feature.module.render.Brightness;
 import cope.nebula.client.feature.module.world.FastBreak;
@@ -41,6 +38,7 @@ public class ModuleManager implements Globals {
             new NoSlowDown(),
             new PacketFly(),
             new Sprint(),
+            new TickShift(),
             new Velocity(),
 
             // Render

@@ -8,6 +8,9 @@
     "refmap": "mixins.nebula.refmap.json",
     "verbose": true,
     "mixins": [
+        "client.IMinecraft",
+        "client.ITimer",
+
         "entity.player.MixinEntityPlayer",
         "entity.player.MixinEntityPlayerSP",
         "entity.MixinEntity",
@@ -20,8 +23,7 @@
         "network.packet.s2c.ISPacketExplosion",
         "network.MixinNetworkManager",
 
-        "render.MixinRenderPlayer",
-        "IMinecraft"
+        "render.MixinRenderPlayer"
     ],
     "injectors": {
         "maxShiftBy": 10
