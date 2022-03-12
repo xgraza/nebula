@@ -8,6 +8,7 @@ import cope.nebula.client.feature.module.combat.AutoTotem;
 import cope.nebula.client.feature.module.combat.Criticals;
 import cope.nebula.client.feature.module.combat.SelfFill;
 import cope.nebula.client.feature.module.movement.*;
+import cope.nebula.client.feature.module.render.ClickGUI;
 import cope.nebula.client.feature.module.world.FastPlace;
 import cope.nebula.client.feature.module.render.Brightness;
 import cope.nebula.client.feature.module.world.FastBreak;
@@ -45,6 +46,7 @@ public class ModuleManager implements Globals {
 
             // Render
             new Brightness(),
+            new ClickGUI(),
 
             // World
             new FastBreak(),
