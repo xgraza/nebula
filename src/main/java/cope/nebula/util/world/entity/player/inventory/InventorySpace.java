@@ -9,6 +9,7 @@ package cope.nebula.util.world.entity.player.inventory;
 public enum InventorySpace {
     HOTBAR(0, 9),
     INVENTORY(9, 36),
+    BOTH(0, 36),
     CRAFTING(-1, -1); // TODO i dont remember these ones lmao
 
     private final int start, end;

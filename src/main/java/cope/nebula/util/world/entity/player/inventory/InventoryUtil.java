@@ -16,6 +16,11 @@ import java.util.function.Predicate;
  */
 public class InventoryUtil implements Globals {
     /**
+     * Represents the offhand slot id
+     */
+    public static final int OFFHAND_SLOT = 45;
+
+    /**
      * Gets an inventory slot
      * @param inventorySpace The space to look inside for the filter
      * @param filter Determines if this is the item we're looking for

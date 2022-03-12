@@ -4,6 +4,7 @@ import com.google.common.collect.Lists;
 import cope.nebula.client.Nebula;
 import cope.nebula.client.feature.module.Module;
 import cope.nebula.client.feature.module.combat.Aura;
+import cope.nebula.client.feature.module.combat.AutoTotem;
 import cope.nebula.client.feature.module.combat.Criticals;
 import cope.nebula.client.feature.module.movement.NoSlowDown;
 import cope.nebula.client.feature.module.movement.PacketFly;
@@ -31,6 +32,7 @@ public class ModuleManager implements Globals {
     private final ArrayList<Module> modules = Lists.newArrayList(
             // Combat
             new Aura(),
+            new AutoTotem(),
             new Criticals(),
 
             // Movement

@@ -58,6 +58,14 @@ public class InventoryTaskHandler implements Globals {
     }
 
     /**
+     * Adds an inventory task
+     * @param task the task
+     */
+    public void addTask(InventoryTask task) {
+        pendingActions.add(task);
+    }
+
+    /**
      * Executes inventory tasks
      * @param waitTime The time to wait in between sending tasks
      * @param await If to wait for the window click packet to be accepted by the server before doing another task
@@ -73,6 +81,7 @@ public class InventoryTaskHandler implements Globals {
                 }
 
                 task.execute();
+                return false;
             }
         } else {
             // TODO some sort of handing in case the task was not accepted
