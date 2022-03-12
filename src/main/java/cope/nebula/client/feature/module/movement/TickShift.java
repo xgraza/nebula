@@ -1,11 +1,11 @@
 package cope.nebula.client.feature.module.movement;
 
-import cope.nebula.asm.mixins.client.IMinecraft;
-import cope.nebula.asm.mixins.client.ITimer;
 import cope.nebula.client.feature.module.Module;
 import cope.nebula.client.feature.module.ModuleCategory;
 import cope.nebula.client.value.Value;
 import cope.nebula.util.world.entity.player.MotionUtil;
+
+import static cope.nebula.client.feature.module.world.Timer.setTimerSpeed;
 
 public class TickShift extends Module {
     public TickShift() {
@@ -55,9 +55,5 @@ public class TickShift extends Module {
             --elapsedTicks;
             setTimerSpeed(boost.getValue());
         }
-    }
-
-    private void setTimerSpeed(float speed) {
-        ((ITimer) ((IMinecraft) mc).getTimer()).setTickLength(50.0f / speed);
     }
 }

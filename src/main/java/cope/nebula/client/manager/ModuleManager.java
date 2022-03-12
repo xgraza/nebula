@@ -11,6 +11,7 @@ import cope.nebula.client.feature.module.movement.*;
 import cope.nebula.client.feature.module.world.FastPlace;
 import cope.nebula.client.feature.module.render.Brightness;
 import cope.nebula.client.feature.module.world.FastBreak;
+import cope.nebula.client.feature.module.world.Timer;
 import cope.nebula.util.Globals;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.InputEvent.KeyInputEvent;
@@ -46,7 +47,8 @@ public class ModuleManager implements Globals {
 
             // World
             new FastBreak(),
-            new FastPlace()
+            new FastPlace(),
+            new Timer()
     );
 
     public ModuleManager() {
