@@ -13,6 +13,7 @@
         "entity.MixinEntity",
 
         "input.MixinKeyBinding",
+        "input.MixinPlayerControllerMP",
 
         "network.packet.c2s.ICPacketPlayer",
         "network.packet.s2c.ISPacketEntityVelocity",

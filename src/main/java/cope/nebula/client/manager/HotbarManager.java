@@ -66,4 +66,8 @@ public class HotbarManager implements Globals {
             sendSlotChange(serverSlot, SwapType.CLIENT);
         }
     }
+
+    public int getServerSlot() {
+        return serverSlot;
+    }
 }

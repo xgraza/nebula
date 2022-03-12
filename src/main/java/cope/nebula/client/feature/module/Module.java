@@ -46,6 +46,13 @@ public class Module extends ToggleableFeature {
 
     }
 
+    /**
+     * Called upon a world render
+     */
+    public void onRender3d() {
+
+    }
+
     public void setKeyBind(int keyCode) {
         bind.setValue(keyCode);
     }
