@@ -3,10 +3,7 @@ package cope.nebula.client.manager;
 import com.google.common.collect.Lists;
 import cope.nebula.client.Nebula;
 import cope.nebula.client.feature.module.Module;
-import cope.nebula.client.feature.module.combat.Aura;
-import cope.nebula.client.feature.module.combat.AutoTotem;
-import cope.nebula.client.feature.module.combat.Criticals;
-import cope.nebula.client.feature.module.combat.SelfFill;
+import cope.nebula.client.feature.module.combat.*;
 import cope.nebula.client.feature.module.exploit.*;
 import cope.nebula.client.feature.module.movement.*;
 import cope.nebula.client.feature.module.render.*;
@@ -35,6 +32,7 @@ public class ModuleManager implements Globals {
             new Aura(),
             new AutoTotem(),
             new Criticals(),
+            new HitboxCity(),
             new SelfFill(),
 
             // Exploit
