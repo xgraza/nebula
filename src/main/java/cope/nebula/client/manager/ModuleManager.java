@@ -48,7 +48,7 @@ public class ModuleManager implements Globals {
             new NoSlowDown(),
             new Speed(),
             new Sprint(),
-            new TickShift(),
+            new Step(),
             new Velocity(),
 
             // Render
