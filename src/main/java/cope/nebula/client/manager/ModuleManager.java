@@ -46,6 +46,7 @@ public class ModuleManager implements Globals {
             // Movement
             new HoleSnap(),
             new NoSlowDown(),
+            new ReverseStep(),
             new Speed(),
             new Sprint(),
             new Step(),
