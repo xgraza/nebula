@@ -9,11 +9,8 @@ import cope.nebula.client.feature.module.combat.Criticals;
 import cope.nebula.client.feature.module.combat.SelfFill;
 import cope.nebula.client.feature.module.exploit.*;
 import cope.nebula.client.feature.module.movement.*;
-import cope.nebula.client.feature.module.render.ClickGUI;
-import cope.nebula.client.feature.module.render.CustomFont;
-import cope.nebula.client.feature.module.render.HUD;
+import cope.nebula.client.feature.module.render.*;
 import cope.nebula.client.feature.module.world.FastPlace;
-import cope.nebula.client.feature.module.render.Brightness;
 import cope.nebula.client.feature.module.world.FastBreak;
 import cope.nebula.client.feature.module.world.Timer;
 import cope.nebula.util.Globals;
@@ -55,6 +52,7 @@ public class ModuleManager implements Globals {
             new Velocity(),
 
             // Render
+            new AntiRender(),
             new Brightness(),
             new ClickGUI(),
             new CustomFont(),

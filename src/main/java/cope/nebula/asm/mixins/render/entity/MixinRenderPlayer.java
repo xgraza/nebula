@@ -1,4 +1,4 @@
-package cope.nebula.asm.mixins.render;
+package cope.nebula.asm.mixins.render.entity;
 
 import cope.nebula.client.Nebula;
 import cope.nebula.client.events.RenderPlayerEvent;

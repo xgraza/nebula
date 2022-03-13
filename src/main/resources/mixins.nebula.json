@@ -18,6 +18,7 @@
         "input.MixinKeyBinding",
         "input.MixinPlayerControllerMP",
 
+        "item.map.MixinMapData",
         "item.MixinItemFood",
 
         "network.packet.c2s.ICPacketPlayer",
@@ -25,7 +26,13 @@
         "network.packet.s2c.ISPacketExplosion",
         "network.MixinNetworkManager",
 
-        "render.MixinRenderPlayer"
+        "render.entity.MixinEntityRenderer",
+        "render.entity.MixinRenderPlayer",
+        "render.entity.MixinRenderXPOrb",
+        "render.ui.MixinGuiIngame",
+        "render.ui.MixinGuiToast",
+        "render.MixinLayerArmorBase",
+        "render.MixinParticleManager"
     ],
     "injectors": {
         "maxShiftBy": 10
