@@ -43,6 +43,7 @@ public class ModuleManager implements Globals {
             new PearlBait(),
             new PingSpoof(),
             new TickShift(),
+            new XCarry(),
 
             // Movement
             new NoSlowDown(),
