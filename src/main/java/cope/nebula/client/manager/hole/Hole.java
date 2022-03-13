@@ -52,4 +52,8 @@ public class Hole {
     public boolean isSafe() {
         return safe;
     }
+
+    public Set<BlockPos> getPositions() {
+        return positions;
+    }
 }

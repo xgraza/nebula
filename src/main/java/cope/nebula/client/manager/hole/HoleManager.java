@@ -111,4 +111,34 @@ public class HoleManager implements Globals {
     public Set<Hole> getHoles(HoleType type) {
         return holes.getOrDefault(type, new HashSet<>());
     }
+
+    /**
+     * Gets all holes of all the types
+     * @param types The types
+     * @return a set of all the holes of all of these types, will be empty if none
+     */
+    public Set<Hole> getHoles(HoleType... types) {
+        Set<Hole> holes = new HashSet<>();
+        for (HoleType type : types) {
+            holes.addAll(getHoles(type));
+        }
+
+        return holes;
+    }
+
+    /**
+     * Checks if the local player is in a hole
+     * @return if we are in the hole
+     */
+    public boolean isInHole() {
+        for (Set<Hole> all : holes.values()) {
+            for (Hole hole : all) {
+                if (hole.intersects(mc.player)) {
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
 }

@@ -44,6 +44,7 @@ public class ModuleManager implements Globals {
             new XCarry(),
 
             // Movement
+            new HoleSnap(),
             new NoSlowDown(),
             new Speed(),
             new Sprint(),
