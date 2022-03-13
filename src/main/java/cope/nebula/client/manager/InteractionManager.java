@@ -52,9 +52,7 @@ public class InteractionManager implements Globals {
             }
         }
 
-        mc.player.connection.sendPacket(new CPacketPlayerTryUseItemOnBlock(
-                neighbor, facing.getOpposite(), hand,
-                (float) (hitVec.x - pos.getX()), (float) (hitVec.y - pos.getY()), (float) (hitVec.z - pos.getZ())));
+        mc.playerController.processRightClickBlock(mc.player, mc.world, neighbor, facing.getOpposite(), hitVec, hand);
 
         if (swing) {
             mc.player.swingArm(hand);
