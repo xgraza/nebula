@@ -29,6 +29,7 @@
         "render.entity.MixinEntityRenderer",
         "render.entity.MixinRenderPlayer",
         "render.entity.MixinRenderXPOrb",
+        "render.shader.IShaderGroup",
         "render.ui.MixinGuiIngame",
         "render.ui.MixinGuiToast",
         "render.MixinLayerArmorBase",
