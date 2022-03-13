@@ -10,6 +10,8 @@ import cope.nebula.client.feature.module.combat.SelfFill;
 import cope.nebula.client.feature.module.exploit.*;
 import cope.nebula.client.feature.module.movement.*;
 import cope.nebula.client.feature.module.render.ClickGUI;
+import cope.nebula.client.feature.module.render.CustomFont;
+import cope.nebula.client.feature.module.render.HUD;
 import cope.nebula.client.feature.module.world.FastPlace;
 import cope.nebula.client.feature.module.render.Brightness;
 import cope.nebula.client.feature.module.world.FastBreak;
@@ -55,6 +57,8 @@ public class ModuleManager implements Globals {
             // Render
             new Brightness(),
             new ClickGUI(),
+            new CustomFont(),
+            new HUD(),
 
             // World
             new FastBreak(),
@@ -65,6 +69,7 @@ public class ModuleManager implements Globals {
     public ModuleManager() {
         EVENT_BUS.register(this);
         Nebula.getLogger().info("Loaded {} modules", modules.size());
+        modules.forEach(Module::registerAllSettings);
     }
 
     @SubscribeEvent

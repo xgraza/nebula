@@ -6,6 +6,7 @@ import cope.nebula.client.value.Value;
 import org.lwjgl.input.Keyboard;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 /**
  * A base class for a module
@@ -30,6 +31,23 @@ public class Module extends ToggleableFeature {
 
         values.add(drawn);
         values.add(bind);
+    }
+
+    /**
+     * Dynamically loads values defined in the module class using reflections
+     */
+    public void registerAllSettings() {
+        Arrays.stream(getClass().getFields())
+                .filter((field) -> Value.class.isAssignableFrom(field.getType()))
+                .forEach((field) -> {
+                    field.setAccessible(true);
+
+                    try {
+                        values.add((Value) field.get(this));
+                    } catch (IllegalAccessException e) {
+                        e.printStackTrace();
+                    }
+                });
     }
 
     /**
@@ -70,6 +88,16 @@ public class Module extends ToggleableFeature {
 
     public boolean isDrawn() {
         return drawn.getValue();
+    }
+
+    public Value getValue(String name) {
+        for (Value value : values) {
+            if (value.getName().equals(name)) {
+                return value;
+            }
+        }
+
+        return null;
     }
 
     public ArrayList<Value> getValues() {
