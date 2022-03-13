@@ -8,7 +8,7 @@ import net.minecraft.client.gui.ScaledResolution;
 public class Watermark implements IHUDComponent {
     @Override
     public void render(ScaledResolution resolution) {
-        FontUtil.drawString(Nebula.NAME + " v" + Nebula.VERSION, 2.0f, 2.0f, -1);
+        FontUtil.drawString(Nebula.NAME + " v" + Nebula.FULL_VERSION, 2.0f, 2.0f, -1);
     }
 
     @Override

@@ -5,6 +5,7 @@ import cope.nebula.client.manager.hole.HoleManager;
 import cope.nebula.client.manager.macro.MacroManager;
 import cope.nebula.util.internal.timing.Stopwatch;
 import cope.nebula.util.internal.timing.TimeFormat;
+import cope.nebula.util.versioning.BuildConfig;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import org.apache.logging.log4j.LogManager;
@@ -18,7 +19,9 @@ import static net.minecraftforge.fml.common.Mod.Instance;
 public class Nebula {
     public static final String NAME = "Nebula";
     public static final String VERSION = "1.0";
-    public static final String MODID = "nebula";
+    public static final String HASH = BuildConfig.HASH;
+    public static final String FULL_VERSION = VERSION + "-" + HASH;
+    public static final String MODID = BuildConfig.NAME;
 
     @Instance
     private static Nebula INSTANCE;
@@ -55,7 +58,7 @@ public class Nebula {
         // Goddamn, Roxanne... Never gonna love me but it's alright
         LOGGER.info("Completed setup of {} in {}ms", NAME, stopwatch.getTime(TimeFormat.MILLISECONDS));
 
-        Display.setTitle(NAME + " v" + VERSION);
+        Display.setTitle(NAME + " v" + FULL_VERSION);
     }
 
     public static Nebula getInstance() {

@@ -14,15 +14,37 @@ buildscript {
     dependencies {
         classpath 'net.minecraftforge.gradle:ForgeGradle:2.3.4'
         classpath 'org.spongepowered:mixingradle:0.6-SNAPSHOT'
+        classpath 'gradle.plugin.de.fuerstenau:BuildConfigPlugin:1.1.4'
     }
 }
 
 apply plugin: 'net.minecraftforge.gradle.forge'
 apply plugin: 'org.spongepowered.mixin'
+apply plugin: 'de.fuerstenau.buildconfig'
 
 version = '1.0.0'
 group = 'cope.nebula'
 archivesBaseName = 'Nebula'
+
+def getGitHash = { ->
+    def stdout = new ByteArrayOutputStream()
+
+    exec {
+        commandLine 'git', 'rev-parse', '--short', 'HEAD'
+        standardOutput = stdout
+    }
+
+    return stdout.toString().trim()
+}
+
+buildConfig {
+    buildConfigField "String", "HASH", "${getGitHash()}"
+    buildConfigField "String", "VERSION", "${project.version}"
+
+    packageName "cope.nebula.util.versioning"
+}
+
+sourceSets.main.java.srcDirs += "build/gen/buildconfig/src/main"
 
 sourceCompatibility = targetCompatibility = '1.8'
 compileJava {
