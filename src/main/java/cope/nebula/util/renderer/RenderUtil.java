@@ -105,67 +105,11 @@ public class RenderUtil implements Globals {
         tessellator.draw();
     }
 
-    /**
-     * Draws a rounded rectangle
-     *
-     * @link https://github.com/linustouchtips/cosmos/blob/main/src/main/java/cope/cosmos/util/render/RenderUtil.java#L412#L457
-     *
-     * @param x The x coordinate
-     * @param y The y coordinate
-     * @param width The width
-     * @param height The height
-     * @param radius The radius of the rounded corners
-     * @param color The color
-     */
-    public static void drawRoundedRectangle(double x, double y, double width, double height, double radius, int color) {
-        GL11.glPushAttrib(GL11.GL_POINTS);
-        GL11.glScaled(0.5, 0.5, 0.5);
-
-        x *= 2.0;
-        y *= 2.0;
-
-        width = (width * 2.0) + x;
-        height = (height * 2.0) + y;
-
+    public static void drawRectangle(double x, double y, double width, double height, int color) {
         float alpha = (color >> 24 & 0xff) / 255f;
         float red = (color >> 16 & 0xff) / 255f;
         float green = (color >> 8 & 0xff) / 255f;
         float blue = (color & 0xff) / 255f;
-
-        GlStateManager.enableBlend();
-        GL11.glDisable(GL11.GL_TEXTURE_2D);
-        GL11.glColor4f(red, green, blue, alpha);
-        GL11.glEnable(GL11.GL_LINE_SMOOTH);
-
-        GL11.glBegin(GL11.GL_POLYGON);
-
-        double pi = Math.PI;
-
-        int i;
-        for (i = 0; i <= 90; ++i) {
-            GL11.glVertex2d(x + radius + Math.sin(i * pi / 180.0) * radius * -1.0, y + radius + Math.cos(i * pi / 180.0) * radius * -1.0);
-        }
-
-        for (i = 90; i <= 180; ++i) {
-            GL11.glVertex2d(x + radius + Math.sin(i * pi / 180.0) * radius * -1.0, height - radius + Math.cos(i * pi / 180.0) * radius * -1.0);
-        }
-
-        for (i = 0; i <= 90; ++i) {
-            GL11.glVertex2d(width - radius + Math.sin(i * pi / 180.0) * radius, height - radius + Math.cos(i * pi / 180.0) * radius);
-        }
-
-        for (i = 90; i <= 180; ++i) {
-            GL11.glVertex2d(width - radius + Math.sin(i * pi / 180.0) * radius, y + radius + Math.cos(i * pi / 180.0) * radius);
-        }
-
-        GL11.glEnd();
-        GL11.glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
-        GL11.glEnable(GL11.GL_TEXTURE_2D);
-        GL11.glDisable(GL11.GL_LINE_SMOOTH);
-        GlStateManager.disableBlend();
-
-        GL11.glScaled(2.0, 2.0, 0.0);
-        GL11.glPopAttrib();
     }
 
     /**
