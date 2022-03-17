@@ -5,7 +5,6 @@ import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.util.ResourceLocation;
 
-import static net.minecraftforge.fml.client.config.GuiUtils.colorCodes;
 import static org.lwjgl.opengl.GL11.*;
 
 /**
@@ -17,11 +16,14 @@ import static org.lwjgl.opengl.GL11.*;
 public class AWTFontRenderer extends FontRenderer implements Globals {
     private final AWTFont font;
 
+    private final int[] customColorCodes = new int[32];
+
     public AWTFontRenderer(AWTFont font) {
         super(mc.gameSettings, new ResourceLocation("textures/font/ascii.png"), mc.renderEngine, false);
         this.font = font;
 
         FONT_HEIGHT = font.getFont().getSize() - 9;
+        registerCustomColorCodes();
     }
 
     @Override
@@ -56,15 +58,12 @@ public class AWTFontRenderer extends FontRenderer implements Globals {
         y1 = (y1 - 3.0) * 2.0;
 
         float alpha = (color >> 24 & 0xff) / 255f;
-        float red = (color >> 16 & 0xff) / 255f;
-        float green = (color >> 8 & 0xff) / 255f;
-        float blue = (color & 0xff) / 255f;
 
         GlStateManager.pushMatrix();
         GlStateManager.scale(0.5, 0.5, 0.5);
         GlStateManager.enableBlend();
         GlStateManager.blendFunc(770, 771);
-        GlStateManager.color(red, green, blue, alpha);
+        GlStateManager.color((float) (color >> 16 & 0xFF) / 255.0f, (float) (color >> 8 & 0xFF) / 255.0f, (float) (color & 0xFF) / 255.0f, alpha);
 
         // bind textures
         GlStateManager.enableTexture2D();
@@ -94,7 +93,7 @@ public class AWTFontRenderer extends FontRenderer implements Globals {
                         colorCode += 16;
                     }
 
-                    colorCode = colorCodes[colorCode];
+                    colorCode = customColorCodes[colorCode];
                     GlStateManager.color((float) (colorCode >> 16 & 0xFF) / 255.0f, (float) (colorCode >> 8 & 0xFF) / 255.0f, (float) (colorCode & 0xFF) / 255.0f, alpha);
                 }
 
@@ -134,4 +133,27 @@ public class AWTFontRenderer extends FontRenderer implements Globals {
         return width / 2;
     }
 
+    /**
+     * Registers all custom colors used for formatting
+     */
+    private void registerCustomColorCodes() {
+        for (int index = 0; index < 32; ++index) {
+            int noClue = (index >> 3 & 1) * 85;
+            int red = (index >> 2 & 1) * 170 + noClue;
+            int green = (index >> 1 & 1) * 170 + noClue;
+            int blue = (index >> 0 & 1) * 170 + noClue;
+
+            if (index == 6) {
+                red += 85;
+            }
+
+            if (index >= 16) {
+                red /= 4;
+                green /= 4;
+                blue /= 4;
+            }
+
+            this.customColorCodes[index] = (red & 0xFF) << 16 | (green & 0xFF) << 8 | blue & 0xFF;
+        }
+    }
 }
