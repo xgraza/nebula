@@ -1,9 +1,14 @@
 package cope.nebula.util.renderer;
 
+import cope.nebula.client.Nebula;
 import cope.nebula.client.feature.module.render.CustomFont;
 import cope.nebula.client.ui.font.AWTFontRenderer;
 import cope.nebula.util.Globals;
 import net.minecraft.client.gui.FontRenderer;
+
+import java.awt.*;
+import java.io.IOException;
+import java.io.InputStream;
 
 /**
  * A simple utility for font rendering
@@ -12,6 +17,30 @@ import net.minecraft.client.gui.FontRenderer;
  * @since 3/12/22
  */
 public class FontUtil implements Globals {
+    /**
+     * Registers custom fonts from the resources and the fonts/ folder
+     */
+    public static void registerCustomFonts() {
+        // register fonts from resources
+        String[] resourceFonts = { "product_sans.ttf" };
+        for (String fontName : resourceFonts) {
+            InputStream stream = FontUtil.class.getResourceAsStream("/assets/nebula/fonts/" + fontName);
+            if (stream == null) {
+                continue;
+            }
+
+            try {
+                Font font = Font.createFont(Font.TRUETYPE_FONT, stream).deriveFont(Font.PLAIN, 18);
+                GraphicsEnvironment.getLocalGraphicsEnvironment().registerFont(font);
+                stream.close();
+
+                Nebula.getLogger().info("Loaded custom font {}", fontName);
+            } catch (FontFormatException | IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
     /**
      * Draws a string with or without shadow depending on the CustomFont setting
      * @param text The text to render

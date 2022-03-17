@@ -5,6 +5,7 @@ import cope.nebula.client.manager.hole.HoleManager;
 import cope.nebula.client.manager.macro.MacroManager;
 import cope.nebula.util.internal.timing.Stopwatch;
 import cope.nebula.util.internal.timing.TimeFormat;
+import cope.nebula.util.renderer.FontUtil;
 import cope.nebula.util.versioning.BuildConfig;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
@@ -44,6 +45,7 @@ public class Nebula {
         Stopwatch stopwatch = new Stopwatch();
         stopwatch.resetTime();
 
+        FontUtil.registerCustomFonts();
         new ForgeEventManager();
 
         moduleManager = new ModuleManager();

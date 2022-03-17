@@ -15,7 +15,7 @@ public class CustomFont extends Module {
         super("Font", ModuleCategory.RENDER, "Configures the client's font");
     }
 
-    public static final Value<String> font = new Value<>("Font", "Verdana");
+    public static final Value<String> font = new Value<>("Font", "Product Sans");
     public static final Value<Boolean> shadow = new Value<>("Shadow", true);
     public static final Value<Style> style = new Value<>("Style", Style.PLAIN);
     public static final Value<Integer> size = new Value<>("Size", 20, 16, 24);
