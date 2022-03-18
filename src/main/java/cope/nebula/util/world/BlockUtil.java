@@ -3,8 +3,11 @@ package cope.nebula.util.world;
 import com.google.common.collect.Lists;
 import cope.nebula.util.Globals;
 import net.minecraft.block.Block;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.item.EntityItem;
 import net.minecraft.init.Blocks;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 
 import java.util.ArrayList;
@@ -171,5 +174,19 @@ public class BlockUtil implements Globals {
         }
 
         return null;
+    }
+
+    public static boolean hasIntersectingBoundingBoxes(BlockPos pos) {
+        for (Entity entity : mc.world.loadedEntityList) {
+            if (entity == null || entity instanceof EntityItem) {
+                continue;
+            }
+
+            if (entity.getEntityBoundingBox().intersects(new AxisAlignedBB(pos))) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }

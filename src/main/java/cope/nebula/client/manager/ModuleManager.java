@@ -29,6 +29,7 @@ public class ModuleManager implements Globals {
             new Aura(),
             new AutoTotem(),
             new Criticals(),
+            new FeetTrap(),
             new HitboxCity(),
             new SelfFill(),
 
