@@ -1,6 +1,7 @@
 package cope.nebula.util.renderer;
 
 import cope.nebula.util.Globals;
+import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.RenderGlobal;
@@ -105,11 +106,37 @@ public class RenderUtil implements Globals {
         tessellator.draw();
     }
 
+    /**
+     * Draws a rectangle
+     * @param x The x coordinate
+     * @param y The y coordinate
+     * @param width The width of the rectangle
+     * @param height The height of the rectangle
+     * @param color The color of the rectangle
+     */
     public static void drawRectangle(double x, double y, double width, double height, int color) {
         float alpha = (color >> 24 & 0xff) / 255f;
         float red = (color >> 16 & 0xff) / 255f;
         float green = (color >> 8 & 0xff) / 255f;
         float blue = (color & 0xff) / 255f;
+
+        GlStateManager.enableBlend();
+        GlStateManager.tryBlendFuncSeparate(770, 771, 0, 1);
+        GlStateManager.disableTexture2D();
+        GlStateManager.shadeModel(GL_SMOOTH);
+
+        Tessellator tessellator = Tessellator.getInstance();
+        BufferBuilder buffer = tessellator.getBuffer();
+
+        buffer.begin(GL_QUADS, DefaultVertexFormats.POSITION_COLOR);
+        buffer.pos(x, y, 0.0).color(red, green, blue, alpha).endVertex();
+        buffer.pos(x, y + height, 0.0).color(red, green, blue, alpha).endVertex();
+        buffer.pos(x + width, y + height, 0.0).color(red, green, blue, alpha).endVertex();
+        buffer.pos(x + width, y, 0.0).color(red, green, blue, alpha).endVertex();
+        tessellator.draw();
+
+        GlStateManager.shadeModel(GL_FLAT);
+        GlStateManager.enableTexture2D();
     }
 
     /**
@@ -183,5 +210,29 @@ public class RenderUtil implements Globals {
      */
     public static int fromRGBA(int red, int green, int blue, int alpha) {
         return (red << 16) + (green << 8) + blue + (alpha << 24);
+    }
+
+    /**
+     * hacker shit
+     * @param x The x coordinate
+     * @param y The y coordinate
+     * @param w The width of the cutoff
+     * @param h The height of the cutoff
+     */
+    public static void scissor(double x, double y, double w, double h) {
+        ScaledResolution res = new ScaledResolution(mc);
+        int scaleFactor = res.getScaleFactor();
+
+        glEnable(GL_SCISSOR_TEST);
+        glScissor((int) (x * scaleFactor), (int) ((res.getScaledHeight() - h) * scaleFactor), (int) ((w - x) * scaleFactor), (int) ((h - y) * scaleFactor));
+    }
+
+    /**
+     * Disables GL_SCISSOR_TEST if it is on
+     */
+    public static void stopScissor() {
+        if (glGetBoolean(GL_SCISSOR_TEST)) {
+            glDisable(GL_SCISSOR_TEST);
+        }
     }
 }

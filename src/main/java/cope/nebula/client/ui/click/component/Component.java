@@ -1,6 +1,11 @@
 package cope.nebula.client.ui.click.component;
 
+import net.minecraft.client.audio.PositionedSoundRecord;
+import net.minecraft.init.SoundEvents;
+
 import java.util.ArrayList;
+
+import static cope.nebula.util.Globals.mc;
 
 /**
  * Represents a base component
@@ -58,5 +63,17 @@ public abstract class Component {
 
     public void setHeight(double height) {
         this.height = height;
+    }
+
+    public boolean isMouseInBounds(int mouseX, int mouseY) {
+        return isMouseWithinBounds(mouseX, mouseY, this.x, this.y, this.width, this.height);
+    }
+
+    public static boolean isMouseWithinBounds(int mouseX, int mouseY, double x, double y, double w, double h) {
+        return mouseX >= x && mouseX <= x + w && mouseY >= y && mouseY <= y + h;
+    }
+
+    public static void playClickSound() {
+        mc.getSoundHandler().playSound(PositionedSoundRecord.getMasterRecord(SoundEvents.UI_BUTTON_CLICK, 1.0f));
     }
 }
