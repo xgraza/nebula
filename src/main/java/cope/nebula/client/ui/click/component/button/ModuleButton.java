@@ -12,6 +12,7 @@ import cope.nebula.util.renderer.animation.AnimationDirection;
 
 import java.awt.*;
 
+@SuppressWarnings("rawtypes")
 public class ModuleButton extends Button {
     private final Module module;
 
@@ -31,7 +32,11 @@ public class ModuleButton extends Button {
                 continue;
             }
 
-
+            if (value.getValue() instanceof Boolean) {
+                children.add(new BooleanButton(value));
+            } else if (value.getValue() instanceof Enum) {
+                children.add(new EnumButton(value));
+            }
         }
     }
 
