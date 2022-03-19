@@ -1,5 +1,6 @@
 package cope.nebula.client.feature.module;
 
+import com.mojang.realmsclient.gui.ChatFormatting;
 import cope.nebula.client.feature.ToggleableFeature;
 import cope.nebula.client.value.Bind;
 import cope.nebula.client.value.Value;
@@ -76,6 +77,27 @@ public class Module extends ToggleableFeature {
      */
     public void onRender3d() {
 
+    }
+
+    /**
+     * Gets display info for the HUD arraylist
+     * @return the display info, or null if none
+     */
+    public String getDisplayInfo() {
+        return null;
+    }
+
+    /**
+     * Gets the full display string
+     * @return the full display string
+     */
+    public String getDisplay() {
+        String text = getName();
+        if (getDisplayInfo() != null) {
+            text += " " + ChatFormatting.GRAY + "[" + ChatFormatting.RESET + getDisplayInfo() + ChatFormatting.GRAY + "]";
+        }
+
+        return text;
     }
 
     public void setKeyBind(int keyCode) {
