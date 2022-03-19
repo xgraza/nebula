@@ -14,6 +14,8 @@ import net.minecraft.init.MobEffects;
 import net.minecraft.network.play.server.SPacketEntityVelocity;
 import net.minecraft.network.play.server.SPacketExplosion;
 import net.minecraft.network.play.server.SPacketPlayerPosLook;
+import net.minecraft.util.math.MathHelper;
+import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 import static cope.nebula.client.feature.module.world.Timer.setTimerSpeed;
@@ -23,11 +25,11 @@ public class Speed extends Module {
         super("Speed", ModuleCategory.MOVEMENT, "Makes you go faster");
     }
 
-    public static final Value<Mode> mode = new Value<>("Mode", Mode.STRICTSTRAFE);
-    public static final Value<Boolean> boost = new Value<>("Boost", true);
+    public static final Value<Mode> mode = new Value<>("Mode", Mode.STRAFE);
+    public static final Value<Boolean> boost = new Value<>("Boost", false);
     public static final Value<Boolean> timer = new Value<>("Timer", false);
 
-    private int strafeStage = 1;
+    private int strafeStage = 4;
     private double moveSpeed = 0.0;
     private double distance = 0.0;
 
@@ -39,7 +41,7 @@ public class Speed extends Module {
 
     @Override
     protected void onDeactivated() {
-        strafeStage = 1;
+        strafeStage = 4;
         moveSpeed = 0.0;
         distance = 0.0;
         damageBoostTicks = -1;
@@ -89,7 +91,7 @@ public class Speed extends Module {
         }
     }
 
-    @SubscribeEvent
+    @SubscribeEvent(priority = EventPriority.HIGHEST)
     public void onMotionUpdate(MotionUpdateEvent event) {
         if (event.getEra().equals(Era.PRE)) {
             distance = Math.sqrt(Math.pow(mc.player.prevPosX - mc.player.posX, 2) + Math.pow(mc.player.prevPosZ - mc.player.posZ, 2));
@@ -110,22 +112,23 @@ public class Speed extends Module {
                 }
 
                 if (!lagback) {
-                    if (boost.getValue() && damageBoostTicks < 0) {
+                    if (boost.getValue() && damageBoostTicks > 0) {
                         --damageBoostTicks;
                         moveSpeed *= (explosionStrength / 10.0);
                     }
 
-//                    if (timer.getValue() && moveSpeed > getBaseNCPSpeed() && strafeStage != 2) {
-//                        setTimerSpeed(1.02f);
-//
-//                        mc.player.motionX *= 1.3;
-//                        mc.player.motionZ *= 1.3;
-//                    }
+                    if (timer.getValue() && moveSpeed < getBaseNCPSpeed() && strafeStage != 2) {
+                        setTimerSpeed(1.02f);
+
+                        mc.player.motionX *= 1.3;
+                        mc.player.motionZ *= 1.3;
+                    }
                 }
             }
 
             if (strafeStage == 1) {
-                moveSpeed = (1.38 * getBaseNCPSpeed()) - 0.1;
+                moveSpeed = (1.35 * getBaseNCPSpeed()) - 0.01;
+
                 strafeStage = 2;
             } else if (strafeStage == 2) {
                 if (MotionUtil.isMoving() && mc.player.onGround) {
@@ -135,26 +138,28 @@ public class Speed extends Module {
 
                 strafeStage = 3;
             } else if (strafeStage == 3) {
-                double diff = 0.66 * (distance - getBaseNCPSpeed());
-                moveSpeed = distance - diff;
+                double scaled = 0.66 * (distance - getBaseNCPSpeed());
+                moveSpeed = distance - scaled;
 
                 strafeStage = 4;
             } else {
                 if (!mc.world.getCollisionBoxes(mc.player, mc.player.getEntityBoundingBox().offset(0.0, mc.player.motionY, 0.0)).isEmpty() || (mc.player.collidedVertically && strafeStage > 1)) {
-                    strafeStage = 0;
+                    strafeStage = 1;
                 }
 
-                double divisor = mode.getValue().equals(Mode.STRAFE) ? 159.0 : 149.0;
-                moveSpeed = distance - distance / divisor;
-
+                moveSpeed = distance - distance / 159.0;
                 lagback = false;
             }
 
+            // i input random numbers until they work
+            double maxMoveSpeed = 0.0;
             if (mode.getValue().equals(Mode.STRICTSTRAFE)) {
-                moveSpeed = Math.max(moveSpeed, 0.422);
+                maxMoveSpeed = 0.456;
             } else {
-                moveSpeed = Math.max(moveSpeed, 0.487);
+                maxMoveSpeed = 0.551;
             }
+
+            moveSpeed = MathHelper.clamp(moveSpeed, getBaseNCPSpeed(), maxMoveSpeed);
 
             Vec2d motion = MotionUtil.strafe(moveSpeed);
 
@@ -192,7 +197,7 @@ public class Speed extends Module {
      * @return the vanilla jump height
      */
     private double getJumpHeight(boolean strict) {
-        double y = strict ? 0.3995 : 0.41;
+        double y = strict ? 0.4199998 : 0.3995;
         if (mc.player.isPotionActive(MobEffects.JUMP_BOOST)) {
             y += (mc.player.getActivePotionEffect(MobEffects.JUMP_BOOST).getAmplifier() + 1) * 0.1;
         }
