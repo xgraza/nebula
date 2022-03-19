@@ -8,6 +8,8 @@ import cope.nebula.util.renderer.FontUtil;
 import cope.nebula.util.renderer.RenderUtil;
 import cope.nebula.util.renderer.animation.Animation;
 import cope.nebula.util.renderer.animation.AnimationDirection;
+import net.minecraft.util.math.MathHelper;
+import org.lwjgl.input.Mouse;
 
 import java.awt.*;
 import java.util.List;
@@ -23,6 +25,9 @@ public class Panel extends Component {
 
     private boolean dragging = false;
     private double dragX, dragY;
+
+    // im dumb, so thanks cosmos
+    private double scroll = 0.0;
 
     // opening animation
     private final Animation animation = new Animation(200.0, 5L);
@@ -44,6 +49,15 @@ public class Panel extends Component {
         if (dragging) {
             setX(dragX + mouseX);
             setY(dragY + mouseY);
+        }
+
+        if (isMouseInBounds(mouseX, mouseY)) {
+            int scrollWheel = Mouse.getDWheel();
+            if (scrollWheel > 0) {
+                children.forEach((child) -> child.setY(child.getY() + 10.0));
+            } else if (scrollWheel < 0) {
+                children.forEach((child) -> child.setY(child.getY() - 10.0));
+            }
         }
 
         RenderUtil.drawHalfRoundedRectangle(getX(), getY(), getWidth(), getHeight(), 5.0, new Color(29, 29, 29).getRGB());
