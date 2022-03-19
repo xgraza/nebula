@@ -68,7 +68,7 @@ public class AWTFontRenderer extends FontRenderer implements Globals {
         // bind textures
         GlStateManager.enableTexture2D();
         GlStateManager.bindTexture(font.getTexture().getGlTextureId());
-        glBindTexture(3553, font.getTexture().getGlTextureId());
+        glBindTexture(GL_TEXTURE_2D, font.getTexture().getGlTextureId());
 
         for (int i = 0; i < text.length(); ++i) {
             char c = text.charAt(i);
