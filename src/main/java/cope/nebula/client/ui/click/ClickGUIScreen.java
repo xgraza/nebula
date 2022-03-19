@@ -56,6 +56,12 @@ public class ClickGUIScreen extends GuiScreen implements Globals {
     }
 
     @Override
+    protected void keyTyped(char typedChar, int keyCode) throws IOException {
+        super.keyTyped(typedChar, keyCode);
+        panels.forEach((panel) -> panel.keyTyped(typedChar, keyCode));
+    }
+
+    @Override
     public boolean doesGuiPauseGame() {
         return false;
     }

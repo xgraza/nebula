@@ -123,6 +123,8 @@ public class Panel extends Component {
 
     @Override
     public void keyTyped(char typedChar, int keyCode) {
-
+        if (expanded) {
+            children.forEach((child) -> child.keyTyped(typedChar, keyCode));
+        }
     }
 }
