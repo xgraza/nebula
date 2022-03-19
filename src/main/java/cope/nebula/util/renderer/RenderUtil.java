@@ -223,16 +223,16 @@ public class RenderUtil implements Globals {
         ScaledResolution res = new ScaledResolution(mc);
         int scaleFactor = res.getScaleFactor();
 
-        glEnable(GL_SCISSOR_TEST);
+        glPushAttrib(GL_SCISSOR_BIT);
         glScissor((int) (x * scaleFactor), (int) ((res.getScaledHeight() - h) * scaleFactor), (int) ((w - x) * scaleFactor), (int) ((h - y) * scaleFactor));
+        glEnable(GL_SCISSOR_TEST);
     }
 
     /**
      * Disables GL_SCISSOR_TEST if it is on
      */
     public static void stopScissor() {
-        if (glGetBoolean(GL_SCISSOR_TEST)) {
-            glDisable(GL_SCISSOR_TEST);
-        }
+        glPopAttrib();
+        glDisable(GL_SCISSOR_TEST);
     }
 }

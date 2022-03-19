@@ -59,7 +59,7 @@ public class AWTFontRenderer extends FontRenderer implements Globals {
 
         float alpha = (color >> 24 & 0xff) / 255f;
 
-        GlStateManager.pushMatrix();
+        glPushMatrix();
         GlStateManager.scale(0.5, 0.5, 0.5);
         GlStateManager.enableBlend();
         GlStateManager.blendFunc(770, 771);
@@ -106,7 +106,7 @@ public class AWTFontRenderer extends FontRenderer implements Globals {
             x1 += charData.getWidth() - 8;
         }
 
-        GlStateManager.popMatrix();
+        glPopMatrix();
 
         return (int) (x1 / 2.0);
     }

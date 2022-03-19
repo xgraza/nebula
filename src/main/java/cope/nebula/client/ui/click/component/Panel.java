@@ -11,6 +11,9 @@ import net.minecraft.util.math.MathHelper;
 import java.awt.*;
 import java.util.List;
 
+import static org.lwjgl.opengl.GL11.glPopMatrix;
+import static org.lwjgl.opengl.GL11.glPushMatrix;
+
 /**
  * Represents a panel (or frame) that will hold all the components
  *
@@ -18,15 +21,15 @@ import java.util.List;
  * @since 3/12/22
  */
 public class Panel extends Component {
-    private boolean expanded = false;
+    private boolean expanded = true;
 
     private boolean dragging = false;
     private double dragX, dragY;
 
     // opening animation
     private long time = System.currentTimeMillis();
-    private boolean opening = false;
-    private double heightProgress = 0.0;
+    private boolean opening = true;
+    private double heightProgress = 200.0;
 
     public Panel(double x, ModuleCategory category, List<Module> modules) {
         super(category.getDisplayName());
@@ -75,16 +78,18 @@ public class Panel extends Component {
         RenderUtil.scissor(getX(), getY() + getHeight(), getX() + getWidth(), getY() + heightProgress);
         RenderUtil.drawRectangle(getX(), getY() + getHeight(), getWidth(), heightProgress, new Color(28, 28, 28, 226).getRGB());
 
-        double posY = getY() + getHeight();
-        for (Component component : children) {
-            component.setX(getX() + 2.0);
-            component.setY(posY);
-            component.setWidth(getWidth() - 4.0);
-            component.setHeight(15.0);
+        if (expanded) {
+            double posY = getY() + getHeight();
+            for (Component component : children) {
+                component.setX(getX() + 2.0);
+                component.setY(posY);
+                component.setWidth(getWidth() - 4.0);
+                component.setHeight(15.0);
 
-            component.drawComponent(mouseX, mouseY);
+                component.drawComponent(mouseX, mouseY);
 
-            posY += component.getHeight() + 1.0;
+                posY += component.getHeight() + 1.0;
+            }
         }
 
         RenderUtil.stopScissor();
