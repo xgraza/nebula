@@ -27,6 +27,7 @@ public class ModuleManager implements Globals {
     private final ArrayList<Module> modules = Lists.newArrayList(
             // Combat
             new Aura(),
+            new AutoCrystal(),
             new AutoTotem(),
             new Criticals(),
             new FeetTrap(),
