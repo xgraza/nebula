@@ -6,13 +6,11 @@ import cope.nebula.client.feature.module.render.ClickGUI;
 import cope.nebula.client.ui.click.component.button.ModuleButton;
 import cope.nebula.util.renderer.FontUtil;
 import cope.nebula.util.renderer.RenderUtil;
-import net.minecraft.util.math.MathHelper;
+import cope.nebula.util.renderer.animation.Animation;
+import cope.nebula.util.renderer.animation.AnimationDirection;
 
 import java.awt.*;
 import java.util.List;
-
-import static org.lwjgl.opengl.GL11.glPopMatrix;
-import static org.lwjgl.opengl.GL11.glPushMatrix;
 
 /**
  * Represents a panel (or frame) that will hold all the components
@@ -27,9 +25,8 @@ public class Panel extends Component {
     private double dragX, dragY;
 
     // opening animation
-    private long time = System.currentTimeMillis();
     private boolean opening = true;
-    private double heightProgress = 200.0;
+    private final Animation animation = new Animation(200.0, 5L);
 
     public Panel(double x, ModuleCategory category, List<Module> modules) {
         super(category.getDisplayName());
@@ -40,7 +37,6 @@ public class Panel extends Component {
         setWidth(112.0);
         setHeight(18.0);
 
-        // TODO
         modules.forEach((module) -> children.add(new ModuleButton(module)));
     }
 
@@ -55,28 +51,14 @@ public class Panel extends Component {
         FontUtil.drawString(getName(), (int) (getX() + 2.3f), (int) ((getY() + (getHeight() / 2.0)) - FontUtil.getHeight() / 2.0), -1);
 
         if (ClickGUI.animations.getValue()) {
-            if (System.currentTimeMillis() - time >= 5L) {
-                time = System.currentTimeMillis();
-                double speed = ClickGUI.speed.getValue();
-
-                if (opening) {
-                    heightProgress += speed;
-                } else {
-                    heightProgress -= speed;
-                }
-
-                heightProgress = MathHelper.clamp(heightProgress, 0, 200.0);
-            }
+            animation.setIncrement(ClickGUI.speed.getValue());
+            animation.tick(AnimationDirection.fromBoolean(opening));
         } else {
-            if (expanded) {
-                heightProgress = 200.0;
-            } else {
-                heightProgress = 0.0;
-            }
+            animation.setProgress(expanded ? 200.0 : 0.0);
         }
 
-        RenderUtil.scissor(getX(), getY() + getHeight(), getX() + getWidth(), getY() + heightProgress);
-        RenderUtil.drawRectangle(getX(), getY() + getHeight(), getWidth(), heightProgress, new Color(28, 28, 28, 226).getRGB());
+        RenderUtil.scissor(getX(), getY() + getHeight(), getX() + getWidth(), getY() + animation.getProgress());
+        RenderUtil.drawRectangle(getX(), getY() + getHeight(), getWidth(), animation.getProgress(), new Color(28, 28, 28, 226).getRGB());
 
         if (expanded) {
             double posY = getY() + getHeight();
@@ -108,8 +90,6 @@ public class Panel extends Component {
                 }
 
                 case 1: {
-                    time = System.currentTimeMillis();
-
                     expanded = !expanded;
                     opening = expanded;
                     break;

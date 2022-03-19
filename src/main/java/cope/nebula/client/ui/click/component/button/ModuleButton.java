@@ -4,7 +4,8 @@ import cope.nebula.client.feature.module.Module;
 import cope.nebula.client.feature.module.render.ClickGUI;
 import cope.nebula.util.renderer.FontUtil;
 import cope.nebula.util.renderer.RenderUtil;
-import net.minecraft.util.math.MathHelper;
+import cope.nebula.util.renderer.animation.Animation;
+import cope.nebula.util.renderer.animation.AnimationDirection;
 
 import java.awt.*;
 
@@ -13,41 +14,27 @@ public class ModuleButton extends Button {
 
     private boolean expanded = false;
 
-    private long time = System.currentTimeMillis();
-    private boolean animationState = false;
-    private double progress = 0.0;
+    private final Animation toggleAnimation;
 
     public ModuleButton(Module module) {
         super(module.getName());
         this.module = module;
+
+        toggleAnimation = new Animation(getWidth(), 5L);
     }
 
     @Override
     public void drawComponent(int mouseX, int mouseY) {
+        toggleAnimation.setMax(getWidth());
         if (ClickGUI.animations.getValue()) {
-            if (System.currentTimeMillis() - time >= 5L) {
-                time = System.currentTimeMillis();
-                double speed = ClickGUI.speed.getValue();
-
-                if (animationState) {
-                    progress += speed;
-                } else {
-                    progress -= speed;
-                }
-
-                progress = MathHelper.clamp(progress, 0, getWidth());
-            }
+            toggleAnimation.setIncrement(ClickGUI.speed.getValue());
+            toggleAnimation.tick(AnimationDirection.fromBoolean(module.isOn()));
         } else {
-            if (animationState) {
-                progress = getWidth();
-            } else {
-                progress = 0.0;
-            }
+            toggleAnimation.setIncrement(module.isOn() ? getWidth() : 0.0);
         }
 
-        // TODO: animation shit, im too lazy
-        if (progress > 0.0) {
-            RenderUtil.drawRectangle(getX(), getY(), progress, getHeight(), new Color(122, 49, 183, 245).getRGB());
+        if (toggleAnimation.getProgress() > 0.0) {
+            RenderUtil.drawRectangle(getX(), getY(), toggleAnimation.getProgress(), getHeight(), new Color(122, 49, 183, 245).getRGB());
         }
 
         FontUtil.drawString(getName(), (int) (getX() + 3.0f), (int) ((getY() + (getHeight() / 2.0)) - FontUtil.getHeight() / 2.0), -1);
@@ -68,9 +55,6 @@ public class ModuleButton extends Button {
         switch (button) {
             case 0: {
                 module.toggle();
-
-                time = System.currentTimeMillis();
-                animationState = module.isOn();
                 break;
             }
 
