@@ -8,7 +8,6 @@ import cope.nebula.util.renderer.FontUtil;
 import cope.nebula.util.renderer.RenderUtil;
 import cope.nebula.util.renderer.animation.Animation;
 import cope.nebula.util.renderer.animation.AnimationDirection;
-import net.minecraft.util.math.MathHelper;
 import org.lwjgl.input.Mouse;
 
 import java.awt.*;
@@ -54,9 +53,11 @@ public class Panel extends Component {
         if (isMouseInBounds(mouseX, mouseY)) {
             int scrollWheel = Mouse.getDWheel();
             if (scrollWheel > 0) {
-                children.forEach((child) -> child.setY(child.getY() + 10.0));
+                // children.forEach((child) -> child.setY(child.getY() + 10.0));
+                scroll += 10.0;
             } else if (scrollWheel < 0) {
-                children.forEach((child) -> child.setY(child.getY() - 10.0));
+                // children.forEach((child) -> child.setY(child.getY() - 10.0));
+                scroll -= 10.0;
             }
         }
 
@@ -74,7 +75,7 @@ public class Panel extends Component {
         RenderUtil.drawRectangle(getX(), getY() + getHeight(), getWidth(), animation.getProgress(), new Color(28, 28, 28, 226).getRGB());
 
         if (expanded) {
-            double posY = getY() + getHeight();
+            double posY = getY() + getHeight() + scroll;
             for (Component component : children) {
                 component.setX(getX() + 2.0);
                 component.setY(posY);
