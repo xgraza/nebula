@@ -25,7 +25,6 @@ public class Panel extends Component {
     private double dragX, dragY;
 
     // opening animation
-    private boolean opening = true;
     private final Animation animation = new Animation(200.0, 5L);
 
     public Panel(double x, ModuleCategory category, List<Module> modules) {
@@ -52,7 +51,7 @@ public class Panel extends Component {
 
         if (ClickGUI.animations.getValue()) {
             animation.setIncrement(ClickGUI.speed.getValue());
-            animation.tick(AnimationDirection.fromBoolean(opening));
+            animation.tick(AnimationDirection.fromBoolean(expanded));
         } else {
             animation.setProgress(expanded ? 200.0 : 0.0);
         }
@@ -91,7 +90,6 @@ public class Panel extends Component {
 
                 case 1: {
                     expanded = !expanded;
-                    opening = expanded;
                     break;
                 }
             }
