@@ -28,6 +28,7 @@ public class ModuleManager implements Globals {
             // Combat
             new Aura(),
             new AutoCrystal(),
+            new AutoLogout(),
             new AutoTotem(),
             new Criticals(),
             new FeetTrap(),
