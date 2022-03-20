@@ -50,13 +50,11 @@ public class Panel extends Component {
             setY(dragY + mouseY);
         }
 
-        if (isMouseInBounds(mouseX, mouseY)) {
+        if (isMouseWithinBounds(mouseX, mouseY, getX(), getY(), getWidth(), getHeight() + animation.getProgress())) {
             int scrollWheel = Mouse.getDWheel();
             if (scrollWheel > 0) {
-                // children.forEach((child) -> child.setY(child.getY() + 10.0));
                 scroll += 10.0;
             } else if (scrollWheel < 0) {
-                // children.forEach((child) -> child.setY(child.getY() - 10.0));
                 scroll -= 10.0;
             }
         }
