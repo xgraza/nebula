@@ -108,7 +108,7 @@ public class Panel extends Component {
             }
         }
 
-        if (expanded) {
+        if (expanded && !dragging) {
             children.forEach((child) -> child.mouseClicked(mouseX, mouseY, button));
         }
     }
