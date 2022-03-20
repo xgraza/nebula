@@ -3,6 +3,7 @@ package cope.nebula.client.ui.click.component.button;
 import cope.nebula.client.feature.module.Module;
 import cope.nebula.client.feature.module.render.ClickGUI;
 import cope.nebula.client.ui.click.component.Component;
+import cope.nebula.client.ui.click.component.other.Slider;
 import cope.nebula.client.value.Bind;
 import cope.nebula.client.value.Value;
 import cope.nebula.util.renderer.FontUtil;
@@ -36,6 +37,8 @@ public class ModuleButton extends Button {
                 children.add(new BooleanButton(value));
             } else if (value.getValue() instanceof Enum) {
                 children.add(new EnumButton(value));
+            } else if (value.getValue() instanceof Number) {
+                children.add(new Slider(value));
             }
         }
     }

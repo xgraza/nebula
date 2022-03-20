@@ -22,6 +22,8 @@ import net.minecraft.entity.item.EntityEnderCrystal;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
 import net.minecraft.init.SoundEvents;
+import net.minecraft.network.play.client.CPacketUseEntity;
+import net.minecraft.network.play.client.CPacketUseEntity.Action;
 import net.minecraft.network.play.server.SPacketDestroyEntities;
 import net.minecraft.network.play.server.SPacketExplosion;
 import net.minecraft.network.play.server.SPacketSoundEffect;
@@ -173,6 +175,18 @@ public class AutoCrystal extends Module {
 
                 break;
             }
+
+            case OUTGOING: {
+                if (event.getPacket() instanceof CPacketUseEntity) {
+                    CPacketUseEntity packet = event.getPacket();
+                    if (packet.getEntityFromWorld(mc.world) instanceof EntityEnderCrystal &&
+                            packet.getAction().equals(Action.ATTACK)) {
+
+                        attackedCrystals.add((EntityEnderCrystal) packet.getEntityFromWorld(mc.world));
+                    }
+                }
+                break;
+            }
         }
     }
 
@@ -186,9 +200,9 @@ public class AutoCrystal extends Module {
 
         hand = slot == InventoryUtil.OFFHAND_SLOT ? EnumHand.OFF_HAND : EnumHand.MAIN_HAND;
 
-        if (place.getValue()) {
-            calculateBestPlace();
+        calculateBestPlace();
 
+        if (place.getValue()) {
             if (lastPlacePos != null) {
                 if (!swap.getValue().equals(Swap.NONE)) {
                     if (swap.getValue().equals(Swap.ALT_SERVER)) {
@@ -337,9 +351,6 @@ public class AutoCrystal extends Module {
         }
 
         attackCrystal = crystal;
-        if (attackCrystal != null) {
-            attackedCrystals.add(attackCrystal);
-        }
     }
 
     private void swapBack() {
