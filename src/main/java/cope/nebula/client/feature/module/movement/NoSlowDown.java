@@ -75,7 +75,7 @@ public class NoSlowDown extends Module {
         }
 
         // this only works while strafing (or sprint jumping)
-        if (itemStrict.getValue() && mc.player.isHandActive()) {
+        if (itemStrict.getValue()) {
             if (mc.player.isHandActive()) {
                 if (!sneakState) {
                     mc.player.connection.sendPacket(new CPacketEntityAction(mc.player, Action.START_SNEAKING));
