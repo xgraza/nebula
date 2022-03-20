@@ -7,6 +7,7 @@ import cope.nebula.client.feature.module.ModuleCategory;
 import cope.nebula.client.value.Value;
 import cope.nebula.util.internal.timing.Stopwatch;
 import cope.nebula.util.internal.timing.TimeFormat;
+import cope.nebula.util.renderer.RenderUtil;
 import cope.nebula.util.world.BlockUtil;
 import cope.nebula.util.world.damage.ExplosionUtil;
 import cope.nebula.util.world.entity.CrystalUtil;
@@ -28,10 +29,12 @@ import net.minecraft.network.play.server.SPacketDestroyEntities;
 import net.minecraft.network.play.server.SPacketExplosion;
 import net.minecraft.network.play.server.SPacketSoundEffect;
 import net.minecraft.util.EnumHand;
+import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
+import java.awt.*;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -102,6 +105,17 @@ public class AutoCrystal extends Module {
         }
 
         lastRotation = Rotation.INVALID_ROTATION;
+    }
+
+    @Override
+    public void onRender3d() {
+        if (lastPlacePos != null) {
+            AxisAlignedBB box = new AxisAlignedBB(lastPlacePos).offset(-mc.getRenderManager().viewerPosX, -mc.getRenderManager().viewerPosY, -mc.getRenderManager().viewerPosZ);
+            int color = new Color(122, 49, 183, 120).getRGB();
+
+            RenderUtil.renderFilledBox(box, color);
+            RenderUtil.renderOutlinedBox(box, 3.5f, color);
+        }
     }
 
     @SubscribeEvent
