@@ -8,6 +8,12 @@ import org.spongepowered.asm.mixin.gen.Accessor;
 public interface ICPacketPlayer {
     @Accessor("rotating") boolean isRotating();
 
+    @Accessor("moving") boolean isMoving();
+
+    @Accessor("onGround") void setOnGround(boolean onGround);
+
+    @Accessor("y") void setY(double y);
+
     @Accessor void setYaw(float yaw);
 
     @Accessor void setPitch(float pitch);

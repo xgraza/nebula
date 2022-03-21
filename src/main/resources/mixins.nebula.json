@@ -33,7 +33,9 @@
         "render.ui.MixinGuiIngame",
         "render.ui.MixinGuiToast",
         "render.MixinLayerArmorBase",
-        "render.MixinParticleManager"
+        "render.MixinParticleManager",
+
+        "world.block.MixinStateImplementation"
     ],
     "injectors": {
         "maxShiftBy": 10
