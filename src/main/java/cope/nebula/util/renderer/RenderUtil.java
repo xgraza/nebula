@@ -29,9 +29,10 @@ public class RenderUtil implements Globals {
      */
     public static void renderFilledBox(AxisAlignedBB box, int color) {
         GlStateManager.enableBlend();
-        GlStateManager.tryBlendFuncSeparate(771, 770, 0, 1);
+        GlStateManager.tryBlendFuncSeparate(770, 771, 0, 1);
         GlStateManager.disableTexture2D();
         GlStateManager.disableDepth();
+        GlStateManager.depthMask(false);
 
         float alpha = (color >> 24 & 0xff) / 255f;
         float red = (color >> 16 & 0xff) / 255f;
@@ -40,8 +41,10 @@ public class RenderUtil implements Globals {
 
         RenderGlobal.renderFilledBox(box, red, green, blue, alpha);
 
+        GlStateManager.depthMask(true);
         GlStateManager.enableDepth();
         GlStateManager.enableTexture2D();
+        GlStateManager.disableBlend();
     }
 
     /**
@@ -51,14 +54,15 @@ public class RenderUtil implements Globals {
      */
     public static void renderOutlinedBox(AxisAlignedBB box, float lineWidth, int color) {
         GlStateManager.enableBlend();
-        GlStateManager.tryBlendFuncSeparate(771, 770, 0, 1);
-        GlStateManager.disableTexture2D();
         GlStateManager.disableDepth();
+        GlStateManager.tryBlendFuncSeparate(770, 771, 0, 1);
+        GlStateManager.disableTexture2D();
+        GlStateManager.depthMask(false);
+
+        GlStateManager.glLineWidth(lineWidth);
 
         glEnable(GL_LINE_SMOOTH);
         glHint(GL_LINE_SMOOTH_HINT, GL_NICEST);
-
-        GlStateManager.glLineWidth(lineWidth);
 
         float alpha = (color >> 24 & 0xff) / 255f;
         float red = (color >> 16 & 0xff) / 255f;
@@ -91,8 +95,10 @@ public class RenderUtil implements Globals {
 
         GlStateManager.glLineWidth(1.0f);
 
+        GlStateManager.depthMask(true);
         GlStateManager.enableDepth();
         GlStateManager.enableTexture2D();
+        GlStateManager.disableBlend();
     }
 
     public static void renderSide(AxisAlignedBB box, EnumFacing facing, int color) {
