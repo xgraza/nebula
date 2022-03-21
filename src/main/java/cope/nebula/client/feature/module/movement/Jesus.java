@@ -40,7 +40,7 @@ public class Jesus extends Module {
         if (!flag) {
             ++materialAccelSpeed;
             if (materialAccelSpeed >= 20) {
-                materialAccelSpeed = 60;
+                materialAccelSpeed = 100;
                 flag = true;
             }
         } else {
