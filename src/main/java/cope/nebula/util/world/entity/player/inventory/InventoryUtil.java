@@ -103,7 +103,7 @@ public class InventoryUtil implements Globals {
      * @param slot the slot
      * @return the corrected slot id
      */
-    public static int toPacketSlot(int slot) {
+    public static int normalize(int slot) {
         return slot < 9 ? slot + 36 : slot;
     }
 

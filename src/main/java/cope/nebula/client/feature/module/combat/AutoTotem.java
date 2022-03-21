@@ -65,7 +65,7 @@ public class AutoTotem extends Module {
 
         int slot = InventoryUtil.getSlot(InventorySpace.BOTH, (s) -> !s.isEmpty() && s.getItem().equals(item));
         if (slot != -1) {
-            int packetSlotId = InventoryUtil.toPacketSlot(slot);
+            int packetSlotId = InventoryUtil.normalize(slot);
 
             taskHandler.addTask(new InventoryTask(packetSlotId, ClickType.PICKUP));
             taskHandler.addTask(new InventoryTask(InventoryUtil.OFFHAND_SLOT, ClickType.PICKUP));
