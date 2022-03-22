@@ -127,7 +127,7 @@ public class Speed extends Module {
             }
 
             if (strafeStage == 1) {
-                moveSpeed = (1.35 * getBaseNCPSpeed()) - 0.01;
+                moveSpeed = (1.38 * getBaseNCPSpeed()) - 0.01;
 
                 strafeStage = 2;
             } else if (strafeStage == 2) {
@@ -147,14 +147,15 @@ public class Speed extends Module {
                     strafeStage = 1;
                 }
 
-                moveSpeed = distance - distance / 159.0;
+                double divisor = mode.getValue().equals(Mode.STRAFE) ? 159.0 : 149.0;
+                moveSpeed = distance - distance / divisor;
                 lagback = false;
             }
 
             // i input random numbers until they work
             double maxMoveSpeed = 0.0;
             if (mode.getValue().equals(Mode.STRICTSTRAFE)) {
-                maxMoveSpeed = 0.456;
+                maxMoveSpeed = 0.4672;
             } else {
                 maxMoveSpeed = 0.551;
             }
@@ -197,7 +198,7 @@ public class Speed extends Module {
      * @return the vanilla jump height
      */
     private double getJumpHeight(boolean strict) {
-        double y = strict ? 0.4199998 : 0.3995;
+        double y = strict ? 0.42 : 0.3995;
         if (mc.player.isPotionActive(MobEffects.JUMP_BOOST)) {
             y += (mc.player.getActivePotionEffect(MobEffects.JUMP_BOOST).getAmplifier() + 1) * 0.1;
         }
