@@ -85,4 +85,19 @@ public class RotationManager implements Globals {
     public float getPitch() {
         return rotation.getPitch();
     }
+
+    public Rotation getFixedRotations() {
+        float yaw = getYaw();
+        float pitch = getPitch();
+
+        if (Float.isNaN(yaw)) {
+            yaw = mc.player.rotationYaw;
+        }
+
+        if (Float.isNaN(pitch)) {
+            pitch = mc.player.rotationPitch;
+        }
+
+        return new Rotation(yaw, pitch);
+    }
 }
