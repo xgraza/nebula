@@ -4,6 +4,7 @@ import com.mojang.realmsclient.gui.ChatFormatting;
 import cope.nebula.client.feature.module.render.HUD;
 import cope.nebula.client.feature.module.render.hud.IHUDComponent;
 import cope.nebula.util.renderer.FontUtil;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiChat;
 import net.minecraft.client.gui.ScaledResolution;
 
@@ -19,6 +20,15 @@ public class Info implements IHUDComponent {
         if (HUD.speed.getValue()) {
             String text = ChatFormatting.GRAY + "Speed: " + ChatFormatting.RESET + getSpeedInKmh() + " km/h";
             FontUtil.drawString(text, resolution.getScaledWidth() - FontUtil.getWidth(text) - 2.0f, posY, -1);
+
+            posY -= (FontUtil.getHeight() + 2.0f);
+        }
+
+        if (HUD.fps.getValue()) {
+            String text = ChatFormatting.GRAY + "FPS " + ChatFormatting.RESET + Minecraft.getDebugFPS();
+            FontUtil.drawString(text, resolution.getScaledWidth() - FontUtil.getWidth(text) - 2.0f, posY, -1);
+
+            posY -= (FontUtil.getHeight() + 2.0f);
         }
     }
 
