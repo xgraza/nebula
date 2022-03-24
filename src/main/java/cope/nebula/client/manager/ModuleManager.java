@@ -6,6 +6,7 @@ import cope.nebula.client.feature.module.Module;
 import cope.nebula.client.feature.module.combat.*;
 import cope.nebula.client.feature.module.exploit.*;
 import cope.nebula.client.feature.module.movement.*;
+import cope.nebula.client.feature.module.other.AutoRespawn;
 import cope.nebula.client.feature.module.render.*;
 import cope.nebula.client.feature.module.world.*;
 import cope.nebula.util.Globals;
@@ -54,6 +55,9 @@ public class ModuleManager implements Globals {
             new Sprint(),
             new Step(),
             new Velocity(),
+
+            // Other
+            new AutoRespawn(),
 
             // Render
             new AntiRender(),
