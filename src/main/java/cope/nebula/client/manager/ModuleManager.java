@@ -48,6 +48,7 @@ public class ModuleManager implements Globals {
             // Movement
             new HoleSnap(),
             new Jesus(),
+            new NoFall(),
             new NoRotate(),
             new NoSlowDown(),
             new ReverseStep(),
