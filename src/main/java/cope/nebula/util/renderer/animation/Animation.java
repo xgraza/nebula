@@ -73,6 +73,10 @@ public class Animation {
         this.max = max;
     }
 
+    public double getMax() {
+        return max;
+    }
+
     public void setProgress(double progress) {
         this.progress = progress;
     }

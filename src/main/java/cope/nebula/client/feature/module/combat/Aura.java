@@ -7,6 +7,8 @@ import cope.nebula.client.feature.module.ModuleCategory;
 import cope.nebula.client.value.Value;
 import cope.nebula.util.internal.timing.Stopwatch;
 import cope.nebula.util.internal.timing.TimeFormat;
+import cope.nebula.util.renderer.animation.Animation;
+import cope.nebula.util.renderer.animation.AnimationDirection;
 import cope.nebula.util.world.entity.EntityUtil;
 import cope.nebula.util.world.entity.player.inventory.InventorySpace;
 import cope.nebula.util.world.entity.player.inventory.InventoryUtil;
@@ -15,6 +17,7 @@ import cope.nebula.util.world.entity.player.rotation.AngleUtil;
 import cope.nebula.util.world.entity.player.rotation.Bone;
 import cope.nebula.util.world.entity.player.rotation.Rotation;
 import cope.nebula.util.world.entity.player.rotation.RotationType;
+import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.item.ItemSword;
 import net.minecraft.network.play.client.CPacketAnimation;
@@ -22,8 +25,11 @@ import net.minecraft.network.play.client.CPacketUseEntity;
 import net.minecraft.util.EnumHand;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
+import java.awt.*;
 import java.util.Comparator;
 import java.util.List;
+
+import static org.lwjgl.opengl.GL11.*;
 
 public class Aura extends Module {
     public Aura() {
@@ -46,6 +52,7 @@ public class Aura extends Module {
 
     private EntityLivingBase target = null;
     private final Stopwatch stopwatch = new Stopwatch();
+    private final Animation animation = new Animation(0L, 25L);
 
     private int oldSlot = -1;
 
@@ -53,6 +60,49 @@ public class Aura extends Module {
     protected void onDeactivated() {
         target = null;
         swapBack();
+    }
+
+    @Override
+    public void onRender3d() {
+        if (target != null) {
+            animation.setMax(target.height);
+            animation.tick(animation.getProgress() <= animation.getMax() ? AnimationDirection.FORWARD : AnimationDirection.BACK);
+
+            glPushMatrix();
+            glDisable(GL_TEXTURE_2D);
+
+            RenderManager renderManager = mc.getRenderManager();
+            glTranslated(-renderManager.viewerPosX, -renderManager.viewerPosY, -renderManager.viewerPosZ);
+
+            glEnable(GL_LINE_SMOOTH);
+            glHint(GL_LINE_SMOOTH_HINT, GL_NICEST);
+            glLineWidth(2.5f);
+
+            int color = new Color(122, 49, 183).getRGB();
+
+            float red = (color >> 16 & 0xff) / 255f;
+            float green = (color >> 8 & 0xff) / 255f;
+            float blue = (color & 0xff) / 255f;
+
+            glColor3d(red, green, blue);
+
+            double x = AngleUtil.interpolate(target.posX, target.prevPosX);
+            double y = AngleUtil.interpolate(target.posY, target.prevPosY);
+            double z = AngleUtil.interpolate(target.posZ, target.prevPosZ);
+
+            glBegin(GL_LINE_LOOP);
+
+                for (double angle = 0.0; angle < 2.0 * Math.PI; angle += 0.1) {
+                    glVertex3d(x + Math.sin(angle) * 0.8, y + animation.getProgress(), z + Math.cos(angle) * 0.8);
+                }
+
+            glEnd();
+
+            glEnable(GL_TEXTURE_2D);
+            glDisable(GL_LINE_SMOOTH);
+            glLineWidth(1.0f);
+            glPopMatrix();
+        }
     }
 
     @SubscribeEvent
