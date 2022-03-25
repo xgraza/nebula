@@ -26,6 +26,7 @@
         "network.packet.s2c.ISPacketExplosion",
         "network.MixinNetworkManager",
 
+        "render.entity.IEntityRenderer",
         "render.entity.MixinEntityRenderer",
         "render.entity.MixinRenderPlayer",
         "render.entity.MixinRenderXPOrb",
