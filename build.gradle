@@ -27,14 +27,18 @@ group = 'cope.nebula'
 archivesBaseName = 'Nebula'
 
 def getGitHash = { ->
-    def stdout = new ByteArrayOutputStream()
+    try {
+        def stdout = new ByteArrayOutputStream()
 
-    exec {
-        commandLine 'git', 'rev-parse', '--short', 'HEAD'
-        standardOutput = stdout
+        exec {
+            commandLine 'git', 'rev-parse', '--short', 'HEAD'
+            standardOutput = stdout
+        }
+
+        return stdout.toString().trim()
+    } catch (ignored) {
+        return "no-git"
     }
-
-    return stdout.toString().trim()
 }
 
 buildConfig {
