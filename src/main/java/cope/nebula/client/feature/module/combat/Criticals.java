@@ -1,6 +1,5 @@
 package cope.nebula.client.feature.module.combat;
 
-import cope.nebula.client.events.MotionEvent;
 import cope.nebula.client.events.PacketEvent;
 import cope.nebula.client.events.PacketEvent.Direction;
 import cope.nebula.client.feature.module.Module;
@@ -8,7 +7,6 @@ import cope.nebula.client.feature.module.ModuleCategory;
 import cope.nebula.client.value.Value;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.network.play.client.CPacketPlayer;
 import net.minecraft.network.play.client.CPacketPlayer.Position;
 import net.minecraft.network.play.client.CPacketUseEntity;
 import net.minecraft.network.play.client.CPacketUseEntity.Action;
@@ -19,7 +17,7 @@ public class Criticals extends Module {
         super("Criticals", ModuleCategory.COMBAT, "Makes you do critical hits");
     }
 
-    public static final Value<Mode> mode = new Value<>("Mode", Mode.STRICT);
+    public static final Value<Mode> mode = new Value<>("Mode", Mode.PACKET);
     public static final Value<Boolean> particles = new Value<>("Particles", false);
 
     @SubscribeEvent
@@ -28,15 +26,15 @@ public class Criticals extends Module {
             CPacketUseEntity packet = event.getPacket();
             if (packet.getAction().equals(Action.ATTACK) && mc.player.onGround) {
                 Entity entity = packet.getEntityFromWorld(mc.world);
-                if (entity == null || !(entity instanceof EntityLivingBase) || entity.equals(mc.player)) {
+                if (!(entity instanceof EntityLivingBase) || entity.equals(mc.player)) {
                     return;
                 }
 
                 double minY = mc.player.getEntityBoundingBox().minY;
 
                 switch (mode.getValue()) {
-                    case BASIC:
-                        mc.player.connection.sendPacket(new Position(mc.player.posX, minY + 0.2, mc.player.posZ, false));
+                    case PACKET:
+                        mc.player.connection.sendPacket(new Position(mc.player.posX, minY + 0.0625, mc.player.posZ, false));
                         mc.player.connection.sendPacket(new Position(mc.player.posX, minY, mc.player.posZ, false));
                         break;
 
@@ -57,6 +55,6 @@ public class Criticals extends Module {
     }
 
     public enum Mode {
-        BASIC, STRICT
+        PACKET, STRICT
     }
 }
