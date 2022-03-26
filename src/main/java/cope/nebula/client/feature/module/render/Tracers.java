@@ -12,6 +12,8 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.math.Vec3d;
 
+import static net.minecraft.client.renderer.GlStateManager.disableDepth;
+import static net.minecraft.client.renderer.GlStateManager.enableDepth;
 import static org.lwjgl.opengl.GL11.*;
 
 public class Tracers extends Module {
@@ -52,6 +54,7 @@ public class Tracers extends Module {
 
             glPushMatrix();
             glDisable(GL_TEXTURE_2D);
+            disableDepth();
 
             glEnable(GL_LINE_SMOOTH);
             glHint(GL_LINE_SMOOTH_HINT, GL_NICEST);
@@ -83,6 +86,7 @@ public class Tracers extends Module {
 
             glEnd();
 
+            enableDepth();
             glEnable(GL_TEXTURE_2D);
             glDisable(GL_LINE_SMOOTH);
             glPopMatrix();
