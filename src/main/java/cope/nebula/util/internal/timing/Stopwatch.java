@@ -98,9 +98,11 @@ public class Stopwatch {
 
     /**
      * Resets the time to the current time
+     * @return this instance
      */
-    public void resetTime() {
+    public Stopwatch resetTime() {
         lastTime = System.nanoTime();
+        return this;
     }
 
     /**
