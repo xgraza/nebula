@@ -33,6 +33,7 @@ public class HUD extends Module {
     public static final Value<Boolean> netherCoordinates = new Value<>(coordinates, "Nether", true);
 
     public static final Value<Boolean> info = new Value<>("Info", true);
+    public static final Value<Boolean> ping = new Value<>(info, "Ping", true);
     public static final Value<Boolean> tps = new Value<>(info, "TPS", true);
     public static final Value<Boolean> fps = new Value<>(info, "FPS", true);
     public static final Value<Boolean> speed = new Value<>(info, "Speed", true);

@@ -24,6 +24,13 @@ public class Info implements IHUDComponent {
             posY -= (FontUtil.getHeight() + 2.0f);
         }
 
+        if (HUD.ping.getValue()) {
+            String text = ChatFormatting.GRAY + "Ping: " + ChatFormatting.RESET + getNebula().getServerManager().getLatency(mc.player.getUniqueID()) + "ms";
+            FontUtil.drawString(text, resolution.getScaledWidth() - FontUtil.getWidth(text) - 2.0f, posY, -1);
+
+            posY -= (FontUtil.getHeight() + 2.0f);
+        }
+
         if (HUD.fps.getValue()) {
             String text = ChatFormatting.GRAY + "FPS " + ChatFormatting.RESET + Minecraft.getDebugFPS();
             FontUtil.drawString(text, resolution.getScaledWidth() - FontUtil.getWidth(text) - 2.0f, posY, -1);

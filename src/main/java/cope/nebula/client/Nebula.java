@@ -36,6 +36,7 @@ public class Nebula {
     private RotationManager rotationManager;
     private InteractionManager interactionManager;
     private HotbarManager hotbarManager;
+    private ServerManager serverManager;
 
     @EventHandler
     public void init(FMLInitializationEvent event) {
@@ -56,6 +57,7 @@ public class Nebula {
         rotationManager = new RotationManager();
         interactionManager = new InteractionManager();
         hotbarManager = new HotbarManager();
+        serverManager = new ServerManager();
 
         // Goddamn, Roxanne... Never gonna love me but it's alright
         LOGGER.info("Completed setup of {} in {}ms", NAME, stopwatch.getTime(TimeFormat.MILLISECONDS));
@@ -97,5 +99,9 @@ public class Nebula {
 
     public HotbarManager getHotbarManager() {
         return hotbarManager;
+    }
+
+    public ServerManager getServerManager() {
+        return serverManager;
     }
 }
