@@ -4,10 +4,7 @@ import com.google.common.collect.Lists;
 import cope.nebula.client.feature.module.Module;
 import cope.nebula.client.feature.module.ModuleCategory;
 import cope.nebula.client.feature.module.render.hud.IHUDComponent;
-import cope.nebula.client.feature.module.render.hud.impl.Arraylist;
-import cope.nebula.client.feature.module.render.hud.impl.Coordinates;
-import cope.nebula.client.feature.module.render.hud.impl.Info;
-import cope.nebula.client.feature.module.render.hud.impl.Watermark;
+import cope.nebula.client.feature.module.render.hud.impl.*;
 import cope.nebula.client.value.Value;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.GlStateManager;
@@ -19,6 +16,7 @@ public class HUD extends Module {
             new Arraylist(),
             new Coordinates(),
             new Info(),
+            new NotResponding(),
             new Watermark()
     );
 

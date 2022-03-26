@@ -85,4 +85,20 @@ public class ServerManager implements Globals {
 
         return MathHelper.clamp(totalTickRate / count, 0.0f, 20.0f);
     }
+
+    /**
+     * Checks if the server is responding
+     * @return if the last tick time is greater than 1000 ms (1 second)
+     */
+    public boolean isResponding() {
+        return System.currentTimeMillis() - lastTick < 1500L;
+    }
+
+    /**
+     * Gets the last tick time
+     * @return the last tick time
+     */
+    public long getLastTick() {
+        return lastTick;
+    }
 }
