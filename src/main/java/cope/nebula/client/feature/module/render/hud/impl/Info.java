@@ -18,7 +18,7 @@ public class Info implements IHUDComponent {
         }
 
         if (HUD.speed.getValue()) {
-            String text = ChatFormatting.GRAY + "Speed: " + ChatFormatting.RESET + getSpeedInKmh() + " km/h";
+            String text = ChatFormatting.GRAY + "Speed: " + ChatFormatting.RESET + getSpeedInKmh() + "km/h";
             FontUtil.drawString(text, resolution.getScaledWidth() - FontUtil.getWidth(text) - 2.0f, posY, -1);
 
             posY -= (FontUtil.getHeight() + 2.0f);
@@ -26,6 +26,15 @@ public class Info implements IHUDComponent {
 
         if (HUD.ping.getValue()) {
             String text = ChatFormatting.GRAY + "Ping: " + ChatFormatting.RESET + getNebula().getServerManager().getLatency(mc.player.getUniqueID()) + "ms";
+            FontUtil.drawString(text, resolution.getScaledWidth() - FontUtil.getWidth(text) - 2.0f, posY, -1);
+
+            posY -= (FontUtil.getHeight() + 2.0f);
+        }
+
+        if (HUD.tps.getValue()) {
+            float tps = getNebula().getServerManager().getTps();
+            String text = ChatFormatting.GRAY + "TPS: " + ChatFormatting.RESET + Math.round(tps * 10.0f) / 10.0f;
+
             FontUtil.drawString(text, resolution.getScaledWidth() - FontUtil.getWidth(text) - 2.0f, posY, -1);
 
             posY -= (FontUtil.getHeight() + 2.0f);
