@@ -4,6 +4,7 @@ import com.google.common.collect.Lists;
 import cope.nebula.client.feature.module.Module;
 import cope.nebula.client.feature.module.ModuleCategory;
 import cope.nebula.client.feature.module.render.hud.IHUDComponent;
+import cope.nebula.client.feature.module.render.hud.impl.Arraylist;
 import cope.nebula.client.feature.module.render.hud.impl.Coordinates;
 import cope.nebula.client.feature.module.render.hud.impl.Info;
 import cope.nebula.client.feature.module.render.hud.impl.Watermark;
@@ -15,6 +16,7 @@ import java.util.ArrayList;
 
 public class HUD extends Module {
     private final ArrayList<IHUDComponent> components = Lists.newArrayList(
+            new Arraylist(),
             new Coordinates(),
             new Info(),
             new Watermark()
@@ -23,6 +25,8 @@ public class HUD extends Module {
     public HUD() {
         super("HUD", ModuleCategory.RENDER, "Renders an overlay on the clients HUD");
     }
+
+    public static final Value<Boolean> arraylist = new Value<>("Arraylist", true);
 
     public static final Value<Boolean> coordinates = new Value<>("Coordinates", true);
     public static final Value<Boolean> direction = new Value<>(coordinates, "Direction", false);
