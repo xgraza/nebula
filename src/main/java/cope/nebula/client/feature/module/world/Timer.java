@@ -12,6 +12,7 @@ public class Timer extends Module {
     }
 
     public static final Value<Float> speed = new Value<>("Speed", 1.5f, 0.1f, 20.0f);
+    public static final Value<Boolean> tickSync = new Value<>("TickSync", false);
 
     @Override
     protected void onDeactivated() {
@@ -22,7 +23,11 @@ public class Timer extends Module {
 
     @Override
     public void onTick() {
-        setTimerSpeed(speed.getValue());
+        if (tickSync.getValue()) {
+            setTimerSpeed(getNebula().getServerManager().getTps() / 20.0f);
+        } else {
+            setTimerSpeed(speed.getValue());
+        }
     }
 
     /**
@@ -30,6 +35,10 @@ public class Timer extends Module {
      * @param speed the speed the game should run at
      */
     public static void setTimerSpeed(float speed) {
+        if (speed <= 0.0f) {
+            speed = 0.1f;
+        }
+
         ((ITimer) ((IMinecraft) mc).getTimer()).setTickLength(50.0f / speed);
     }
 }
