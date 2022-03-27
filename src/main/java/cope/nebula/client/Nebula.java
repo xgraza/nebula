@@ -3,6 +3,7 @@ package cope.nebula.client;
 import cope.nebula.client.manager.*;
 import cope.nebula.client.manager.hole.HoleManager;
 import cope.nebula.client.manager.macro.MacroManager;
+import cope.nebula.client.manager.relation.RelationshipManager;
 import cope.nebula.util.internal.timing.Stopwatch;
 import cope.nebula.util.internal.timing.TimeFormat;
 import cope.nebula.util.renderer.FontUtil;
@@ -31,6 +32,7 @@ public class Nebula {
     private ModuleManager moduleManager;
     private CommandManager commandManager;
     private MacroManager macroManager;
+    private RelationshipManager relationshipManager;
     private HoleManager holeManager;
 
     private RotationManager rotationManager;
@@ -52,6 +54,7 @@ public class Nebula {
         moduleManager = new ModuleManager();
         commandManager = new CommandManager();
         macroManager = new MacroManager();
+        relationshipManager = new RelationshipManager();
         holeManager = new HoleManager();
 
         rotationManager = new RotationManager();
@@ -87,6 +90,10 @@ public class Nebula {
 
     public HoleManager getHoleManager() {
         return holeManager;
+    }
+
+    public RelationshipManager getRelationshipManager() {
+        return relationshipManager;
     }
 
     public RotationManager getRotationManager() {

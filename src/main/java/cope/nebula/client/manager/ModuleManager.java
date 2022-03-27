@@ -8,6 +8,7 @@ import cope.nebula.client.feature.module.exploit.*;
 import cope.nebula.client.feature.module.movement.*;
 import cope.nebula.client.feature.module.other.AutoRespawn;
 import cope.nebula.client.feature.module.other.HotbarRefill;
+import cope.nebula.client.feature.module.other.MiddleClick;
 import cope.nebula.client.feature.module.render.*;
 import cope.nebula.client.feature.module.world.*;
 import cope.nebula.util.Globals;
@@ -62,6 +63,7 @@ public class ModuleManager implements Globals {
             // Other
             new AutoRespawn(),
             new HotbarRefill(),
+            new MiddleClick(),
 
             // Render
             new AntiRender(),
