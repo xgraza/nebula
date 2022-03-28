@@ -125,6 +125,10 @@ public class CrystalUtil implements Globals {
      * @param swing If to swing your hand
      */
     public static void attack(EntityEnderCrystal crystal, EnumHand hand, boolean swing) {
+        if (crystal == null) {
+            return;
+        }
+
         mc.player.connection.sendPacket(new CPacketUseEntity(crystal));
         if (swing) {
             mc.player.swingArm(hand);
