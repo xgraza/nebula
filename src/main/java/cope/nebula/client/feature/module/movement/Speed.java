@@ -36,7 +36,6 @@ public class Speed extends Module {
     private float explosionStrength = 0.0f;
     private int damageBoostTicks = -1;
 
-    private boolean up = false;
     private boolean lagback = false;
 
     @Override
@@ -46,7 +45,6 @@ public class Speed extends Module {
         distance = 0.0;
         damageBoostTicks = -1;
 
-        up = false;
         lagback = false;
     }
 
@@ -59,12 +57,10 @@ public class Speed extends Module {
             }
 
             if (MotionUtil.isMoving()) {
-                up = mc.player.onGround;
-                if (up) {
-                    mc.player.motionY = -1.0;
+                if (mc.player.onGround) {
+                    mc.player.jump();
                 } else {
-                    mc.player.motionY = getJumpHeight(true);
-                    up = false;
+                    mc.player.motionY = -1.0;
                 }
             }
         }
@@ -165,11 +161,6 @@ public class Speed extends Module {
             moveSpeed = MathHelper.clamp(moveSpeed, getBaseNCPSpeed(), maxMoveSpeed);
 
             Vec2d motion = MotionUtil.strafe(moveSpeed);
-
-            event.setX(mc.player.motionX = motion.getX());
-            event.setZ(mc.player.motionZ = motion.getZ());
-        } else if (mode.getValue().equals(Mode.YPORT)) {
-            Vec2d motion = MotionUtil.strafe(getBaseNCPSpeed());
 
             event.setX(mc.player.motionX = motion.getX());
             event.setZ(mc.player.motionZ = motion.getZ());
