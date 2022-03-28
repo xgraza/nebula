@@ -249,6 +249,23 @@ public class AutoCrystal extends Module {
         hand = slot == InventoryUtil.OFFHAND_SLOT ? EnumHand.OFF_HAND : EnumHand.MAIN_HAND;
 
         calculateBestPlace();
+        calculateBestAttackCrystal();
+
+        if (explode.getValue()) {
+            if (attackCrystal != null && explodeStopwatch.getTime(TimeFormat.MILLISECONDS) / 50.0f >= 20.0f - explodeSpeed.getValue()) {
+                explodeStopwatch.resetTime();
+
+                if (!rotate.getValue().equals(Rotate.NONE)) {
+                    Rotation rotation = AngleUtil.toEntity(attackCrystal, Bone.CHEST);
+                    if (rotation.isValid()) {
+                        getNebula().getRotationManager().setRotation(rotation);
+                    }
+                }
+
+                CrystalUtil.attack(attackCrystal, hand, swing.getValue());
+            }
+        }
+
         if (place.getValue()) {
             if (lastPlacePos != null) {
                 if (!swap.getValue().equals(Swap.NONE) &&
@@ -272,22 +289,6 @@ public class AutoCrystal extends Module {
                         swapBack();
                     }
                 }
-            }
-        }
-
-        calculateBestAttackCrystal();
-        if (explode.getValue()) {
-            if (attackCrystal != null && explodeStopwatch.getTime(TimeFormat.MILLISECONDS) / 50.0f >= 20.0f - explodeSpeed.getValue()) {
-                explodeStopwatch.resetTime();
-
-                if (!rotate.getValue().equals(Rotate.NONE)) {
-                    Rotation rotation = AngleUtil.toEntity(attackCrystal, Bone.CHEST);
-                    if (rotation.isValid()) {
-                        getNebula().getRotationManager().setRotation(rotation);
-                    }
-                }
-
-                CrystalUtil.attack(attackCrystal, hand, swing.getValue());
             }
         }
     }
