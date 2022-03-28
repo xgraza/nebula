@@ -33,12 +33,6 @@ public class PacketLogger extends Module {
             return;
         }
 
-        if (event.getPacket() instanceof CPacketPlayerTryUseItemOnBlock) {
-            CPacketPlayerTryUseItemOnBlock packet = event.getPacket();
-
-            System.out.println("FacingX: " +packet.getFacingX() + ", FacingY: " + packet.getFacingY() + ", FacingZ: " + packet.getFacingZ());
-        }
-
         sendDeconstructedPacket(event.getPacket());
     }
 
