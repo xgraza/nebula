@@ -189,4 +189,12 @@ public class BlockUtil implements Globals {
 
         return false;
     }
+
+    /**
+     * Checks if the local player is inside a block
+     * @return if we're inside a block
+     */
+    public static boolean isInBlock() {
+        return !mc.world.getCollisionBoxes(mc.player, mc.player.getEntityBoundingBox().expand(-0.0625, -0.0625, -0.0625)).isEmpty();
+    }
 }
