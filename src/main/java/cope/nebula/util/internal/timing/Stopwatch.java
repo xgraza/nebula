@@ -64,7 +64,7 @@ public class Stopwatch {
      */
     public boolean passedSeconds(long seconds) {
         // We can convert seconds into milliseconds by dividing seconds by 1 second in milliseconds.
-        return passedMs(seconds / 1000L);
+        return passedMs(seconds * 1000L);
     }
 
     /**

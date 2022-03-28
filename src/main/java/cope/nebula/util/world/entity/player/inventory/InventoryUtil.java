@@ -1,6 +1,7 @@
 package cope.nebula.util.world.entity.player.inventory;
 
 import cope.nebula.util.Globals;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.play.client.CPacketEntityAction;
@@ -32,6 +33,10 @@ public class InventoryUtil implements Globals {
             return -1;
         }
 
+        if (filter.test(getHeld(EnumHand.OFF_HAND))) {
+            return OFFHAND_SLOT;
+        }
+
         while (i < inventorySpace.getEnd()) {
             ItemStack stack = mc.player.inventory.getStackInSlot(i);
             if (filter.test(stack)) {
@@ -39,10 +44,6 @@ public class InventoryUtil implements Globals {
             }
 
             ++i;
-        }
-
-        if (filter.test(getHeld(EnumHand.OFF_HAND))) {
-            return OFFHAND_SLOT;
         }
 
         return -1;
@@ -55,6 +56,16 @@ public class InventoryUtil implements Globals {
      */
     public static ItemStack getHeld(EnumHand hand) {
         return mc.player.getHeldItem(hand);
+    }
+
+    /**
+     * Checks if you are holding an item
+     * @param item the item
+     * @return if we are holding it
+     */
+    public static boolean isHolding(Item item) {
+        return getHeld(EnumHand.MAIN_HAND).getItem().equals(item) ||
+                getHeld(EnumHand.OFF_HAND).getItem().equals(item);
     }
 
     /**

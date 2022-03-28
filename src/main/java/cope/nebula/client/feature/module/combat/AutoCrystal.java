@@ -1,5 +1,6 @@
 package cope.nebula.client.feature.module.combat;
 
+import cope.nebula.client.events.EntityRemoveEvent;
 import cope.nebula.client.events.PacketEvent;
 import cope.nebula.client.feature.command.Command;
 import cope.nebula.client.feature.module.Module;
@@ -93,6 +94,27 @@ public class AutoCrystal extends Module {
     private final Set<EntityEnderCrystal> attackedCrystals = new HashSet<>();
     private Rotation lastRotation = Rotation.INVALID_ROTATION;
 
+    private final Stopwatch crystals = new Stopwatch();
+    private int crystalsPerSec = 0;
+    private int lastCrystalsPerSec = 0;
+
+    @Override
+    public String getDisplayInfo() {
+        if (crystals.passedSeconds(1L)) {
+            crystals.resetTime();
+
+            lastCrystalsPerSec = crystalsPerSec;
+            crystalsPerSec = 0;
+        }
+
+        return String.valueOf(lastCrystalsPerSec == 0 ? crystalsPerSec : lastCrystalsPerSec);
+    }
+
+    @Override
+    protected void onActivated() {
+        crystals.resetTime();
+    }
+
     @Override
     protected void onDeactivated() {
         target = null;
@@ -105,6 +127,9 @@ public class AutoCrystal extends Module {
         }
 
         lastRotation = Rotation.INVALID_ROTATION;
+
+        lastCrystalsPerSec = 0;
+        crystalsPerSec = 0;
     }
 
     @Override
@@ -136,7 +161,7 @@ public class AutoCrystal extends Module {
                         crystal.setDead();
                         mc.world.removeEntity(crystal);
 
-                        if (attackCrystal != null && attackCrystal.equals(crystal)) {
+                        if (attackCrystal != null && attackCrystal.getEntityId() == entityId) {
                             attackCrystal = null;
                         }
 
@@ -158,6 +183,7 @@ public class AutoCrystal extends Module {
 
                                 if (attackCrystal != null && attackCrystal.equals(crystal)) {
                                     attackCrystal = null;
+                                    ++crystalsPerSec;
                                 }
 
                                 attackedCrystals.remove(crystal);
@@ -207,7 +233,8 @@ public class AutoCrystal extends Module {
     @Override
     public void onTick() {
         // find out hand shit
-        int slot = InventoryUtil.getSlot(InventorySpace.HOTBAR, (stack) -> !stack.isEmpty() && stack.getItem().equals(Items.END_CRYSTAL));
+        int slot = InventoryUtil.getSlot(InventorySpace.HOTBAR,
+                (stack) -> !stack.isEmpty() && stack.getItem().equals(Items.END_CRYSTAL));
         if (slot == -1) {
             return;
         }
@@ -215,18 +242,14 @@ public class AutoCrystal extends Module {
         hand = slot == InventoryUtil.OFFHAND_SLOT ? EnumHand.OFF_HAND : EnumHand.MAIN_HAND;
 
         calculateBestPlace();
-
         if (place.getValue()) {
             if (lastPlacePos != null) {
-                if (!swap.getValue().equals(Swap.NONE)) {
-                    if (swap.getValue().equals(Swap.ALT_SERVER)) {
-                        // TODO
-                    } else {
-                        if (slot != InventoryUtil.OFFHAND_SLOT) {
-                            oldSlot = mc.player.inventory.currentItem;
-                            getNebula().getHotbarManager().sendSlotChange(slot, swap.getValue().swapType);
-                        }
-                    }
+                if (!swap.getValue().equals(Swap.NONE) &&
+                        !InventoryUtil.isHolding(Items.END_CRYSTAL) &&
+                        slot != InventoryUtil.OFFHAND_SLOT) {
+
+                    oldSlot = mc.player.inventory.currentItem;
+                    getNebula().getHotbarManager().sendSlotChange(slot, swap.getValue().swapType);
                 }
 
                 if (placeStopwatch.getTime(TimeFormat.MILLISECONDS) / 50.0f >= 20.0f - placeSpeed.getValue()) {
@@ -252,7 +275,7 @@ public class AutoCrystal extends Module {
                 explodeStopwatch.resetTime();
 
                 if (!rotate.getValue().equals(Rotate.NONE)) {
-                    Rotation rotation = AngleUtil.toEntity(attackCrystal, Bone.HEAD);
+                    Rotation rotation = AngleUtil.toEntity(attackCrystal, Bone.CHEST);
                     if (rotation.isValid()) {
                         getNebula().getRotationManager().setRotation(rotation);
                     }
@@ -364,7 +387,9 @@ public class AutoCrystal extends Module {
 //            }
         }
 
-        attackCrystal = crystal;
+        if (crystal != null) {
+            attackCrystal = crystal;
+        }
     }
 
     private void swapBack() {
@@ -391,8 +416,7 @@ public class AutoCrystal extends Module {
     public enum Swap {
         NONE(null),
         CLIENT(SwapType.CLIENT),
-        SERVER(SwapType.SERVER),
-        ALT_SERVER(SwapType.SERVER);
+        SERVER(SwapType.SERVER);
 
         private final SwapType swapType;
 

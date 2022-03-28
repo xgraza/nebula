@@ -38,7 +38,8 @@
         "render.MixinLayerArmorBase",
         "render.MixinParticleManager",
 
-        "world.block.MixinStateImplementation"
+        "world.block.MixinStateImplementation",
+        "world.MixinWorldClient"
     ],
     "injectors": {
         "maxShiftBy": 10
