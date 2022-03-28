@@ -29,6 +29,11 @@ public class Velocity extends Module {
     public static final Value<Boolean> liquids = new Value<>("Liquids", true);
     public static final Value<Boolean> fishingHooks = new Value<>("FishingHooks", true);
 
+    @Override
+    public String getDisplayInfo() {
+        return "V:" + vertical.getValue() + "%, H:" + horizontal.getValue() + "%";
+    }
+
     @SubscribeEvent
     public void onPacket(PacketEvent event) {
         if (event.getDirection().equals(Direction.INCOMING)) {

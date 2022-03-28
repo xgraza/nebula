@@ -8,6 +8,7 @@ import cope.nebula.client.events.PacketEvent.Direction;
 import cope.nebula.client.feature.module.Module;
 import cope.nebula.client.feature.module.ModuleCategory;
 import cope.nebula.client.value.Value;
+import cope.nebula.util.renderer.FontUtil;
 import net.minecraft.block.BlockLiquid;
 import net.minecraft.init.Blocks;
 import net.minecraft.network.play.client.CPacketPlayer;
@@ -34,6 +35,11 @@ public class Jesus extends Module {
     private int materialAccelSpeed = 0;
 
     private int ticksInWater = 0;
+
+    @Override
+    public String getDisplayInfo() {
+        return FontUtil.formatText(mode.getValue().name());
+    }
 
     @Override
     public void onTick() {

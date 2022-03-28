@@ -6,6 +6,7 @@ import cope.nebula.client.events.PacketEvent.Direction;
 import cope.nebula.client.feature.module.Module;
 import cope.nebula.client.feature.module.ModuleCategory;
 import cope.nebula.client.value.Value;
+import cope.nebula.util.renderer.FontUtil;
 import net.minecraft.network.play.client.CPacketPlayer;
 import net.minecraft.network.play.client.CPacketPlayer.Position;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
@@ -17,6 +18,11 @@ public class NoFall extends Module {
 
     public static final Value<Mode> mode = new Value<>("Mode", Mode.BASIC);
     public static final Value<Float> fallDistance = new Value<>("FallDistance", 3.0f, 3.0f, 20.0f);
+
+    @Override
+    public String getDisplayInfo() {
+        return FontUtil.formatText(mode.getValue().name());
+    }
 
     @SubscribeEvent
     public void onPacket(PacketEvent event) {

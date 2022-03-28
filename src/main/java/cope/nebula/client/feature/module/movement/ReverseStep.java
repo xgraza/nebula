@@ -3,6 +3,7 @@ package cope.nebula.client.feature.module.movement;
 import cope.nebula.client.feature.module.Module;
 import cope.nebula.client.feature.module.ModuleCategory;
 import cope.nebula.client.value.Value;
+import cope.nebula.util.renderer.FontUtil;
 
 public class ReverseStep extends Module {
     public ReverseStep() {
@@ -12,6 +13,11 @@ public class ReverseStep extends Module {
     public static final Value<Mode> mode = new Value<>("Mode", Mode.MOTION);
     public static final Value<Double> height = new Value<>("Height", 2.0, 1.0, 5.0);
     public static final Value<Double> speed = new Value<>("Speed", 1.0, 0.5, 3.0);
+
+    @Override
+    public String getDisplayInfo() {
+        return FontUtil.formatText(mode.getValue().name());
+    }
 
     @Override
     public void onTick() {

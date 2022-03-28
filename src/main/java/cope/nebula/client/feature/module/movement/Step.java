@@ -3,6 +3,7 @@ package cope.nebula.client.feature.module.movement;
 import cope.nebula.client.feature.module.Module;
 import cope.nebula.client.feature.module.ModuleCategory;
 import cope.nebula.client.value.Value;
+import cope.nebula.util.renderer.FontUtil;
 
 public class Step extends Module {
     public Step() {
@@ -11,6 +12,11 @@ public class Step extends Module {
 
     public static final Value<Mode> mode = new Value<>("Mode", Mode.NCP);
     public static final Value<Float> height = new Value<>("Height", 2.0f, 1.0f, 1.0f);
+
+    @Override
+    public String getDisplayInfo() {
+        return FontUtil.formatText(mode.getValue().name());
+    }
 
     @Override
     protected void onDeactivated() {

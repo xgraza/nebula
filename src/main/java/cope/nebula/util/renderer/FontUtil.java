@@ -9,6 +9,8 @@ import net.minecraft.client.gui.FontRenderer;
 import java.awt.*;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Arrays;
+import java.util.stream.Collectors;
 
 /**
  * A simple utility for font rendering
@@ -107,5 +109,18 @@ public class FontUtil implements Globals {
         }
 
         return mc.fontRenderer;
+    }
+
+    /**
+     * Formats the text into a human-readable form
+     * @param str the string
+     * @return human-readable text
+     */
+    public static String formatText(String str) {
+        return Arrays.stream(str.replaceAll("_", " ").split(" "))
+                .map((text) ->
+                        Character.toString(text.charAt(0)).toUpperCase() +
+                                text.substring(1).toLowerCase())
+                .collect(Collectors.joining(" "));
     }
 }

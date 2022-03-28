@@ -9,6 +9,7 @@ import cope.nebula.client.feature.module.Module;
 import cope.nebula.client.feature.module.ModuleCategory;
 import cope.nebula.client.value.Value;
 import cope.nebula.util.internal.math.Vec2d;
+import cope.nebula.util.renderer.FontUtil;
 import cope.nebula.util.world.entity.player.MotionUtil;
 import net.minecraft.init.MobEffects;
 import net.minecraft.network.play.server.SPacketEntityVelocity;
@@ -37,6 +38,11 @@ public class Speed extends Module {
     private int damageBoostTicks = -1;
 
     private boolean lagback = false;
+
+    @Override
+    public String getDisplayInfo() {
+        return FontUtil.formatText(mode.getValue().name());
+    }
 
     @Override
     protected void onDeactivated() {
@@ -101,7 +107,7 @@ public class Speed extends Module {
 
     @SubscribeEvent
     public void onMotion(MotionEvent event) {
-        if (mode.getValue().equals(Mode.STRAFE) || mode.getValue().equals(Mode.STRICTSTRAFE)) {
+        if (mode.getValue().equals(Mode.STRAFE) || mode.getValue().equals(Mode.STRICT_STRAFE)) {
             if (MotionUtil.isMoving()) {
                 if (mc.player.onGround) {
                     strafeStage = 2;
@@ -130,7 +136,7 @@ public class Speed extends Module {
                 strafeStage = 2;
             } else if (strafeStage == 2) {
                 if (MotionUtil.isMoving() && mc.player.onGround) {
-                    event.setY(mc.player.motionY = getJumpHeight(mode.getValue().equals(Mode.STRICTSTRAFE)));
+                    event.setY(mc.player.motionY = getJumpHeight(mode.getValue().equals(Mode.STRICT_STRAFE)));
                     moveSpeed *= 2.149;
                 }
 
@@ -152,7 +158,7 @@ public class Speed extends Module {
 
             // i input random numbers until they work
             double maxMoveSpeed = 0.0;
-            if (mode.getValue().equals(Mode.STRICTSTRAFE)) {
+            if (mode.getValue().equals(Mode.STRICT_STRAFE)) {
                 maxMoveSpeed = 0.4672;
             } else {
                 maxMoveSpeed = 0.551;
@@ -201,6 +207,6 @@ public class Speed extends Module {
 
 
     public enum Mode {
-        STRAFE, STRICTSTRAFE, YPORT, ONGROUND
+        STRAFE, STRICT_STRAFE, YPORT, ONGROUND
     }
 }

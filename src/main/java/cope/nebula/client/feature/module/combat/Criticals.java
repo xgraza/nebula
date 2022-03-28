@@ -5,6 +5,7 @@ import cope.nebula.client.events.PacketEvent.Direction;
 import cope.nebula.client.feature.module.Module;
 import cope.nebula.client.feature.module.ModuleCategory;
 import cope.nebula.client.value.Value;
+import cope.nebula.util.renderer.FontUtil;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.network.play.client.CPacketPlayer.Position;
@@ -19,6 +20,11 @@ public class Criticals extends Module {
 
     public static final Value<Mode> mode = new Value<>("Mode", Mode.PACKET);
     public static final Value<Boolean> particles = new Value<>("Particles", false);
+
+    @Override
+    public String getDisplayInfo() {
+        return FontUtil.formatText(mode.getValue().name());
+    }
 
     @SubscribeEvent
     public void onPacket(PacketEvent event) {

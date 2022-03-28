@@ -40,6 +40,11 @@ public class AutoTotem extends Module {
     }
 
     @Override
+    public String getDisplayInfo() {
+        return String.valueOf(InventoryUtil.getTotalCount(Items.TOTEM_OF_UNDYING));
+    }
+
+    @Override
     public void onTick() {
         if (!taskHandler.execute(delay.getValue() * 50L, await.getValue())) {
             return;

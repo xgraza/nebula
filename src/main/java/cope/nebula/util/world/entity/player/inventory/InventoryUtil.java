@@ -110,6 +110,27 @@ public class InventoryUtil implements Globals {
     }
 
     /**
+     * Gets the total amount of this item in the entire inventory
+     * @param item the item
+     * @return the amount of this item
+     */
+    public static int getTotalCount(Item item) {
+        int count = 0;
+        if (getHeld(EnumHand.OFF_HAND).getItem().equals(item)) {
+            count = 1;
+        }
+
+        for (int i = 0; i < 36; ++i) {
+            ItemStack stack = mc.player.inventory.getStackInSlot(i);
+            if (!stack.isEmpty() && stack.getItem().equals(item)) {
+                count += stack.getCount();
+            }
+        }
+
+        return count;
+    }
+
+    /**
      * Converts a slot into a slot id for a CPacketClickWindow packet
      * @param slot the slot
      * @return the corrected slot id

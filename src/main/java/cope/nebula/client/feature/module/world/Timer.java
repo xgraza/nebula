@@ -15,6 +15,11 @@ public class Timer extends Module {
     public static final Value<Boolean> tickSync = new Value<>("TickSync", false);
 
     @Override
+    public String getDisplayInfo() {
+        return String.valueOf(speed.getValue());
+    }
+
+    @Override
     protected void onDeactivated() {
         if (!nullCheck()) {
             setTimerSpeed(1.0f);

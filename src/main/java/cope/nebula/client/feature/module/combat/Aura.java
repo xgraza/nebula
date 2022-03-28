@@ -63,6 +63,15 @@ public class Aura extends Module {
     }
 
     @Override
+    public String getDisplayInfo() {
+        if (target != null) {
+            return target.getName();
+        }
+
+        return super.getDisplayInfo();
+    }
+
+    @Override
     public void onRender3d() {
         if (target != null) {
             animation.setMax(target.height);
