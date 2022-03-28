@@ -118,10 +118,12 @@ public class Speed extends Module {
                     }
 
                     if (timer.getValue() && moveSpeed < getBaseNCPSpeed() && strafeStage != 2) {
-                        setTimerSpeed(1.02f);
+                        setTimerSpeed(1.15f);
 
-                        mc.player.motionX *= 1.3;
-                        mc.player.motionZ *= 1.3;
+                        mc.player.motionX *= 1.11;
+                        mc.player.motionZ *= 1.11;
+                    } else {
+                        setTimerSpeed(1.0f);
                     }
                 }
             }
