@@ -10,6 +10,7 @@ import cope.nebula.util.internal.timing.Stopwatch;
 import cope.nebula.util.internal.timing.TimeFormat;
 import cope.nebula.util.renderer.RenderUtil;
 import cope.nebula.util.world.BlockUtil;
+import cope.nebula.util.world.RaycastUtil;
 import cope.nebula.util.world.damage.ExplosionUtil;
 import cope.nebula.util.world.entity.CrystalUtil;
 import cope.nebula.util.world.entity.EntityUtil;
@@ -298,6 +299,10 @@ public class AutoCrystal extends Module {
                 continue;
             }
 
+            if (!RaycastUtil.isBlockVisible(loc) && !BlockUtil.isInRange(pos, placeRange.getValue())) {
+                continue;
+            }
+
             Vec3d vec = new Vec3d(loc.getX() + 0.5, loc.getY() + 1.0, loc.getZ() + 0.5);
 
             float localDamage = ExplosionUtil.calculateCrystalDamage(mc.player, vec, ignoreTerrain.getValue()) + 0.5f;
@@ -305,7 +310,7 @@ public class AutoCrystal extends Module {
                 continue;
             }
 
-            float entityDamage = 0.0f;
+            float entityDamage = 1.5f;
             if (target != null) {
                 entityDamage = ExplosionUtil.calculateCrystalDamage(target, vec, ignoreTerrain.getValue());
                 if (localDamage > entityDamage || entityDamage < minDamage.getValue()) {

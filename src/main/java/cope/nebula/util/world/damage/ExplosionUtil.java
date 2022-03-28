@@ -1,6 +1,7 @@
 package cope.nebula.util.world.damage;
 
 import cope.nebula.util.Globals;
+import cope.nebula.util.world.RaycastUtil;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.player.EntityPlayer;
@@ -47,7 +48,8 @@ public class ExplosionUtil implements Globals {
 //        }
 
         double size = player.getDistanceSq(vec.x, vec.y, vec.z) / powerSq;
-        double density = mc.world.getBlockDensity(vec, player.getEntityBoundingBox());
+        double density = RaycastUtil.getBlockDensity(ignoreTerrain, vec, player.getEntityBoundingBox());
+        // double density = mc.world.getBlockDensity(vec, player.getEntityBoundingBox());
 
         double impact = (1.0 - size) * density;
         float damage = (float) ((impact * impact + impact) / 2.0f * 7.0f * powerSq + 1.0);

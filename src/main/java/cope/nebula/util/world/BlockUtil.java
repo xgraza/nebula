@@ -9,6 +9,8 @@ import net.minecraft.init.Blocks;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.RayTraceResult;
+import net.minecraft.util.math.Vec3d;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -196,5 +198,16 @@ public class BlockUtil implements Globals {
      */
     public static boolean isInBlock() {
         return !mc.world.getCollisionBoxes(mc.player, mc.player.getEntityBoundingBox().expand(-0.0625, -0.0625, -0.0625)).isEmpty();
+    }
+
+    /**
+     * Checks if the block is in range
+     * @param pos The position
+     * @param range The range
+     * @return if we are in range of this block
+     */
+    public static boolean isInRange(BlockPos pos, double range) {
+        double dist = mc.player.getDistanceSq(pos);
+        return dist < range * range;
     }
 }
