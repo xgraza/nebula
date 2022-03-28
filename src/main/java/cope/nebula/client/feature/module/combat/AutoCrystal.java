@@ -131,6 +131,8 @@ public class AutoCrystal extends Module {
 
         lastCrystalsPerSec = 0;
         crystalsPerSec = 0;
+
+        attackedCrystals.clear();
     }
 
     @Override
@@ -166,7 +168,7 @@ public class AutoCrystal extends Module {
                             attackCrystal = null;
                         }
 
-                        attackedCrystals.remove(crystal);
+                        attackedCrystals.add(crystal);
                     }
                 } else if (event.getPacket() instanceof SPacketSoundEffect) {
                     SPacketSoundEffect packet = event.getPacket();
@@ -187,7 +189,7 @@ public class AutoCrystal extends Module {
                                     ++crystalsPerSec;
                                 }
 
-                                attackedCrystals.remove(crystal);
+                                attackedCrystals.add(crystal);
                             }
                         }
                     }
@@ -209,7 +211,7 @@ public class AutoCrystal extends Module {
                                 attackCrystal = null;
                             }
 
-                            attackedCrystals.remove(crystal);
+                            attackedCrystals.add(crystal);
                         }
                     }
                 }
@@ -220,8 +222,12 @@ public class AutoCrystal extends Module {
             case OUTGOING: {
                 if (event.getPacket() instanceof CPacketUseEntity) {
                     CPacketUseEntity packet = event.getPacket();
-                    if (packet.getEntityFromWorld(mc.world) instanceof EntityEnderCrystal &&
-                            packet.getAction().equals(Action.ATTACK)) {
+                    if (packet.getEntityFromWorld(mc.world) instanceof EntityEnderCrystal && packet.getAction().equals(Action.ATTACK)) {
+                        EntityEnderCrystal crystal = (EntityEnderCrystal) packet.getEntityFromWorld(mc.world);
+                        if (attackedCrystals.contains(crystal)) {
+                            event.setCanceled(true);
+                            return;
+                        }
 
                         attackedCrystals.add((EntityEnderCrystal) packet.getEntityFromWorld(mc.world));
                     }
