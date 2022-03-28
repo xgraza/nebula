@@ -299,7 +299,7 @@ public class AutoCrystal extends Module {
                 continue;
             }
 
-            if (!RaycastUtil.isBlockVisible(loc) && !BlockUtil.isInRange(pos, placeRange.getValue())) {
+            if (!RaycastUtil.isBlockVisible(loc) && !BlockUtil.isInRange(pos, placeWallRange.getValue())) {
                 continue;
             }
 
