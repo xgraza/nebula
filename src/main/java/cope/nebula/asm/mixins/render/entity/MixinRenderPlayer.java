@@ -2,6 +2,7 @@ package cope.nebula.asm.mixins.render.entity;
 
 import cope.nebula.client.Nebula;
 import cope.nebula.client.events.RenderPlayerEvent;
+import cope.nebula.client.feature.module.render.Nametags;
 import cope.nebula.util.Globals;
 import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.renderer.entity.RenderPlayer;
@@ -49,6 +50,13 @@ public class MixinRenderPlayer {
             // reset previous rotations
             prevPitch = Float.NaN;
             prevYaw = Float.NaN;
+        }
+    }
+
+    @Inject(method = "renderEntityName(Lnet/minecraft/client/entity/AbstractClientPlayer;DDDLjava/lang/String;D)V", at = @At("HEAD"), cancellable = true)
+    public void renderEntityName(AbstractClientPlayer entityIn, double x, double y, double z, String name, double distanceSq, CallbackInfo info) {
+        if (Nametags.INSTANCE.isOn()) {
+            info.cancel();
         }
     }
 }
