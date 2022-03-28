@@ -269,9 +269,8 @@ public class AutoCrystal extends Module {
             }
         }
 
+        calculateBestAttackCrystal();
         if (explode.getValue()) {
-            calculateBestAttackCrystal();
-
             if (attackCrystal != null && explodeStopwatch.getTime(TimeFormat.MILLISECONDS) / 50.0f >= 20.0f - explodeSpeed.getValue()) {
                 explodeStopwatch.resetTime();
 
@@ -310,7 +309,7 @@ public class AutoCrystal extends Module {
                 continue;
             }
 
-            float entityDamage = 1.5f;
+            float entityDamage = 0.0f;
             if (target != null) {
                 entityDamage = ExplosionUtil.calculateCrystalDamage(target, vec, ignoreTerrain.getValue());
                 if (localDamage > entityDamage || entityDamage < minDamage.getValue()) {
