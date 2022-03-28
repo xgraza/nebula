@@ -33,47 +33,43 @@ public class CrystalUtil implements Globals {
      * @return if we can place an and crystal at this block
      */
     public static boolean canPlaceAt(BlockPos blockPos, boolean protocol) {
-        try {
-            Block block = mc.world.getBlockState(blockPos).getBlock();
-            // if the block the crystal is being placed on is not bedrock or obsidian, we cant place there
-            if (!(block == Blocks.OBSIDIAN || block == Blocks.BEDROCK)) {
-                return false;
-            }
+        // if the block is not bedrock/obsidian
+        if (!canCrystalBePlacedOn(blockPos)) {
+            return false;
+        }
 
-            // we get the position from one up
-            BlockPos pos = blockPos.add(0.0, 1.0, 0.0);
-            // we get the position from two up
-            BlockPos pos1 = blockPos.add(0.0, 2.0, 0.0);
+        // the position of where crystals will be
+        BlockPos possibleCrystalPos = blockPos.add(0, 1, 0);
 
-            // if no 1.13 placements and the block above the block isnt air, or the first block above isnt air, we cant place because of non 1.13 placements
-            if ((!protocol && mc.world.getBlockState(pos1).getBlock() != Blocks.AIR) || mc.world.getBlockState(pos1).getBlock() != Blocks.AIR) {
-                return false;
-            }
+        // if the block where a crystal can placed is not air, we cannot place there
+        if (!mc.world.isAirBlock(possibleCrystalPos)) {
+            return false;
+        }
 
-            // make sure theres no entities to interfere with placements
-            for (Entity entity : mc.world.getEntitiesWithinAABB(Entity.class, new AxisAlignedBB(pos))) {
-                if (entity.isDead || entity instanceof EntityEnderCrystal) {
-                    continue;
-                }
+        // check if any end crystals are at this spot
+        if (!mc.world.getEntitiesWithinAABB(Entity.class,
+                new AxisAlignedBB(possibleCrystalPos),
+                (c) -> !(c instanceof EntityEnderCrystal) && !c.isDead).isEmpty()) {
 
-                return false;
-            }
+            return false;
+        }
 
-            // if no 1.13 place, we have to also check two blocks above
-            if (!protocol) {
-                for (Entity entity : mc.world.getEntitiesWithinAABB(Entity.class, new AxisAlignedBB(pos1))) {
-                    if (entity.isDead || entity instanceof EntityEnderCrystal) {
-                        continue;
-                    }
-
-                    return false;
-                }
-            }
-        } catch (Exception e) {
+        // if we are not on an updated server and the block above where a crystal can be placed is not air, it is not a valid placement
+        if (!protocol && !mc.world.isAirBlock(blockPos.add(0, 2, 0))) {
             return false;
         }
 
         return true;
+    }
+
+    /**
+     * Checks if the position is bedrock or obsidian
+     * @param pos the position
+     * @return if we can place at that position
+     */
+    public static boolean canCrystalBePlacedOn(BlockPos pos) {
+        Block block = mc.world.getBlockState(pos).getBlock();
+        return block.equals(Blocks.BEDROCK) || block.equals(Blocks.OBSIDIAN);
     }
 
     /**
