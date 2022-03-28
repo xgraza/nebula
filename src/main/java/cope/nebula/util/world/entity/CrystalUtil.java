@@ -29,10 +29,11 @@ public class CrystalUtil implements Globals {
     /**
      * Checks if we can place an end crystal here
      * @param blockPos The position to place at
+     * @param entityCheck if end crystals should be checked or not
      * @param protocol If we should take into account being on a newer server
      * @return if we can place an and crystal at this block
      */
-    public static boolean canPlaceAt(BlockPos blockPos, boolean protocol) {
+    public static boolean canPlaceAt(BlockPos blockPos, boolean entityCheck, boolean protocol) {
         // if the block is not bedrock/obsidian
         if (!canCrystalBePlacedOn(blockPos)) {
             return false;
@@ -49,7 +50,7 @@ public class CrystalUtil implements Globals {
         // check if any end crystals are at this spot
         if (!mc.world.getEntitiesWithinAABB(Entity.class,
                 new AxisAlignedBB(possibleCrystalPos),
-                (c) -> !(c instanceof EntityEnderCrystal) && !c.isDead).isEmpty()) {
+                (c) -> (entityCheck && !(c instanceof EntityEnderCrystal)) && !c.isDead).isEmpty()) {
 
             return false;
         }

@@ -277,7 +277,7 @@ public class AutoCrystal extends Module {
                 }
 
                 if (placeStopwatch.getTime(TimeFormat.MILLISECONDS) / 50.0f >= 20.0f - placeSpeed.getValue()) {
-                    if (!CrystalUtil.canPlaceAt(lastPlacePos, type.getValue().equals(Type.UPDATED))) {
+                    if (!CrystalUtil.canPlaceAt(lastPlacePos, false, type.getValue().equals(Type.UPDATED))) {
                         lastPlacePos = null;
                         return;
                     }
@@ -301,7 +301,7 @@ public class AutoCrystal extends Module {
         float damage = 1.0f;
 
         for (BlockPos loc : BlockUtil.sphere(mc.player.getPosition(), placeRange.getValue().intValue())) {
-            if (!CrystalUtil.canPlaceAt(loc, type.getValue().equals(Type.UPDATED))) {
+            if (!CrystalUtil.canPlaceAt(loc, true, type.getValue().equals(Type.UPDATED))) {
                 continue;
             }
 
