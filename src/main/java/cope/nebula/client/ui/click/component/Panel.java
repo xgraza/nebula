@@ -29,7 +29,7 @@ public class Panel extends Component {
     private double scroll = 0.0;
 
     // opening animation
-    private final Animation animation = new Animation(200.0, 5L);
+    private final Animation animation = new Animation(250.0, 5L);
 
     public Panel(double x, ModuleCategory category, List<Module> modules) {
         super(category.getDisplayName());
@@ -66,7 +66,7 @@ public class Panel extends Component {
             animation.setIncrement(ClickGUI.speed.getValue());
             animation.tick(AnimationDirection.fromBoolean(expanded));
         } else {
-            animation.setProgress(expanded ? 200.0 : 0.0);
+            animation.setProgress(expanded ? 250.0 : 0.0);
         }
 
         RenderUtil.scissor(getX(), getY() + getHeight(), getX() + getWidth(), getY() + animation.getProgress());
