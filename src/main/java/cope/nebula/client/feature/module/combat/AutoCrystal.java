@@ -263,6 +263,7 @@ public class AutoCrystal extends Module {
                 }
 
                 CrystalUtil.attack(attackCrystal, hand, swing.getValue());
+                // Command.send("Attacking");
             }
         }
 
@@ -277,13 +278,13 @@ public class AutoCrystal extends Module {
                 }
 
                 if (placeStopwatch.getTime(TimeFormat.MILLISECONDS) / 50.0f >= 20.0f - placeSpeed.getValue()) {
-                    if (!CrystalUtil.canPlaceAt(lastPlacePos, false, type.getValue().equals(Type.UPDATED))) {
-                        lastPlacePos = null;
+                    if (!CrystalUtil.canPlaceAt(lastPlacePos, true, type.getValue().equals(Type.UPDATED))) {
                         return;
                     }
 
                     placeStopwatch.resetTime();
                     CrystalUtil.placeAt(lastPlacePos, hand, strictDirection.getValue(), swing.getValue(), rotate.getValue().equals(Rotate.NORMAL));
+                    // Command.send("Placing/Interacting");
 
                     if (swap.getValue().equals(Swap.SERVER)) {
                         swapBack();
@@ -301,7 +302,7 @@ public class AutoCrystal extends Module {
         float damage = 1.0f;
 
         for (BlockPos loc : BlockUtil.sphere(mc.player.getPosition(), placeRange.getValue().intValue())) {
-            if (!CrystalUtil.canPlaceAt(loc, true, type.getValue().equals(Type.UPDATED))) {
+            if (!CrystalUtil.canPlaceAt(loc, false, type.getValue().equals(Type.UPDATED))) {
                 continue;
             }
 

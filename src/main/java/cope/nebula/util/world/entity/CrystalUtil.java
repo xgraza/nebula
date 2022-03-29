@@ -2,7 +2,6 @@ package cope.nebula.util.world.entity;
 
 import cope.nebula.client.Nebula;
 import cope.nebula.util.Globals;
-import cope.nebula.util.world.BlockUtil;
 import cope.nebula.util.world.entity.player.rotation.AngleUtil;
 import cope.nebula.util.world.entity.player.rotation.Rotation;
 import net.minecraft.block.Block;
@@ -48,12 +47,24 @@ public class CrystalUtil implements Globals {
         }
 
         // check if any end crystals are at this spot
-        if (!mc.world.getEntitiesWithinAABB(Entity.class,
-                new AxisAlignedBB(possibleCrystalPos),
-                (c) -> (entityCheck && !(c instanceof EntityEnderCrystal)) && !c.isDead).isEmpty()) {
+        for (Entity entity : mc.world.getEntitiesWithinAABB(Entity.class, new AxisAlignedBB(possibleCrystalPos))) {
+            if (entityCheck && entity instanceof EntityEnderCrystal) {
+                return false;
+            }
+
+            if (entity.isDead || entity instanceof EntityEnderCrystal) {
+                continue;
+            }
 
             return false;
         }
+
+//        if (!mc.world.getEntitiesWithinAABB(Entity.class,
+//                new AxisAlignedBB(possibleCrystalPos),
+//                (c) -> (entityCheck && !(c instanceof EntityEnderCrystal)) && !c.isDead).isEmpty()) {
+//
+//            return false;
+//        }
 
         // if we are not on an updated server and the block above where a crystal can be placed is not air, it is not a valid placement
         if (!protocol && !mc.world.isAirBlock(blockPos.add(0, 2, 0))) {
