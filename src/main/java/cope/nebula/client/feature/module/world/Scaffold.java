@@ -15,6 +15,8 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 
+import static cope.nebula.client.feature.module.world.Timer.setTimerSpeed;
+
 public class Scaffold extends Module {
     public Scaffold() {
         super("Scaffold", ModuleCategory.WORLD, "Places blocks below you");
@@ -23,22 +25,36 @@ public class Scaffold extends Module {
     public static final Value<Boolean> rotate = new Value<>("Rotate", true);
     public static final Value<Boolean> swing = new Value<>("Swing", true);
     public static final Value<Swap> swap = new Value<>("Swap", Swap.CLIENT);
+
     public static final Value<Boolean> tower = new Value<>("Tower", true);
     public static final Value<Boolean> stopMotion = new Value<>("StopMotion", false);
+
+    public static final Value<Boolean> timerBoost = new Value<>("TimerBoost", false);
+    public static final Value<Boolean> keepY = new Value<>("KeepY", false);
 
     private final Stopwatch towerStopwatch = new Stopwatch();
 
     private EnumHand hand = null;
     private int oldSlot = -1;
 
+    private double y;
+
+    @Override
+    protected void onActivated() {
+        y = mc.player.posY;
+    }
+
     @Override
     protected void onDeactivated() {
         swapBack();
+        setTimerSpeed(1.0f);
+
+        y = -1.0;
     }
 
     @Override
     public void onTick() {
-        BlockPos pos = new BlockPos(mc.player.posX, mc.player.posY - 1.0, mc.player.posZ);
+        BlockPos pos = new BlockPos(mc.player.posX, (keepY.getValue() ? y : mc.player.posY) - 1.0, mc.player.posZ);
         if (BlockUtil.isReplaceable(pos)) {
             EnumFacing facing = BlockUtil.getFacing(pos);
             if (facing == null) {
@@ -76,6 +92,10 @@ public class Scaffold extends Module {
                 return;
             }
 
+            if (timerBoost.getValue() && mc.player.onGround) {
+                setTimerSpeed(1.6f);
+            }
+
             if (stopMotion.getValue()) {
                 mc.player.motionX = 0.0;
                 mc.player.motionZ = 0.0;
@@ -98,6 +118,8 @@ public class Scaffold extends Module {
             if (!swap.getValue().equals(Swap.KEEP)) {
                 swapBack();
             }
+        } else {
+            setTimerSpeed(1.0f);
         }
     }
 
