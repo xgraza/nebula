@@ -6,14 +6,13 @@ import cope.nebula.client.feature.module.ModuleCategory;
 import cope.nebula.client.value.Value;
 import cope.nebula.util.world.entity.EntityUtil;
 import cope.nebula.util.world.entity.player.rotation.AngleUtil;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.math.Vec3d;
 
-import static net.minecraft.client.renderer.GlStateManager.disableDepth;
-import static net.minecraft.client.renderer.GlStateManager.enableDepth;
 import static org.lwjgl.opengl.GL11.*;
 
 public class Tracers extends Module {
@@ -54,7 +53,7 @@ public class Tracers extends Module {
 
             glPushMatrix();
             glDisable(GL_TEXTURE_2D);
-            disableDepth();
+            GlStateManager.disableDepth();
 
             glEnable(GL_LINE_SMOOTH);
             glHint(GL_LINE_SMOOTH_HINT, GL_NICEST);
@@ -86,7 +85,7 @@ public class Tracers extends Module {
 
             glEnd();
 
-            enableDepth();
+            GlStateManager.enableDepth();
             glEnable(GL_TEXTURE_2D);
             glDisable(GL_LINE_SMOOTH);
             glPopMatrix();

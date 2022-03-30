@@ -17,6 +17,7 @@ import cope.nebula.util.world.entity.player.rotation.AngleUtil;
 import cope.nebula.util.world.entity.player.rotation.Bone;
 import cope.nebula.util.world.entity.player.rotation.Rotation;
 import cope.nebula.util.world.entity.player.rotation.RotationType;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.item.ItemSword;
@@ -79,6 +80,7 @@ public class Aura extends Module {
 
             glPushMatrix();
             glDisable(GL_TEXTURE_2D);
+            GlStateManager.disableDepth();
 
             RenderManager renderManager = mc.getRenderManager();
             glTranslated(-renderManager.viewerPosX, -renderManager.viewerPosY, -renderManager.viewerPosZ);
@@ -107,6 +109,7 @@ public class Aura extends Module {
 
             glEnd();
 
+            GlStateManager.enableDepth();
             glEnable(GL_TEXTURE_2D);
             glDisable(GL_LINE_SMOOTH);
             glLineWidth(1.0f);
