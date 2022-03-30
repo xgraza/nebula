@@ -4,6 +4,7 @@ import cope.nebula.client.Nebula;
 import cope.nebula.util.Globals;
 import cope.nebula.util.world.entity.player.rotation.AngleUtil;
 import cope.nebula.util.world.entity.player.rotation.Rotation;
+import cope.nebula.util.world.entity.player.rotation.RotationType;
 import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.EntityEnderCrystal;
@@ -90,9 +91,9 @@ public class CrystalUtil implements Globals {
      * @param hand The hand to place with
      * @param strictDirection If to place with a stricter direction
      * @param swing If to swing
-     * @param rotate If to rotate
+     * @param rotate how to rotate
      */
-    public static void placeAt(BlockPos pos, EnumHand hand, boolean strictDirection, boolean swing, boolean rotate) {
+    public static void placeAt(BlockPos pos, EnumHand hand, boolean strictDirection, boolean swing, RotationType rotate) {
         EnumFacing facing = EnumFacing.UP;
         Vec3d vec = new Vec3d(0.0, 0.0, 0.0);
 
@@ -110,8 +111,8 @@ public class CrystalUtil implements Globals {
             }
         }
 
-        if (rotate) {
-            Rotation rotation = AngleUtil.toBlock(pos, facing);
+        if (!rotate.equals(RotationType.NONE)) {
+            Rotation rotation = AngleUtil.toBlock(pos, facing).setType(rotate);
             if (rotation.isValid()) {
                 Nebula.getInstance().getRotationManager().setRotation(rotation);
             }
