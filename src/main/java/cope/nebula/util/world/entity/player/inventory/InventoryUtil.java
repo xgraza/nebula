@@ -1,6 +1,7 @@
 package cope.nebula.util.world.entity.player.inventory;
 
 import cope.nebula.util.Globals;
+import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
@@ -66,6 +67,25 @@ public class InventoryUtil implements Globals {
     public static boolean isHolding(Item item) {
         return getHeld(EnumHand.MAIN_HAND).getItem().equals(item) ||
                 getHeld(EnumHand.OFF_HAND).getItem().equals(item);
+    }
+
+    /**
+     * Checks if you are holding a block
+     * @param block the block
+     * @return if we are holding it
+     */
+    public static boolean isHolding(Block block) {
+        ItemStack offhand = getHeld(EnumHand.OFF_HAND);
+        if (isBlock(offhand) && ((ItemBlock) offhand.getItem()).getBlock().equals(block)) {
+            return true;
+        }
+
+        ItemStack mainHand = getHeld(EnumHand.MAIN_HAND);
+        if (isBlock(mainHand) && ((ItemBlock) mainHand.getItem()).getBlock().equals(block)) {
+            return true;
+        }
+
+        return false;
     }
 
     /**

@@ -52,7 +52,7 @@ public class SelfFill extends Module {
         EnumHand hand = slot == InventoryUtil.OFFHAND_SLOT ? EnumHand.OFF_HAND : EnumHand.MAIN_HAND;
         int oldSlot = -1;
 
-        if (hand.equals(EnumHand.MAIN_HAND)) {
+        if (hand.equals(EnumHand.MAIN_HAND) && !InventoryUtil.isHolding(mode.getValue().block)) {
             oldSlot = mc.player.inventory.currentItem;
             getNebula().getHotbarManager().sendSlotChange(slot, swap.getValue());
         }
