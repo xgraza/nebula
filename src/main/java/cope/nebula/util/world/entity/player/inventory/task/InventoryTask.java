@@ -33,6 +33,6 @@ public class InventoryTask implements Globals {
      * Runs this inventory task
      */
     public void execute() {
-        mc.playerController.windowClick(0, slotId, 0, clickType, mc.player);
+        mc.playerController.windowClick(mc.player.inventoryContainer.windowId, slotId, 0, clickType, mc.player);
     }
 }
