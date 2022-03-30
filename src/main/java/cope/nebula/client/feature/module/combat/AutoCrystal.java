@@ -1,6 +1,8 @@
 package cope.nebula.client.feature.module.combat;
 
 import cope.nebula.asm.duck.IEntityPlayer;
+import cope.nebula.client.events.EntityAddedEvent;
+import cope.nebula.client.events.EntityRemoveEvent;
 import cope.nebula.client.events.PacketEvent;
 import cope.nebula.client.events.PacketEvent.Direction;
 import cope.nebula.client.feature.module.Module;
@@ -218,23 +220,37 @@ public class AutoCrystal extends Module {
     }
 
     @SubscribeEvent
+    public void onEntityAdded(EntityAddedEvent event) {
+        if (event.getEntity() instanceof EntityEnderCrystal) {
+            EntityEnderCrystal crystal = (EntityEnderCrystal) event.getEntity();
+            if (placePos == null) {
+                return;
+            }
+
+            if (placePos.equals(crystal.getPosition().down())) {
+                placedCrystals.add(crystal);
+            }
+        }
+    }
+
+    @SubscribeEvent
+    public void onEntityRemove(EntityRemoveEvent event) {
+        if (event.getEntity() instanceof EntityEnderCrystal) {
+            if (attackCrystal == null) {
+                return;
+            }
+
+            if (event.getEntity().equals(attackCrystal)) {
+                attackCrystal.setDead();
+                attackCrystal = null;
+            }
+        }
+    }
+
+    @SubscribeEvent
     public void onPacket(PacketEvent event) {
         if (event.getDirection().equals(Direction.INCOMING)) {
-            if (event.getPacket() instanceof SPacketSpawnObject) {
-                SPacketSpawnObject packet = event.getPacket();
-                if (packet.getType() == 51) {
-                    Entity entity = mc.world.getEntityByID(packet.getEntityID());
-                    if (entity instanceof EntityEnderCrystal) {
-                        if (placePos == null) {
-                            return;
-                        }
-
-                        if (placePos.equals(entity.getPosition().down())) {
-                            placedCrystals.add((EntityEnderCrystal) entity);
-                        }
-                    }
-                }
-            } else if (event.getPacket() instanceof SPacketDestroyEntities) {
+            if (event.getPacket() instanceof SPacketDestroyEntities) {
                 SPacketDestroyEntities packet = event.getPacket();
 
                 for (int entityId : packet.getEntityIDs()) {
@@ -364,10 +380,10 @@ public class AutoCrystal extends Module {
         double dist = 0.0;
         EntityEnderCrystal crystal = null;
 
-        Iterator<Entity> iterator = mc.world.loadedEntityList.iterator();
+        Iterator<EntityEnderCrystal> iterator = placedCrystals.iterator();
         while (iterator.hasNext()) {
-            Entity entity = iterator.next();
-            if (!(entity instanceof EntityEnderCrystal) || entity.isDead || entity.ticksExisted < ticksExisted.getValue()) {
+            EntityEnderCrystal entity = iterator.next();
+            if (entity == null || entity.isDead || entity.ticksExisted < ticksExisted.getValue()) {
                 continue;
             }
 
@@ -384,7 +400,7 @@ public class AutoCrystal extends Module {
 
             if (crystal == null || distance < dist) {
                 dist = distance;
-                crystal = (EntityEnderCrystal) entity;
+                crystal = entity;
             }
         }
 
