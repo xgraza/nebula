@@ -1,5 +1,6 @@
 package cope.nebula.util.world.entity;
 
+import cope.nebula.asm.mixins.network.packet.c2s.ICPacketUseEntity;
 import cope.nebula.client.Nebula;
 import cope.nebula.util.Globals;
 import cope.nebula.util.world.entity.player.rotation.AngleUtil;
@@ -12,6 +13,7 @@ import net.minecraft.init.Blocks;
 import net.minecraft.network.play.client.CPacketAnimation;
 import net.minecraft.network.play.client.CPacketPlayerTryUseItemOnBlock;
 import net.minecraft.network.play.client.CPacketUseEntity;
+import net.minecraft.network.play.client.CPacketUseEntity.Action;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.AxisAlignedBB;
@@ -133,16 +135,17 @@ public class CrystalUtil implements Globals {
 
     /**
      * Attacks an end crystal
-     * @param crystal The crystal
+     * @param entityId The crystal's entity id
      * @param hand The hand to attack with
      * @param swing If to swing your hand
      */
-    public static void attack(EntityEnderCrystal crystal, EnumHand hand, boolean swing) {
-        if (crystal == null) {
-            return;
-        }
+    public static void attack(int entityId, EnumHand hand, boolean swing) {
+        CPacketUseEntity packet = new CPacketUseEntity();
+        ((ICPacketUseEntity) packet).setEntityId(entityId);
+        ((ICPacketUseEntity) packet).setAction(Action.ATTACK);
 
-        mc.player.connection.sendPacket(new CPacketUseEntity(crystal));
+        mc.player.connection.sendPacket(packet);
+
         if (swing) {
             mc.player.swingArm(hand);
         } else {

@@ -179,7 +179,7 @@ public class AutoCrystal extends Module {
                     }
                 }
 
-                CrystalUtil.attack(attackCrystal, hand, true);
+                CrystalUtil.attack(attackCrystal.getEntityId(), hand, true);
                 inhibitCrystals.put(attackCrystal, new Stopwatch().resetTime());
             }
         }
