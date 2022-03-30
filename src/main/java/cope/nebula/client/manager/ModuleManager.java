@@ -6,10 +6,7 @@ import cope.nebula.client.feature.module.Module;
 import cope.nebula.client.feature.module.combat.*;
 import cope.nebula.client.feature.module.exploit.*;
 import cope.nebula.client.feature.module.movement.*;
-import cope.nebula.client.feature.module.other.AutoRespawn;
-import cope.nebula.client.feature.module.other.HotbarRefill;
-import cope.nebula.client.feature.module.other.MiddleClick;
-import cope.nebula.client.feature.module.other.PacketLogger;
+import cope.nebula.client.feature.module.other.*;
 import cope.nebula.client.feature.module.render.*;
 import cope.nebula.client.feature.module.world.*;
 import cope.nebula.util.Globals;
@@ -66,6 +63,7 @@ public class ModuleManager implements Globals {
             new HotbarRefill(),
             new MiddleClick(),
             new PacketLogger(),
+            new Spammer(),
 
             // Render
             new AntiRender(),

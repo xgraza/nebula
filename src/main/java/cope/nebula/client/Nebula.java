@@ -4,6 +4,7 @@ import cope.nebula.client.manager.*;
 import cope.nebula.client.manager.hole.HoleManager;
 import cope.nebula.client.manager.macro.MacroManager;
 import cope.nebula.client.manager.relation.RelationshipManager;
+import cope.nebula.util.internal.fs.FileUtil;
 import cope.nebula.util.internal.timing.Stopwatch;
 import cope.nebula.util.internal.timing.TimeFormat;
 import cope.nebula.util.renderer.FontUtil;
@@ -13,6 +14,8 @@ import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.lwjgl.opengl.Display;
+
+import java.nio.file.Files;
 
 import static net.minecraftforge.fml.common.Mod.EventHandler;
 import static net.minecraftforge.fml.common.Mod.Instance;
@@ -44,6 +47,12 @@ public class Nebula {
     public void init(FMLInitializationEvent event) {
         // Roxanne, Roxanne... All she wanna do is party all night
         LOGGER.info("Loading {} v{}...", NAME, VERSION);
+
+        // create file
+        if (!Files.exists(FileUtil.NEBULA)) {
+            LOGGER.info("Creating nebula folder");
+            FileUtil.mkDir(FileUtil.NEBULA);
+        }
 
         Stopwatch stopwatch = new Stopwatch();
         stopwatch.resetTime();
