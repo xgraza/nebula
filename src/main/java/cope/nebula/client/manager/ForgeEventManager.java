@@ -1,5 +1,6 @@
 package cope.nebula.client.manager;
 
+import cope.nebula.client.feature.module.Module;
 import cope.nebula.util.Globals;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraftforge.client.event.RenderGameOverlayEvent.Text;
@@ -25,13 +26,11 @@ public class ForgeEventManager implements Globals {
     @SubscribeEvent
     public void onClientTick(ClientTickEvent event) {
         if (!nullCheck()) {
-            getNebula().getModuleManager().getModules().forEach((module) -> {
+            for (Module module : getNebula().getModuleManager().getModules()) {
                 if (module.isOn()) {
-                    mc.profiler.startSection("module_clienttick_" + module.getName());
                     module.onTick();
-                    mc.profiler.endSection();
                 }
-            });
+            }
 
             getNebula().getHoleManager().onTick();
         }

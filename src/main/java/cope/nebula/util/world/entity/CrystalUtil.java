@@ -1,5 +1,6 @@
 package cope.nebula.util.world.entity;
 
+import cope.nebula.asm.mixins.input.IPlayerControllerMP;
 import cope.nebula.asm.mixins.network.packet.c2s.ICPacketUseEntity;
 import cope.nebula.client.Nebula;
 import cope.nebula.util.Globals;

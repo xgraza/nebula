@@ -16,6 +16,7 @@
         "entity.player.MixinEntityPlayerSP",
         "entity.MixinEntity",
 
+        "input.IPlayerControllerMP",
         "input.MixinKeyBinding",
         "input.MixinPlayerControllerMP",
 

@@ -30,7 +30,6 @@ import net.minecraft.init.SoundEvents;
 import net.minecraft.network.play.server.SPacketDestroyEntities;
 import net.minecraft.network.play.server.SPacketExplosion;
 import net.minecraft.network.play.server.SPacketSoundEffect;
-import net.minecraft.network.play.server.SPacketSpawnObject;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
@@ -38,7 +37,10 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 import java.awt.*;
-import java.util.*;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 
 public class AutoCrystal extends Module {
     public AutoCrystal() {
@@ -345,10 +347,7 @@ public class AutoCrystal extends Module {
                 }
             }
 
-            Iterator<EntityPlayer> players = mc.world.playerEntities.iterator();
-            while (players.hasNext()) {
-                EntityPlayer player = players.next();
-
+            for (EntityPlayer player : mc.world.playerEntities) {
                 float playerDamage = ExplosionUtil.calculateCrystalDamage(player, vec, ignoreTerrain.getValue());
 
                 // protect friends
@@ -380,9 +379,7 @@ public class AutoCrystal extends Module {
         double dist = 0.0;
         EntityEnderCrystal crystal = null;
 
-        Iterator<EntityEnderCrystal> iterator = placedCrystals.iterator();
-        while (iterator.hasNext()) {
-            EntityEnderCrystal entity = iterator.next();
+        for (EntityEnderCrystal entity : placedCrystals) {
             if (entity == null || entity.isDead || entity.ticksExisted < ticksExisted.getValue()) {
                 continue;
             }
