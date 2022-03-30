@@ -1,5 +1,6 @@
 package cope.nebula.client.feature.module.combat;
 
+import cope.nebula.asm.duck.IEntityPlayer;
 import cope.nebula.client.events.MotionUpdateEvent;
 import cope.nebula.client.events.MotionUpdateEvent.Era;
 import cope.nebula.client.feature.module.Module;
@@ -20,6 +21,7 @@ import cope.nebula.util.world.entity.player.rotation.RotationType;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemSword;
 import net.minecraft.network.play.client.CPacketAnimation;
 import net.minecraft.network.play.client.CPacketUseEntity;
@@ -212,6 +214,10 @@ public class Aura extends Module {
         }
 
         if (!walls.getValue() && !mc.player.canEntityBeSeen(entity)) {
+            return false;
+        }
+
+        if (entity instanceof EntityPlayer && ((IEntityPlayer) entity).isFriend()) {
             return false;
         }
 
