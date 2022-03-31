@@ -115,6 +115,14 @@ public class FastBreak extends Module {
 
     @SubscribeEvent
     public void onClickBlock(ClickBlockEvent event) {
+
+        // check if this block is breakable
+        // for example, we cannot break bedrock or command blocks in survival
+        IBlockState state = mc.world.getBlockState(event.getPos());
+        if (state.getBlockHardness(mc.world, event.getPos()) == -1) {
+            return;
+        }
+
         event.setCanceled(true);
 
         if (pos != null) {
