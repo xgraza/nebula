@@ -61,7 +61,7 @@ public class SelfFill extends Module {
             mc.player.connection.sendPacket(new Position(mc.player.posX, pos.getY() + offset, mc.player.posZ, false));
         }
 
-        getNebula().getInteractionManager().placeBlock(pos, hand, rotate.getValue(), swing.getValue());
+        getNebula().getInteractionManager().placeBlock(pos, hand, rotate.getValue(), true, swing.getValue());
 
         if (flag.getValue()) {
             mc.player.connection.sendPacket(new Position(mc.player.posX, pos.getY() + 2.3, mc.player.posZ, false));

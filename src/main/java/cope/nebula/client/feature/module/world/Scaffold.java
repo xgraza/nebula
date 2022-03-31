@@ -103,7 +103,7 @@ public class Scaffold extends Module {
                 mc.player.setSprinting(false);
             }
 
-            getNebula().getInteractionManager().placeBlock(pos, hand, rotate.getValue() ? RotationType.SERVER : RotationType.NONE, swing.getValue());
+            getNebula().getInteractionManager().placeBlock(pos, hand, rotate.getValue() ? RotationType.SERVER : RotationType.NONE, false, swing.getValue());
 
             if (tower.getValue() && mc.gameSettings.keyBindJump.isKeyDown() && facing.equals(EnumFacing.DOWN)) {
                 mc.player.motionX *= 0.2;

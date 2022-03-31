@@ -27,9 +27,10 @@ public class InteractionManager implements Globals {
      * @param pos The block position
      * @param hand The hand the block is held in
      * @param rotationType The type of rotation
+     * @param packet If to place with a packet
      * @param swing If to swing client side or server side
      */
-    public void placeBlock(BlockPos pos, EnumHand hand, RotationType rotationType, boolean swing) {
+    public void placeBlock(BlockPos pos, EnumHand hand, RotationType rotationType, boolean packet, boolean swing) {
         EnumFacing facing = BlockUtil.getFacing(pos);
         if (facing == null) {
             return;
@@ -52,7 +53,15 @@ public class InteractionManager implements Globals {
             }
         }
 
-        mc.playerController.processRightClickBlock(mc.player, mc.world, neighbor, facing.getOpposite(), hitVec, hand);
+        if (packet) {
+            float x = (float) (hitVec.x - pos.getX());
+            float y = (float) (hitVec.y - pos.getY());
+            float z = (float) (hitVec.z - pos.getZ());
+
+            mc.player.connection.sendPacket(new CPacketPlayerTryUseItemOnBlock(neighbor, facing.getOpposite(), hand, x, y, z));
+        } else {
+            mc.playerController.processRightClickBlock(mc.player, mc.world, neighbor, facing.getOpposite(), hitVec, hand);
+        }
 
         if (swing) {
             mc.player.swingArm(hand);

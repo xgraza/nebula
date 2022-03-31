@@ -8,6 +8,7 @@ import cope.nebula.client.value.Value;
 import cope.nebula.util.internal.timing.Stopwatch;
 import cope.nebula.util.internal.timing.TimeFormat;
 import cope.nebula.util.world.BlockUtil;
+import cope.nebula.util.world.entity.CrystalUtil;
 import cope.nebula.util.world.entity.player.inventory.InventorySpace;
 import cope.nebula.util.world.entity.player.inventory.InventoryUtil;
 import cope.nebula.util.world.entity.player.inventory.SwapType;
@@ -19,9 +20,6 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.EntityEnderCrystal;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemBlock;
-import net.minecraft.network.play.client.CPacketAnimation;
-import net.minecraft.network.play.client.CPacketPlayer.Position;
-import net.minecraft.network.play.client.CPacketUseEntity;
 import net.minecraft.network.play.server.SPacketBlockChange;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
@@ -29,9 +27,7 @@ import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
-import java.util.HashSet;
-import java.util.Queue;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 public class FeetTrap extends Module {
@@ -39,172 +35,145 @@ public class FeetTrap extends Module {
         super("FeetTrap", ModuleCategory.COMBAT, "Traps your feet with obsidian");
     }
 
-    public static final Value<Double> speed = new Value<>("Speed", 20.0, 1.0, 20.0);
-    public static final Value<Boolean> floor = new Value<>("Floor", true);
     public static final Value<Boolean> attack = new Value<>("Attack", true);
-    public static final Value<SwapType> swap = new Value<>("Swap", SwapType.CLIENT);
-    public static final Value<Boolean> center = new Value<>("Center", false);
+    public static final Value<Boolean> extend = new Value<>("Extend", true);
 
-    private final Queue<BlockPos> queuedPositions = new ConcurrentLinkedQueue<>();
-    private final Set<BlockPos> cached = new HashSet<>();
+    public static final Value<Integer> delay = new Value<>("Delay", 1, 0, 5);
+    public static final Value<Integer> blocks = new Value<>("Blocks", 3, 1, 5);
+
+    public static final Value<SwapType> swap = new Value<>("Swap", SwapType.CLIENT);
+    public static final Value<RotationType> rotate = new Value<>("Rotate", RotationType.SERVER);
+
+    private final Queue<BlockPos> queue = new ConcurrentLinkedQueue<>();
+    private final Set<BlockPos> blockCache = new HashSet<>();
     private final Stopwatch stopwatch = new Stopwatch();
 
-    private EnumHand hand = EnumHand.MAIN_HAND;
     private int oldSlot = -1;
-
-    @Override
-    protected void onDeactivated() {
-        queuedPositions.clear();
-        cached.clear();
-
-        swapBack();
-    }
+    private EnumHand hand = EnumHand.MAIN_HAND;
 
     @SubscribeEvent
     public void onPacket(PacketEvent event) {
-        if (event.getDirection().equals(Direction.INCOMING) && event.getPacket() instanceof SPacketBlockChange) {
-            SPacketBlockChange packet = event.getPacket();
-
-            if (packet.getBlockState().getMaterial().isReplaceable() && cached.contains(packet.getBlockPosition())) {
-                queuedPositions.remove(packet.getBlockPosition());
-                place(packet.getBlockPosition());
+        if (event.getDirection().equals(Direction.INCOMING)) {
+            if (event.getPacket() instanceof SPacketBlockChange) {
+                SPacketBlockChange packet = event.getPacket();
+                if (blockCache.contains(packet.getBlockPosition()) && packet.getBlockState().getMaterial().isReplaceable()) {
+                    placeBlock(packet.getBlockPosition());
+                }
             }
         }
     }
 
     @Override
     public void onTick() {
-        if (!mc.player.onGround) {
+        int slot = InventoryUtil.getSlot(InventorySpace.HOTBAR,
+                (stack) -> !stack.isEmpty() &&
+                        InventoryUtil.isBlock(stack) &&
+                        ((ItemBlock) stack.getItem()).getBlock().equals(Blocks.OBSIDIAN));
+
+        if (slot == -1) {
             disable();
             return;
         }
 
-        if (queuedPositions.isEmpty()) {
-            queuedPositions.addAll(updateCachedPositions());
-            if (queuedPositions.isEmpty()) {
-                swapBack();
+        hand = slot == InventoryUtil.OFFHAND_SLOT ? EnumHand.OFF_HAND : EnumHand.MAIN_HAND;
+
+        if (queue.isEmpty()) {
+            Set<BlockPos> positions = getFeetTrapPositions();
+            if (!positions.isEmpty()) {
+                queue.addAll(positions);
+
+                blockCache.clear();
+                blockCache.addAll(positions);
+
+                return;
             }
-        } else {
-            if (stopwatch.getTime(TimeFormat.MILLISECONDS) / 50.0f >= 20.0f - speed.getValue()) {
-                BlockPos pos = queuedPositions.poll();
+
+            swapBack();
+            return;
+        }
+
+        if (stopwatch.hasElapsed(delay.getValue(), true, TimeFormat.TICKS)) {
+            if (!InventoryUtil.isHolding(Blocks.OBSIDIAN)) {
+                oldSlot = mc.player.inventory.currentItem;
+                getNebula().getHotbarManager().sendSlotChange(slot, swap.getValue());
+            }
+
+            for (int i = 0; i < blocks.getValue(); ++i) {
+                BlockPos pos = queue.poll();
                 if (pos == null) {
-                    return;
+                    break;
                 }
 
-                if (!InventoryUtil.isBlock(InventoryUtil.getHeld(EnumHand.MAIN_HAND)) ||
-                        !InventoryUtil.isBlock(InventoryUtil.getHeld(EnumHand.OFF_HAND))) {
-
-                    int slot = InventoryUtil.getSlot(InventorySpace.HOTBAR,
-                            (stack) -> InventoryUtil.isBlock(stack) && ((ItemBlock) stack.getItem()).getBlock().equals(Blocks.OBSIDIAN));
-
-                    if (slot == -1) {
-                        return;
-                    }
-
-                    hand = slot == InventoryUtil.OFFHAND_SLOT ? EnumHand.OFF_HAND : EnumHand.MAIN_HAND;
-                    if (hand.equals(EnumHand.MAIN_HAND)) {
-                        oldSlot = mc.player.inventory.currentItem;
-                        getNebula().getHotbarManager().sendSlotChange(slot, swap.getValue());
-                    }
-
-                    mc.player.setActiveHand(hand);
-                }
-
-                stopwatch.resetTime();
-
-                if (center.getValue()) {
-                    double x = Math.floor(mc.player.posX) + 0.5;
-                    double z = Math.floor(mc.player.posZ) + 0.5;
-
-                    double diffX = Math.abs(mc.player.posX - x);
-                    double diffZ = Math.abs(mc.player.posZ - z);
-
-                    if (diffX < 0.7 || diffX > 0.3 || diffZ < 0.7 || diffZ > 0.3) {
-                        mc.player.setPosition(x, mc.player.posY, z);
-                        mc.player.connection.sendPacket(new Position(x, mc.player.getEntityBoundingBox().minY, z, mc.player.onGround));
-
-                        // recalculate
-                        cached.clear();
-                        updateCachedPositions();
-
-                        return;
-                    }
-                }
-
-                place(pos);
+                placeBlock(pos);
             }
         }
-    }
-
-    private void place(BlockPos pos) {
-        for (Entity entity : mc.world.loadedEntityList) {
-            if (entity instanceof EntityEnderCrystal &&
-                    !entity.isDead &&
-                    entity.getEntityBoundingBox().intersects(new AxisAlignedBB(pos))) {
-
-                // rotate to crystal
-                Rotation rotation = AngleUtil.toEntity(entity, Bone.HEAD).setType(RotationType.SERVER);
-                if (rotation.isValid()) {
-                    getNebula().getRotationManager().setRotation(rotation);
-                }
-
-                mc.player.connection.sendPacket(new CPacketUseEntity(entity));
-                mc.player.connection.sendPacket(new CPacketAnimation(EnumHand.MAIN_HAND));
-            }
-        }
-
-        getNebula().getInteractionManager().placeBlock(pos, hand, RotationType.SERVER, true);
-    }
-
-    private Set<BlockPos> updateCachedPositions() {
-        BlockPos pos = new BlockPos(mc.player.posX, mc.player.posY, mc.player.posZ);
-
-        Set<BlockPos> additions = new HashSet<>();
-        Set<BlockPos> needsExtensions = new HashSet<>();
-
-        for (EnumFacing direction : EnumFacing.values()) {
-            if (direction.equals(EnumFacing.UP) || (!floor.getValue() && direction.equals(EnumFacing.DOWN))) {
-                continue;
-            }
-
-            BlockPos neighbor = pos.offset(direction);
-
-            if (BlockUtil.hasIntersectingBoundingBoxes(neighbor)) {
-                needsExtensions.add(neighbor);
-            } else {
-                if (!BlockUtil.isReplaceable(neighbor)) {
-                    continue;
-                }
-
-                additions.add(neighbor);
-            }
-        }
-
-        if (!needsExtensions.isEmpty()) {
-            for (BlockPos extension : needsExtensions) {
-                for (EnumFacing direction : EnumFacing.values()) {
-                    if (direction.equals(EnumFacing.UP) || (!floor.getValue() && direction.equals(EnumFacing.DOWN))) {
-                        continue;
-                    }
-
-                    BlockPos neighbor = extension.offset(direction);
-
-                    if (BlockUtil.isReplaceable(neighbor) && !BlockUtil.hasIntersectingBoundingBoxes(neighbor)) {
-                        additions.add(neighbor);
-                    }
-                }
-            }
-        }
-
-        return additions;
     }
 
     private void swapBack() {
         if (oldSlot != -1) {
             getNebula().getHotbarManager().sendSlotChange(oldSlot, swap.getValue());
+            oldSlot = -1;
+        }
+    }
+
+    private void placeBlock(BlockPos pos) {
+        if (attack.getValue()) {
+            for (Entity entity : mc.world.getEntitiesWithinAABB(Entity.class, new AxisAlignedBB(pos))) {
+
+                // if its an end crystal and it is not dead
+                if (entity instanceof EntityEnderCrystal && !entity.isDead) {
+                    // if we are within 4 blocks of the crystal
+                    double range = 16.0; // 4.0
+                    if (!mc.player.canEntityBeSeen(entity)) {
+                        range = 12.25; // 3.5
+                    }
+
+                    if (mc.player.getDistanceSq(entity) < range) {
+                        Rotation rotation = AngleUtil.toEntity(entity, Bone.HEAD);
+                        if (rotation.isValid()) {
+                            rotation = rotation.setType(rotate.getValue());
+                            getNebula().getRotationManager().setRotation(rotation);
+                        }
+
+                        CrystalUtil.attack(entity.getEntityId(), EnumHand.MAIN_HAND, true);
+                    }
+                }
+            }
         }
 
-        oldSlot = -1;
-        hand = EnumHand.MAIN_HAND;
+        getNebula().getInteractionManager().placeBlock(pos, hand, rotate.getValue(), true,true);
+    }
+
+    private Set<BlockPos> getFeetTrapPositions() {
+        BlockPos pos = new BlockPos(mc.player.posX, mc.player.posY, mc.player.posZ);
+        Set<BlockPos> positions = new HashSet<>();
+
+        for (EnumFacing facing : EnumFacing.values()) {
+            if (facing.equals(EnumFacing.UP)) {
+                continue;
+            }
+
+            BlockPos neighbor = pos.offset(facing);
+
+            // if there is a player there or whatever
+            if (BlockUtil.hasIntersectingBoundingBoxes(neighbor)) {
+                for (EnumFacing dir : EnumFacing.values()) {
+                    if (dir.equals(EnumFacing.UP)) {
+                        continue;
+                    }
+
+                    BlockPos extend = neighbor.offset(dir);
+                    if (BlockUtil.isReplaceable(neighbor) && !BlockUtil.hasIntersectingBoundingBoxes(neighbor)) {
+                        positions.add(extend);
+                    }
+                }
+            } else {
+                if (BlockUtil.isReplaceable(neighbor)) {
+                    positions.add(neighbor);
+                }
+            }
+        }
+
+        return positions;
     }
 }
