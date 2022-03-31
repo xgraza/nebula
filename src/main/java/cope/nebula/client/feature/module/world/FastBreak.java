@@ -20,7 +20,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.network.play.client.CPacketPlayerDigging;
 import net.minecraft.network.play.client.CPacketPlayerDigging.Action;
 import net.minecraft.util.EnumFacing;
-import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
@@ -127,10 +126,7 @@ public class FastBreak extends Module {
 
         if (pos != null) {
             if (pos.equals(event.getPos())) {
-                if (breakMode.getValue().equals(Break.MANUAL)) {
-                    mc.player.connection.sendPacket(new CPacketPlayerDigging(Action.STOP_DESTROY_BLOCK, pos, facing));
-                }
-
+                mc.player.connection.sendPacket(new CPacketPlayerDigging(Action.STOP_DESTROY_BLOCK, pos, facing));
                 return;
             } else {
                 // tell the server we're gonna stop breaking this block
@@ -262,6 +258,6 @@ public class FastBreak extends Module {
     }
 
     public enum Break {
-        AUTOMATIC, STRICT, MANUAL
+        AUTOMATIC, STRICT
     }
 }
