@@ -75,6 +75,7 @@ public class ModuleManager implements Globals {
             new Tracers(),
 
             // World
+            new AutoTool(),
             new FastBreak(),
             new FastPlace(),
             new NoGlitchBlocks(),
