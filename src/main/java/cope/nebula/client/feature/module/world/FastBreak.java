@@ -58,8 +58,6 @@ public class FastBreak extends Module {
     @Override
     public void onRender3d() {
         if (pos != null) {
-            // double breakTime = getTimeToBreakBlock(pos, swapSlot);
-            // boolean passed = stopwatch.passedMs((long) (breakTime * 1000.0));
             boolean passed = stopwatch.passedMs((long) (breakSpeed * 1000.0));
 
             int r = passed ? 0 : 255;
