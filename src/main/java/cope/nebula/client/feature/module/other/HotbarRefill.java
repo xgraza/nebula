@@ -40,7 +40,7 @@ public class HotbarRefill extends Module {
                 continue;
             }
 
-            int percentage = stack.getCount() / stack.getMaxStackSize();
+            double percentage = ((double) stack.getCount() / stack.getMaxStackSize()) * 100.0;
             if (percentage <= percent.getValue()) {
                 refill(i, stack);
             }
