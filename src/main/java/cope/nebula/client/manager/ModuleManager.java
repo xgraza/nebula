@@ -40,6 +40,7 @@ public class ModuleManager implements Globals {
 
             // Exploit
             new ChorusControl(),
+            new FastProjectile(),
             new PacketFly(),
             new PearlBait(),
             new PingSpoof(),
