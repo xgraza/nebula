@@ -46,7 +46,7 @@ public class NoSlowDown extends Module {
 
     @Override
     public void onTick() {
-        if (shouldItemNoSlow() && !windowClick && !sneakState) {
+        if (shouldItemNoSlow() && bypass.getValue().equals(Bypass.SNEAK)) {
             applySneakBypass();
         }
 
