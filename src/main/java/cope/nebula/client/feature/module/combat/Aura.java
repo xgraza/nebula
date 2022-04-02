@@ -18,8 +18,11 @@ import cope.nebula.util.world.entity.player.rotation.AngleUtil;
 import cope.nebula.util.world.entity.player.rotation.Bone;
 import cope.nebula.util.world.entity.player.rotation.Rotation;
 import cope.nebula.util.world.entity.player.rotation.RotationType;
+import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.entity.RenderManager;
+import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemSword;
@@ -80,8 +83,8 @@ public class Aura extends Module {
             animation.setMax(target.height);
             animation.tick(animation.getProgress() <= animation.getMax() ? AnimationDirection.FORWARD : AnimationDirection.BACK);
 
-            glPushMatrix();
-            glDisable(GL_TEXTURE_2D);
+            GlStateManager.pushMatrix();
+            GlStateManager.disableTexture2D();
             GlStateManager.disableDepth();
 
             RenderManager renderManager = mc.getRenderManager();
@@ -89,7 +92,7 @@ public class Aura extends Module {
 
             glEnable(GL_LINE_SMOOTH);
             glHint(GL_LINE_SMOOTH_HINT, GL_NICEST);
-            glLineWidth(2.5f);
+            GlStateManager.glLineWidth(2.5f);
 
             int color = new Color(122, 49, 183).getRGB();
 
@@ -97,25 +100,26 @@ public class Aura extends Module {
             float green = (color >> 8 & 0xff) / 255f;
             float blue = (color & 0xff) / 255f;
 
-            glColor3d(red, green, blue);
-
             double x = AngleUtil.interpolate(target.posX, target.prevPosX);
             double y = AngleUtil.interpolate(target.posY, target.prevPosY);
             double z = AngleUtil.interpolate(target.posZ, target.prevPosZ);
 
-            glBegin(GL_LINE_LOOP);
+            Tessellator tessellator = Tessellator.getInstance();
+            BufferBuilder buffer = tessellator.getBuffer();
 
-                for (double angle = 0.0; angle < 2.0 * Math.PI; angle += 0.1) {
-                    glVertex3d(x + Math.sin(angle) * 0.8, y + animation.getProgress(), z + Math.cos(angle) * 0.8);
-                }
+            buffer.begin(GL_LINE_LOOP, DefaultVertexFormats.POSITION_COLOR);
 
-            glEnd();
+            for (double angle = 0.0; angle < 2.0 * Math.PI; angle += 0.1) {
+                buffer.pos(x + Math.sin(angle) * 0.8, y + animation.getProgress(), z + Math.cos(angle) * 0.8).color(red, green, blue, 1.0f).endVertex();
+            }
+
+            tessellator.draw();
 
             GlStateManager.enableDepth();
-            glEnable(GL_TEXTURE_2D);
+            GlStateManager.enableTexture2D();
             glDisable(GL_LINE_SMOOTH);
-            glLineWidth(1.0f);
-            glPopMatrix();
+            GlStateManager.glLineWidth(1.0f);
+            GlStateManager.popMatrix();
         }
     }
 
