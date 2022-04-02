@@ -6,8 +6,11 @@ import cope.nebula.client.feature.module.ModuleCategory;
 import cope.nebula.client.value.Value;
 import cope.nebula.util.world.entity.EntityUtil;
 import cope.nebula.util.world.entity.player.rotation.AngleUtil;
+import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.entity.RenderManager;
+import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
@@ -51,17 +54,19 @@ public class Tracers extends Module {
                 continue;
             }
 
-            glPushMatrix();
-            glDisable(GL_TEXTURE_2D);
+            GlStateManager.pushMatrix();
+            GlStateManager.disableTexture2D();
             GlStateManager.disableDepth();
 
             glEnable(GL_LINE_SMOOTH);
             glHint(GL_LINE_SMOOTH_HINT, GL_NICEST);
 
-            glLineWidth(lineWidth.getValue());
+            GlStateManager.glLineWidth(lineWidth.getValue());
 
             double dist = mc.player.getDistance(entity) / 20.0;
-            glColor3d(2.0 - dist, dist, 0.0);
+
+            float r = (float) (2.0 - dist);
+            float g = (float) dist;
 
             glLoadIdentity();
             ((IEntityRenderer) mc.entityRenderer).doOrientCamera(mc.getRenderPartialTicks());
@@ -73,22 +78,26 @@ public class Tracers extends Module {
             double y = AngleUtil.interpolate(entity.posY, entity.prevPosY);
             double z = AngleUtil.interpolate(entity.posZ, entity.prevPosZ);
 
-            glBegin(GL_LINES);
+            Tessellator tessellator = Tessellator.getInstance();
+            BufferBuilder buffer = tessellator.getBuffer();
 
-                glVertex3d(eyes.x, eyes.y + mc.player.getEyeHeight(), eyes.z);
-                glVertex3d(x - renderManager.viewerPosX, y - renderManager.viewerPosY, z - renderManager.viewerPosZ);
+            buffer.begin(GL_LINES, DefaultVertexFormats.POSITION_COLOR);
 
-                if (stem.getValue()) {
-                    glVertex3d(x - renderManager.viewerPosX, y - renderManager.viewerPosY, z - renderManager.viewerPosZ);
-                    glVertex3d(x - renderManager.viewerPosX, (y + entity.height) - renderManager.viewerPosY, z - renderManager.viewerPosZ);
-                }
+            // base tracers, from middle of screen to entity feet
+            buffer.pos(eyes.x, eyes.y + mc.player.getEyeHeight(), eyes.z).color(r, g, 0.0f, 1.0f).endVertex();
+            buffer.pos(x - renderManager.viewerPosX, y - renderManager.viewerPosY, z - renderManager.viewerPosZ).color(r, g, 0.0f, 1.0f).endVertex();
 
-            glEnd();
+            if (stem.getValue()) {
+                buffer.pos(x - renderManager.viewerPosX, y - renderManager.viewerPosY, z - renderManager.viewerPosZ).color(r, g, 0.0f, 1.0f).endVertex();
+                buffer.pos(x - renderManager.viewerPosX, (y + entity.height) - renderManager.viewerPosY, z - renderManager.viewerPosZ).color(r, g, 0.0f, 1.0f).endVertex();
+            }
+
+            tessellator.draw();
 
             GlStateManager.enableDepth();
-            glEnable(GL_TEXTURE_2D);
+            GlStateManager.disableTexture2D();
             glDisable(GL_LINE_SMOOTH);
-            glPopMatrix();
+            GlStateManager.popMatrix();
         }
     }
 }
