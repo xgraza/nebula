@@ -48,7 +48,7 @@ public class Info implements IHUDComponent {
         }
     }
 
-    private String getSpeedInKmh() {
+    public static String getSpeedInKmh() {
         return String.format("%.2f", Math.sqrt(
                 Math.pow(mc.player.posX - mc.player.prevPosX, 2) +
                         Math.pow(mc.player.posZ - mc.player.prevPosZ, 2)) * 71.2729367892);
