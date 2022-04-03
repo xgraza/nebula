@@ -23,7 +23,7 @@ public class Rotation {
     }
 
     public Rotation(RotationType type, float yaw, float pitch) {
-        this.type = RotationType.NONE;
+        this.type = type;
         this.yaw = yaw;
         this.pitch = pitch;
     }

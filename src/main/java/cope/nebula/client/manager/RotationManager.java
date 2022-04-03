@@ -10,6 +10,7 @@ import cope.nebula.util.Globals;
 import cope.nebula.util.internal.timing.Stopwatch;
 import cope.nebula.util.internal.timing.TimeFormat;
 import cope.nebula.util.world.entity.player.rotation.Rotation;
+import cope.nebula.util.world.entity.player.rotation.RotationType;
 import net.minecraft.network.play.client.CPacketPlayer;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
@@ -70,8 +71,10 @@ public class RotationManager implements Globals {
     }
 
     public void setRotation(Rotation rotationIn) {
-        rotation = rotationIn;
-        stopwatch.resetTime();
+        if (rotationIn.isValid()) {
+            rotation = rotationIn;
+            stopwatch.resetTime();
+        }
     }
 
     public void resetRotations() {

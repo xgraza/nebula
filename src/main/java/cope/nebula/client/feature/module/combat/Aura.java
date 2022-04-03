@@ -29,6 +29,7 @@ import net.minecraft.item.ItemSword;
 import net.minecraft.network.play.client.CPacketAnimation;
 import net.minecraft.network.play.client.CPacketUseEntity;
 import net.minecraft.util.EnumHand;
+import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 import java.awt.*;
@@ -123,7 +124,7 @@ public class Aura extends Module {
         }
     }
 
-    @SubscribeEvent
+    @SubscribeEvent(priority = EventPriority.HIGHEST)
     public void onMotionUpdate(MotionUpdateEvent event) {
         if (!isTargetValid(target)) {
             target = null;
@@ -184,15 +185,11 @@ public class Aura extends Module {
      * Attacks the current target
      */
     private void attack() {
-        if (!rotate.getValue().equals(RotationType.NONE) && keep.getValue()) {
+        if (!rotate.getValue().equals(RotationType.NONE)) {
             rotate();
         }
 
         if (canAttack()) {
-            if (!rotate.getValue().equals(RotationType.NONE) && !keep.getValue()) {
-                rotate();
-            }
-
             // in 1.8, we swing before we attack, but in 1.12 we swing after we attack
             if (swing.getValue().equals(Swing.PRE)) {
                 swingItem();

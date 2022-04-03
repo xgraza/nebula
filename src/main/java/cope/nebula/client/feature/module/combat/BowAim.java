@@ -13,6 +13,7 @@ import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.init.Items;
+import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 import java.awt.*;
@@ -91,7 +92,7 @@ public class BowAim extends Module {
         }
     }
 
-    @SubscribeEvent
+    @SubscribeEvent(priority = EventPriority.HIGHEST)
     public void onMotionUpdate(MotionUpdateEvent event) {
         List<EntityLivingBase> entities = mc.world.getEntities(EntityLivingBase.class,
                 (e) -> e != null &&

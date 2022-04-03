@@ -109,6 +109,7 @@ public abstract class MixinEntityPlayerSP extends AbstractClientPlayer {
 
             // if we have moved at all
             boolean moved = diffX * diffX + diffY * diffY + diffZ * diffZ > 9.0E-4 || positionUpdateTicks >= 20;
+            // boolean moved = diffX * diffX + diffY * diffY + diffZ * diffZ > 0.0 || positionUpdateTicks >= 20;
 
             // differences in our yaw & pitch
             float diffYaw = event.getYaw() - lastReportedYaw;
