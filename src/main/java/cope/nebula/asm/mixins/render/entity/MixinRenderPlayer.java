@@ -13,43 +13,58 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(RenderPlayer.class)
 public class MixinRenderPlayer {
-    private float prevYaw = Float.NaN, prevPitch = Float.NaN;
+    private float renderPitch;
+    private float renderYaw;
+    private float renderHeadYaw;
+    private float prevRenderHeadYaw;
+    private float lastRenderHeadYaw = 0.0f;
+    private float prevRenderPitch;
+    private float lastRenderPitch = 0.0f;
+
+    private boolean b = false;
 
     @Inject(method = "doRender(Lnet/minecraft/client/entity/AbstractClientPlayer;DDDFF)V", at = @At("HEAD"))
-    public void doRenderPre(AbstractClientPlayer entity, double x, double y, double z, float entityYaw, float partialTicks, CallbackInfo info) {
-        if (Globals.EVENT_BUS.post(new RenderPlayerEvent()) && entity.equals(Globals.mc.player)) {
-            prevYaw = entity.rotationYaw;
-            prevPitch = entity.rotationPitch;
+    public void doRenderPre(AbstractClientPlayer player, double x, double y, double z, float entityYaw, float partialTicks, CallbackInfo info) {
+        if (Globals.EVENT_BUS.post(new RenderPlayerEvent()) && player.equals(Globals.mc.player)) {
+            b = true;
 
             float yaw = Nebula.getInstance().getRotationManager().getYaw();
             float pitch = Nebula.getInstance().getRotationManager().getPitch();
 
-            entity.rotationYaw = yaw;
-            entity.rotationYawHead = yaw;
-            entity.renderYawOffset = yaw;
-            entity.prevRotationYaw = yaw;
-            entity.prevRotationYawHead = yaw;
+            renderPitch = player.rotationPitch;
+            renderYaw = player.rotationYaw;
 
-            entity.rotationPitch = pitch;
-            entity.prevRotationPitch = pitch;
+            renderHeadYaw = player.rotationYawHead;
+
+            prevRenderHeadYaw = player.prevRotationYawHead;
+            prevRenderPitch = player.prevRotationPitch;
+
+            player.rotationPitch = pitch;
+            player.rotationYaw = yaw;
+
+            player.renderYawOffset = yaw;
+            player.rotationYawHead = yaw;
+
+            player.prevRotationYawHead = lastRenderHeadYaw;
+            player.prevRotationPitch = lastRenderPitch;
         }
     }
 
     @Inject(method = "doRender(Lnet/minecraft/client/entity/AbstractClientPlayer;DDDFF)V", at = @At("TAIL"))
-    public void doRenderPost(AbstractClientPlayer entity, double x, double y, double z, float entityYaw, float partialTicks, CallbackInfo info) {
-        if (!Float.isNaN(prevYaw) && !Float.isNaN(prevPitch)) {
-            entity.rotationYaw = prevYaw;
-            entity.rotationYawHead = prevYaw;
+    public void doRenderPost(AbstractClientPlayer player, double x, double y, double z, float entityYaw, float partialTicks, CallbackInfo info) {
+        if (player.equals(Globals.mc.player) && b) {
+            lastRenderHeadYaw = player.rotationYawHead;
+            lastRenderPitch = player.rotationPitch;
 
-            entity.prevRotationYaw = prevYaw;
-            entity.prevRotationYawHead = prevYaw;
+            player.rotationPitch = renderPitch;
+            player.rotationYaw = renderYaw;
 
-            entity.rotationPitch = prevPitch;
-            entity.prevRotationPitch = prevPitch;
+            player.prevRotationPitch = prevRenderPitch;
 
-            // reset previous rotations
-            prevPitch = Float.NaN;
-            prevYaw = Float.NaN;
+            player.rotationYawHead = renderHeadYaw;
+            player.prevRotationYawHead = prevRenderHeadYaw;
+
+            b = false;
         }
     }
 
