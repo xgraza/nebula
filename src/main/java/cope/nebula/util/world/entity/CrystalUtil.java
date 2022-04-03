@@ -98,18 +98,19 @@ public class CrystalUtil implements Globals {
      */
     public static void placeAt(BlockPos pos, EnumHand hand, boolean strictDirection, boolean swing, RotationType rotate) {
         EnumFacing facing = EnumFacing.UP;
-        Vec3d vec = new Vec3d(0.0, 0.0, 0.0);
+        Vec3d vec = Vec3d.ZERO;
 
-        if (strictDirection) {
-            if (pos.getY() > mc.player.getEntityBoundingBox().minY + mc.player.getEyeHeight()) {
-                RayTraceResult result = mc.world.rayTraceBlocks(mc.player.getPositionEyes(1.0f), new Vec3d(pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5));
+        if (strictDirection && pos.getY() > mc.player.getEntityBoundingBox().minY + mc.player.getEyeHeight()) {
+            RayTraceResult result = mc.world.rayTraceBlocks(mc.player.getPositionEyes(1.0f), new Vec3d(pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5));
 
-                if (result != null) {
-                    facing = result.sideHit == null ? EnumFacing.DOWN : result.sideHit;
+            if (result != null) {
+                facing = result.sideHit == null ? EnumFacing.DOWN : result.sideHit;
 
-                    if (result.hitVec != null) {
-                        vec = result.hitVec;
-                    }
+                if (result.hitVec != null) {
+                    vec = result.hitVec;
+                } else {
+                    // we'll make our own
+                    vec = new Vec3d(pos).add(0.5, 0.5, 0.5).add(new Vec3d(facing.getOpposite().getDirectionVec()).scale(0.5));
                 }
             }
         }
@@ -121,11 +122,17 @@ public class CrystalUtil implements Globals {
             }
         }
 
-        mc.player.connection.sendPacket(new CPacketPlayerTryUseItemOnBlock(
-                pos, facing, hand,
-                (float) (vec.x - pos.getX()),
-                (float) (vec.y - pos.getY()),
-                (float) (vec.z - pos.getZ())));
+        float facingX = 0.0f;
+        float facingY = 0.0f;
+        float facingZ = 0.0f;
+
+        if (!vec.equals(Vec3d.ZERO)) {
+            facingX = (float) (vec.x - pos.getX());
+            facingY = (float) (vec.y - pos.getY());
+            facingZ = (float) (vec.z - pos.getZ());
+        }
+
+        mc.player.connection.sendPacket(new CPacketPlayerTryUseItemOnBlock(pos, facing, hand, facingX, facingY, facingZ));
 
         if (swing) {
             mc.player.swingArm(hand);
