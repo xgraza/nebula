@@ -1,6 +1,7 @@
 package cope.nebula.util.world.damage;
 
 import cope.nebula.util.Globals;
+import net.minecraft.util.CombatRules;
 import net.minecraft.world.World;
 
 /**
@@ -22,6 +23,17 @@ public class DamageUtil implements Globals {
         }
 
         int diff = world.getDifficulty().getId();
-        return damage * (diff * 0.5f);
+        switch (diff) {
+            case 0:
+                return 0.0f;
+
+            case 1:
+                return Math.min(damage / 2.0f + 1.0f, damage);
+
+            case 3:
+                return damage * 3.0f / 2.0f;
+        }
+
+        return damage;
     }
 }

@@ -3,6 +3,8 @@ package cope.nebula.client.feature.command.impl;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import cope.nebula.client.feature.command.Command;
 import net.minecraft.client.entity.EntityOtherPlayerMP;
+import net.minecraft.init.MobEffects;
+import net.minecraft.potion.PotionEffect;
 import net.minecraft.world.GameType;
 
 public class FakePlayer extends Command {
@@ -26,6 +28,8 @@ public class FakePlayer extends Command {
                     fakePlayer.inventory.copyInventory(mc.player.inventory);
                     fakePlayer.setHealth(20.0f);
                     fakePlayer.setGameType(GameType.SURVIVAL);
+
+                    fakePlayer.addPotionEffect(new PotionEffect(MobEffects.RESISTANCE, 1, 999999));
 
                     mc.world.spawnEntity(fakePlayer);
 
