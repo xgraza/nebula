@@ -82,6 +82,7 @@ public class AutoCrystal extends Module {
     public static final Value<Float> maxLocal = new Value<>("MaxLocal", 12.0f, 1.0f, 20.0f);
     public static final Value<Boolean> safety = new Value<>("Safety", true);
 
+    public static final Value<Boolean> swing = new Value<>("Swing", true);
 
     // targets
     private EntityPlayer target = null;
@@ -182,7 +183,7 @@ public class AutoCrystal extends Module {
                     }
                 }
 
-                CrystalUtil.attack(attackCrystal.getEntityId(), hand, true);
+                CrystalUtil.attack(attackCrystal.getEntityId(), hand, swing.getValue());
                 inhibitCrystals.put(attackCrystal, new Stopwatch().resetTime());
             }
         }
@@ -213,7 +214,7 @@ public class AutoCrystal extends Module {
                     }
                 }
 
-                CrystalUtil.placeAt(placePos, hand, interact.getValue().equals(Interact.STRICT), true, rotate.getValue().rotationType);
+                CrystalUtil.placeAt(placePos, hand, interact.getValue().equals(Interact.STRICT), swing.getValue(), rotate.getValue().rotationType);
 
                 if (swapping.getValue().equals(SwapType.SERVER)) {
                     swapBack();
