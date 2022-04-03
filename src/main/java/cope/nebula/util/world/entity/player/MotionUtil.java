@@ -3,6 +3,7 @@ package cope.nebula.util.world.entity.player;
 import cope.nebula.util.Globals;
 import cope.nebula.util.internal.math.Vec2d;
 import cope.nebula.util.world.entity.player.rotation.AngleUtil;
+import net.minecraft.init.MobEffects;
 
 /**
  * Checks/calculates movement values
@@ -53,5 +54,32 @@ public class MotionUtil implements Globals {
                 forward * motionSpeed * sin + strafe * motionSpeed * cos,
                 forward * motionSpeed * cos - strafe * motionSpeed * sin
         );
+    }
+
+    /**
+     * Gets the base NCP speed
+     * @return the base NCP speed
+     */
+    public static double getBaseNCPSpeed() {
+        double baseSpeed = 0.2873;
+        if (mc.player.isPotionActive(MobEffects.SPEED)) {
+            baseSpeed *= 1.0 + 0.2 * (mc.player.getActivePotionEffect(MobEffects.SPEED).getAmplifier() + 1);
+        }
+
+        return baseSpeed;
+    }
+
+    /**
+     * Gets the vanilla jump height
+     * @param strict if to use a more strict y height
+     * @return the vanilla jump height
+     */
+    public static double getJumpHeight(boolean strict) {
+        double y = strict ? 0.42 : 0.3995;
+        if (mc.player.isPotionActive(MobEffects.JUMP_BOOST)) {
+            y += (mc.player.getActivePotionEffect(MobEffects.JUMP_BOOST).getAmplifier() + 1) * 0.1;
+        }
+
+        return y;
     }
 }
