@@ -39,6 +39,7 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import java.awt.*;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -230,6 +231,7 @@ public class AutoCrystal extends Module {
             }
 
             if (placePos.equals(crystal.getPosition().down())) {
+                attackCrystal = crystal;
                 placedCrystals.add(crystal);
             }
         }
@@ -243,6 +245,9 @@ public class AutoCrystal extends Module {
             }
 
             if (event.getEntity().equals(attackCrystal)) {
+                placedCrystals.remove(attackCrystal);
+                inhibitCrystals.remove(attackCrystal);
+
                 attackCrystal.setDead();
                 attackCrystal = null;
             }
@@ -377,28 +382,30 @@ public class AutoCrystal extends Module {
      * I should make this sort by damage done to player, but in the end it doesn't really matter
      */
     private void findBestEndCrystal() {
-        double dist = 0.0;
-        EntityEnderCrystal crystal = null;
+        EntityEnderCrystal crystal = attackCrystal;
 
-        for (EntityEnderCrystal entity : placedCrystals) {
-            if (entity == null || entity.isDead || entity.ticksExisted < ticksExisted.getValue()) {
-                continue;
-            }
+        if (crystal == null) {
+            double dist = 0.0;
+            for (EntityEnderCrystal entity : placedCrystals) {
+                if (entity == null || entity.isDead || entity.ticksExisted < ticksExisted.getValue()) {
+                    continue;
+                }
 
-            double distance = mc.player.getDistanceSq(entity);
+                double distance = mc.player.getDistanceSq(entity);
 
-            double range = explodeRange.getValue() * explodeRange.getValue();
-            if (!mc.player.canEntityBeSeen(entity)) {
-                range = explodeWallRange.getValue() * explodeWallRange.getValue();
-            }
+                double range = explodeRange.getValue() * explodeRange.getValue();
+                if (!mc.player.canEntityBeSeen(entity)) {
+                    range = explodeWallRange.getValue() * explodeWallRange.getValue();
+                }
 
-            if (distance > range) {
-                continue;
-            }
+                if (distance > range) {
+                    continue;
+                }
 
-            if (crystal == null || distance < dist) {
-                dist = distance;
-                crystal = entity;
+                if (crystal == null || distance < dist) {
+                    dist = distance;
+                    crystal = entity;
+                }
             }
         }
 
