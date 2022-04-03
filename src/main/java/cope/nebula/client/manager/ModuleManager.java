@@ -32,6 +32,7 @@ public class ModuleManager implements Globals {
             new AutoCrystal(),
             new AutoLogout(),
             new AutoTotem(),
+            new BowAim(),
             new BowRelease(),
             new Criticals(),
             new FeetTrap(),
