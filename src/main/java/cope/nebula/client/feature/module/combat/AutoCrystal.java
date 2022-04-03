@@ -316,7 +316,8 @@ public class AutoCrystal extends Module {
         BlockPos position = null;
         float damage = 1.0f;
 
-        for (BlockPos pos : BlockUtil.sphere(mc.player.getPosition(), placeRange.getValue().intValue())) {
+        BlockPos origin = new BlockPos(mc.player.posX, mc.player.posY, mc.player.posZ);
+        for (BlockPos pos : BlockUtil.sphere(origin, placeRange.getValue().intValue())) {
             // if we cannot see the position we want to place in and it exceeds our wall range bounds, we cant use this position
             if (!RaycastUtil.isBlockVisible(pos) && !BlockUtil.isInRange(pos, placeWallRange.getValue())) {
                 continue;
