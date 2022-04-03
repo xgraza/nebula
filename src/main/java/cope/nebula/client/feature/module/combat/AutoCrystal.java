@@ -276,7 +276,7 @@ public class AutoCrystal extends Module {
                 }
             } else if (event.getPacket() instanceof SPacketExplosion) {
                 SPacketExplosion packet = event.getPacket();
-                double power = packet.getStrength() * 2.0;
+                double power = packet.getStrength() * packet.getStrength();
 
                 for (Entity entity : mc.world.loadedEntityList) {
                     if (!(entity instanceof EntityEnderCrystal) || entity.isDead) {
