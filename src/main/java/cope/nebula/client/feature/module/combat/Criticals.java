@@ -50,6 +50,10 @@ public class Criticals extends Module {
                         mc.player.connection.sendPacket(new Position(mc.player.posX, minY + 0.1100013579, mc.player.posZ, false));
                         mc.player.connection.sendPacket(new Position(mc.player.posX, minY + 0.0000013579, mc.player.posZ, false));
                         break;
+
+                    case JUMP:
+                        mc.player.jump();
+                        break;
                 }
 
                 // so critical hits will show up on fake players
@@ -61,6 +65,6 @@ public class Criticals extends Module {
     }
 
     public enum Mode {
-        PACKET, STRICT
+        PACKET, STRICT, JUMP
     }
 }
