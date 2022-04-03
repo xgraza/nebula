@@ -25,6 +25,8 @@ import static org.lwjgl.opengl.GL11.*;
  * Credit: https://github.com/Sxmurai/not-konas-src/blob/main/src/main/java/me/darki/konas/module/modules/combat/BowAim.java
  *
  * I did **not** write any of the rotation methods in this module, this is skidded from above. I'm not that good at math, and this BowAim is nice.
+ *
+ * Konas devs, if you want your code removed please open an issue kthx
  */
 public class BowAim extends Module {
     public BowAim() {
