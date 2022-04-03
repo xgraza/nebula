@@ -40,7 +40,9 @@
         "render.MixinLayerArmorBase",
         "render.MixinParticleManager",
 
-        "world.block.MixinStateImplementation",
+        "world.block.state.MixinStateImplementation",
+        "world.block.MixinBlockCactus",
+        "world.block.MixinBlockFire",
         "world.MixinWorldClient"
     ],
     "injectors": {

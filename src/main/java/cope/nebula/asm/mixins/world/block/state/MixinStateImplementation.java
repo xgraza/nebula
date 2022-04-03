@@ -1,4 +1,4 @@
-package cope.nebula.asm.mixins.world.block;
+package cope.nebula.asm.mixins.world.block.state;
 
 import cope.nebula.client.events.BlockCollisionEvent;
 import net.minecraft.block.Block;

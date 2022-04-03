@@ -77,6 +77,7 @@ public class ModuleManager implements Globals {
 
             // World
             new AutoTool(),
+            new Avoid(),
             new FastBreak(),
             new FastPlace(),
             new NoGlitchBlocks(),
