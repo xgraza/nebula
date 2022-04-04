@@ -56,6 +56,7 @@ public class ModuleManager implements Globals {
             new NoFall(),
             new NoRotate(),
             new NoSlowDown(),
+            new PacketLag(),
             new ReverseStep(),
             new Speed(),
             new Sprint(),
