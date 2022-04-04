@@ -3,6 +3,8 @@ package cope.nebula.util.world;
 import cope.nebula.util.Globals;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.client.renderer.culling.Frustum;
+import net.minecraft.entity.Entity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.*;
 
@@ -13,6 +15,24 @@ import net.minecraft.util.math.*;
  * @since 3/28/22
  */
 public class RaycastUtil implements Globals {
+    private static final Frustum FRUSTUM = new Frustum();
+
+    /**
+     * Checks if a bounding box is in our frustum
+     * @param box the bounding box
+     * @return if it is within our frustum
+     */
+    public static boolean isInFrustum(AxisAlignedBB box) {
+        if (mc.getRenderViewEntity() == null) {
+            return false;
+        }
+
+        Entity renderViewEntity = mc.getRenderViewEntity();
+        FRUSTUM.setPosition(renderViewEntity.posX, renderViewEntity.posY, renderViewEntity.posZ);
+
+        return FRUSTUM.isBoundingBoxInFrustum(box);
+    }
+
     /**
      * Checks if we can see this block
      * @param pos the position
