@@ -77,10 +77,8 @@ public class ExplosionUtil implements Globals {
         float eof = MathHelper.clamp(enchantModifier, 0.0f, 20.0f);
         damage *= 1.0f - eof / 25.0f;
 
-        // EntityLivingBase#applyPotionDamageCalculations
         if (target.isPotionActive(MobEffects.RESISTANCE)) {
-            int resistanceLevel = (target.getActivePotionEffect(MobEffects.RESISTANCE).getAmplifier() + 1) * 5;
-            damage = (damage * (25.0f - resistanceLevel)) / 25.0f;
+            damage -= damage / 4.0f;
         }
 
         return Math.max(0.0f, damage);

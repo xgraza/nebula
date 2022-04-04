@@ -23,17 +23,6 @@ public class DamageUtil implements Globals {
         }
 
         int diff = world.getDifficulty().getId();
-        switch (diff) {
-            case 0:
-                return 0.0f;
-
-            case 1:
-                return Math.min(damage / 2.0f + 1.0f, damage);
-
-            case 3:
-                return damage * 3.0f / 2.0f;
-        }
-
-        return damage;
+        return damage * ((float) diff * 0.5f);
     }
 }
