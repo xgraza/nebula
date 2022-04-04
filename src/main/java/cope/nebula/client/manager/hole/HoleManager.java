@@ -9,6 +9,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Finds and records holes in the ground
@@ -17,7 +18,7 @@ import java.util.Set;
  * @since 3/8/22
  */
 public class HoleManager implements Globals {
-    private final Map<HoleType, Set<Hole>> holes = new HashMap<>();
+    private final Map<HoleType, Set<Hole>> holes = new ConcurrentHashMap<>();
 
     public void onTick() {
         holes.clear();
