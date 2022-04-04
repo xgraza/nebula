@@ -43,6 +43,7 @@
         "world.block.state.MixinStateImplementation",
         "world.block.MixinBlockCactus",
         "world.block.MixinBlockFire",
+        "world.MixinWorld",
         "world.MixinWorldClient"
     ],
     "injectors": {

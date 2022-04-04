@@ -1,14 +1,29 @@
 package cope.nebula.client.feature.module.render;
 
+import com.google.common.collect.Lists;
+import cope.nebula.client.events.PacketEvent;
+import cope.nebula.client.events.PacketEvent.Direction;
 import cope.nebula.client.feature.module.Module;
 import cope.nebula.client.feature.module.ModuleCategory;
 import cope.nebula.client.value.Value;
+import net.minecraft.network.play.server.SPacketParticles;
+import net.minecraft.util.EnumParticleTypes;
 import net.minecraftforge.client.event.RenderBlockOverlayEvent;
 import net.minecraftforge.client.event.RenderBlockOverlayEvent.OverlayType;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
+import java.util.List;
+
 public class AntiRender extends Module {
     public static AntiRender INSTANCE;
+
+    public static final List<EnumParticleTypes> EXPLOSION_PARTICLES = Lists.newArrayList(
+            EnumParticleTypes.EXPLOSION_HUGE,
+            EnumParticleTypes.EXPLOSION_LARGE,
+            EnumParticleTypes.EXPLOSION_NORMAL,
+            EnumParticleTypes.SMOKE_LARGE,
+            EnumParticleTypes.SMOKE_NORMAL
+    );
 
     public AntiRender() {
         super("AntiRender", ModuleCategory.RENDER, "Stops things from rendering");
@@ -36,6 +51,16 @@ public class AntiRender extends Module {
             event.setCanceled(blocks.getValue());
         } else {
             event.setCanceled(fire.getValue());
+        }
+    }
+
+    @SubscribeEvent
+    public void onPacket(PacketEvent event) {
+        if (event.getDirection().equals(Direction.INCOMING) && event.getPacket() instanceof SPacketParticles) {
+            SPacketParticles packet = event.getPacket();
+            if (explosions.getValue() && EXPLOSION_PARTICLES.contains(packet.getParticleType())) {
+                event.setCanceled(true);
+            }
         }
     }
 
