@@ -40,21 +40,11 @@ public class Velocity extends Module {
             if (event.getPacket() instanceof SPacketEntityVelocity) {
                 SPacketEntityVelocity packet = event.getPacket();
 
-                if (horizontal.getValue() == 0.0f && vertical.getValue() == 0.0f) {
-                    event.setCanceled(true);
-                    return;
-                }
-
                 ((ISPacketEntityVelocity) packet).setMotionX(packet.getMotionX() * (int) (horizontal.getValue() / 100.0));
                 ((ISPacketEntityVelocity) packet).setMotionY(packet.getMotionY() * (int) (vertical.getValue() / 100.0));
                 ((ISPacketEntityVelocity) packet).setMotionZ(packet.getMotionZ() * (int) (horizontal.getValue() / 100.0));
             } else if (event.getPacket() instanceof SPacketExplosion) {
                 SPacketExplosion packet = event.getPacket();
-
-                if (horizontal.getValue() == 0.0f && vertical.getValue() == 0.0f) {
-                    event.setCanceled(true);
-                    return;
-                }
 
                 ((ISPacketExplosion) packet).setMotionX(packet.getMotionX() * (horizontal.getValue() / 100.0f));
                 ((ISPacketExplosion) packet).setMotionY(packet.getMotionY() * (vertical.getValue() / 100.0f));
