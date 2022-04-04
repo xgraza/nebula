@@ -2,6 +2,7 @@ package cope.nebula.asm.mixins.render.entity;
 
 import cope.nebula.client.Nebula;
 import cope.nebula.client.events.RenderPlayerEvent;
+import cope.nebula.client.feature.module.render.LogoutSpots;
 import cope.nebula.client.feature.module.render.Nametags;
 import cope.nebula.util.Globals;
 import net.minecraft.client.entity.AbstractClientPlayer;
@@ -70,6 +71,13 @@ public class MixinRenderPlayer {
 
     @Inject(method = "renderEntityName(Lnet/minecraft/client/entity/AbstractClientPlayer;DDDLjava/lang/String;D)V", at = @At("HEAD"), cancellable = true)
     public void renderEntityName(AbstractClientPlayer entityIn, double x, double y, double z, String name, double distanceSq, CallbackInfo info) {
+        if (LogoutSpots.spawnedFakes.stream().anyMatch(
+                (fake) -> fake.getUniqueID().equals(entityIn.getUniqueID()))) {
+
+            info.cancel();
+            return;
+        }
+
         if (Nametags.INSTANCE.isOn()) {
             info.cancel();
         }

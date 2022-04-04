@@ -74,6 +74,7 @@ public class ModuleManager implements Globals {
             new ClickGUI(),
             new CustomFont(),
             new HUD(),
+            new LogoutSpots(),
             new Nametags(),
             new Tracers(),
 

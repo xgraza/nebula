@@ -1,10 +1,16 @@
 package cope.nebula.client.manager;
 
+import com.mojang.authlib.GameProfile;
+import cope.nebula.client.events.ServerConnectionEvent;
+import cope.nebula.client.events.ServerConnectionEvent.Type;
 import cope.nebula.client.events.PacketEvent;
 import cope.nebula.client.events.PacketEvent.Direction;
 import cope.nebula.util.Globals;
 import net.minecraft.client.network.NetworkPlayerInfo;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.network.play.server.SPacketDisconnect;
+import net.minecraft.network.play.server.SPacketPlayerListItem;
+import net.minecraft.network.play.server.SPacketPlayerListItem.Action;
 import net.minecraft.network.play.server.SPacketTimeUpdate;
 import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
@@ -43,6 +49,30 @@ public class ServerManager implements Globals {
                 }
 
                 lastTick = System.currentTimeMillis();
+            } else if (event.getPacket() instanceof SPacketPlayerListItem) {
+                if (nullCheck()) {
+                    return;
+                }
+
+                SPacketPlayerListItem packet = event.getPacket();
+                Action action = packet.getAction();
+
+                if (action.equals(Action.ADD_PLAYER) || action.equals(Action.REMOVE_PLAYER)) {
+                    packet.getEntries().forEach((data) -> {
+                        GameProfile profile = data.getProfile();
+                        if (profile == null || profile.getId() == null) {
+                            return;
+                        }
+
+                        EntityPlayer player = mc.world.getPlayerEntityByUUID(profile.getId());
+                        if (player == null) {
+                            return;
+                        }
+
+                        Type type = action.equals(Action.ADD_PLAYER) ? Type.JOIN : Type.LEAVE;
+                        EVENT_BUS.post(new ServerConnectionEvent(type, profile, player));
+                    });
+                }
             }
         } else if (event.getPacket() instanceof SPacketDisconnect) {
             Arrays.fill(ticks, 0.0f);

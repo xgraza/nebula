@@ -1,6 +1,8 @@
 package cope.nebula.client.feature.command.impl;
 
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
+import cope.nebula.client.events.ServerConnectionEvent;
+import cope.nebula.client.events.ServerConnectionEvent.Type;
 import cope.nebula.client.feature.command.Command;
 import net.minecraft.client.entity.EntityOtherPlayerMP;
 import net.minecraft.init.MobEffects;
@@ -14,6 +16,9 @@ public class FakePlayer extends Command {
         super("fakeplayer", LiteralArgumentBuilder.literal("fakeplayer")
                 .executes((ctx) -> {
                     if (fakePlayer != null) {
+                        // LogoutSpots testing:
+                        // EVENT_BUS.post(new ServerConnectionEvent(Type.LEAVE, fakePlayer.getGameProfile(), fakePlayer));
+
                         mc.world.removeEntity(fakePlayer);
                         mc.world.removeEntityDangerously(fakePlayer);
 
