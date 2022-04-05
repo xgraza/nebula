@@ -10,6 +10,7 @@ import cope.nebula.client.feature.module.ModuleCategory;
 import cope.nebula.client.value.Value;
 import cope.nebula.util.internal.timing.Stopwatch;
 import cope.nebula.util.internal.timing.TimeFormat;
+import cope.nebula.util.renderer.FontUtil;
 import cope.nebula.util.renderer.RenderUtil;
 import cope.nebula.util.world.BlockUtil;
 import cope.nebula.util.world.RaycastUtil;
@@ -22,6 +23,8 @@ import cope.nebula.util.world.entity.player.rotation.AngleUtil;
 import cope.nebula.util.world.entity.player.rotation.Bone;
 import cope.nebula.util.world.entity.player.rotation.Rotation;
 import cope.nebula.util.world.entity.player.rotation.RotationType;
+import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.EntityEnderCrystal;
 import net.minecraft.entity.player.EntityPlayer;
@@ -30,6 +33,7 @@ import net.minecraft.init.SoundEvents;
 import net.minecraft.network.play.server.SPacketDestroyEntities;
 import net.minecraft.network.play.server.SPacketExplosion;
 import net.minecraft.network.play.server.SPacketSoundEffect;
+import net.minecraft.network.play.server.SPacketSpawnObject;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
@@ -39,7 +43,6 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import java.awt.*;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -89,6 +92,9 @@ public class AutoCrystal extends Module {
     private BlockPos placePos = null;
     private EntityEnderCrystal attackCrystal = null;
 
+    private float damage = 0.5f;
+    private int entityIdSpawn = -1;
+
     // rotations
     private Rotation nextRotation = Rotation.INVALID_ROTATION;
 
@@ -106,8 +112,8 @@ public class AutoCrystal extends Module {
     private final Stopwatch swapTimer = new Stopwatch();
     private final Stopwatch crystalCountTimer = new Stopwatch();
 
-    private final Set<EntityEnderCrystal> placedCrystals = new HashSet<>();
-    private final Map<EntityEnderCrystal, Stopwatch> inhibitCrystals = new HashMap<>();
+    private final Set<Integer> placedCrystals = new HashSet<>();
+    private final Map<Integer, Stopwatch> inhibitCrystals = new HashMap<>();
 
     @Override
     public String getDisplayInfo() {
@@ -152,8 +158,32 @@ public class AutoCrystal extends Module {
                     .offset(-mc.getRenderManager().viewerPosX, -mc.getRenderManager().viewerPosY, -mc.getRenderManager().viewerPosZ);
             int color = new Color(122, 49, 183, 120).getRGB();
 
+            // box render
+
             RenderUtil.renderFilledBox(box, color);
             RenderUtil.renderOutlinedBox(box, 3.5f, color);
+
+            // text render
+
+            String text = String.format("%.2f", damage);
+
+            GlStateManager.pushMatrix();
+            GlStateManager.disableDepth();
+
+            RenderManager renderManager = mc.getRenderManager();
+
+            GlStateManager.translate((placePos.getX() + 0.5f) - renderManager.viewerPosX, (placePos.getY() + 0.5f) - renderManager.viewerPosY, (placePos.getZ() + 0.5f) - renderManager.viewerPosZ);
+            GlStateManager.glNormal3f(0.0f, 1.0f, 0.0f);
+            GlStateManager.rotate(-mc.player.rotationYaw, 0.0f, 1.0f, 0.0f);
+            GlStateManager.rotate(mc.player.rotationPitch, mc.gameSettings.thirdPersonView == 2 ? -1.0f : 1.0f, 0.0f, 0.0f);
+            GlStateManager.scale(-0.02666667, -0.02666667, 0.02666667);
+
+            GlStateManager.translate(-(FontUtil.getWidth(text) / 2.0), 0.0, 0.0);
+
+            FontUtil.drawString(text, 0.0f, 0.0f, -1);
+
+            GlStateManager.enableDepth();
+            GlStateManager.popMatrix();
         }
     }
 
@@ -184,7 +214,7 @@ public class AutoCrystal extends Module {
                 }
 
                 CrystalUtil.attack(attackCrystal.getEntityId(), hand, swing.getValue());
-                inhibitCrystals.put(attackCrystal, new Stopwatch().resetTime());
+                inhibitCrystals.put(attackCrystal.getEntityId(), new Stopwatch().resetTime());
             }
         }
 
@@ -231,9 +261,9 @@ public class AutoCrystal extends Module {
                 return;
             }
 
-            if (placePos.equals(crystal.getPosition().down())) {
+            if (placePos.equals(crystal.getPosition().down()) || crystal.getEntityId() == entityIdSpawn) {
                 attackCrystal = crystal;
-                placedCrystals.add(crystal);
+                placedCrystals.add(crystal.getEntityId());
             }
         }
     }
@@ -311,6 +341,19 @@ public class AutoCrystal extends Module {
                         }
                     }
                 }
+            } else if (event.getPacket() instanceof SPacketSpawnObject) {
+                SPacketSpawnObject packet = event.getPacket();
+                if (packet.getType() == 51) {
+                    BlockPos pos = new BlockPos(packet.getX(), packet.getY(), packet.getZ());
+                    if (placePos != null && placePos.equals(pos.down())) {
+                        placedCrystals.add(entityIdSpawn = packet.getEntityID());
+
+                        // just attack
+                        if (explodeSpeed.getValue() == 20.0) {
+                            CrystalUtil.attack(entityIdSpawn, hand, swing.getValue());
+                        }
+                    }
+                }
             }
         }
     }
@@ -320,7 +363,7 @@ public class AutoCrystal extends Module {
      */
     private void findBestPlacePosition() {
         BlockPos position = null;
-        float damage = 1.0f;
+        float currDamage = 1.0f;
 
         BlockPos origin = new BlockPos(mc.player.posX, mc.player.posY, mc.player.posZ);
         for (BlockPos pos : BlockUtil.sphere(origin, placeRange.getValue().intValue())) {
@@ -346,10 +389,10 @@ public class AutoCrystal extends Module {
                 continue;
             }
 
-            float targetDamage = damage;
+            float targetDamage = currDamage;
             if (target != null) {
                 targetDamage = ExplosionUtil.calculateCrystalDamage(target, vec, ignoreTerrain.getValue());
-                if (targetDamage < minDamage.getValue() || (safety.getValue() && localDamage > targetDamage)) {
+                if (targetDamage < minDamage.getValue() || localDamage > targetDamage) {
                     continue;
                 }
             }
@@ -362,19 +405,20 @@ public class AutoCrystal extends Module {
                     continue;
                 }
 
-                if (playerDamage > targetDamage) {
+                if (playerDamage > targetDamage && playerDamage > localDamage) {
                     targetDamage = playerDamage;
                     target = player;
                 }
             }
 
-            if (targetDamage > damage) {
+            if (targetDamage > currDamage) {
                 position = pos;
-                damage = targetDamage;
+                currDamage = targetDamage;
             }
         }
 
         placePos = position;
+        damage = currDamage;
     }
 
     /**
@@ -387,7 +431,8 @@ public class AutoCrystal extends Module {
 
         if (crystal == null) {
             double dist = 0.0;
-            for (EntityEnderCrystal entity : placedCrystals) {
+            for (int entityId : placedCrystals) {
+                Entity entity = mc.world.getEntityByID(entityId);
                 if (entity == null || entity.isDead || entity.ticksExisted < ticksExisted.getValue()) {
                     continue;
                 }
@@ -405,7 +450,7 @@ public class AutoCrystal extends Module {
 
                 if (crystal == null || distance < dist) {
                     dist = distance;
-                    crystal = entity;
+                    crystal = (EntityEnderCrystal) entity;
                 }
             }
         }
