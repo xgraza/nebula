@@ -37,25 +37,20 @@ public class ExplosionUtil implements Globals {
      * @param player The target player
      * @param vec The position
      * @param ignoreTerrain If to ignore terrain blocks when calculating block density
-     * @param powerSq The power of the explosion squared
+     * @param doublePower The power of the explosion squared
      * @param causesFire If the explosion causes fire
      * @param damagesTerrain If the explosion damages the terrain
      * @return the explosion damage to the target player
      */
-    public static float calculateExplosionDamage(EntityPlayer player, Vec3d vec, boolean ignoreTerrain, double powerSq, boolean causesFire, boolean damagesTerrain) {
-//        if (player == null || player.isCreative() || player.isDead) {
-//            return 0.0f;
-//        }
-
-        double size = player.getDistanceSq(vec.x, vec.y, vec.z) / powerSq;
+    public static float calculateExplosionDamage(EntityPlayer player, Vec3d vec, boolean ignoreTerrain, double doublePower, boolean causesFire, boolean damagesTerrain) {
+        double size = player.getDistanceSq(vec.x, vec.y, vec.z) / (doublePower * doublePower);
         double density = RaycastUtil.getBlockDensity(ignoreTerrain, vec, player.getEntityBoundingBox());
-        // double density = mc.world.getBlockDensity(vec, player.getEntityBoundingBox());
 
         double impact = (1.0 - size) * density;
-        float damage = (float) ((impact * impact + impact) / 2.0f * 7.0f * powerSq + 1.0);
+        float damage = (float) ((impact * impact + impact) / 2.0f * 7.0f * doublePower + 1.0);
 
-        return getBlastReduction(player, DamageUtil.getScaledDamage(damage),
-                new Explosion(player.world, player, vec.x, vec.y, vec.z, (float) (powerSq / 2.0), causesFire, damagesTerrain));
+        return getBlastReduction(player, getExplosionScaledDamage(damage),
+                new Explosion(player.world, player, vec.x, vec.y, vec.z, (float) (doublePower / 2.0), causesFire, damagesTerrain));
     }
 
     /**
@@ -66,12 +61,11 @@ public class ExplosionUtil implements Globals {
      * @return a reduced damage value
      */
     public static float getBlastReduction(EntityPlayer target, float damage, Explosion explosion) {
-        DamageSource src = DamageSource.causeExplosionDamage(explosion);
         damage = CombatRules.getDamageAfterAbsorb(damage, target.getTotalArmorValue(), (float) target.getEntityAttribute(SharedMonsterAttributes.ARMOR_TOUGHNESS).getAttributeValue());
 
         int enchantModifier = 0;
         try {
-            enchantModifier = EnchantmentHelper.getEnchantmentModifierDamage(target.getArmorInventoryList(), src);
+            enchantModifier = EnchantmentHelper.getEnchantmentModifierDamage(target.getArmorInventoryList(), DamageSource.causeExplosionDamage(explosion));
         } catch (NullPointerException ignored) { }
 
         float eof = MathHelper.clamp(enchantModifier, 0.0f, 20.0f);
@@ -82,5 +76,20 @@ public class ExplosionUtil implements Globals {
         }
 
         return Math.max(0.0f, damage);
+    }
+
+    /**
+     * Gets the multiplied explosion damage based off the difficulty
+     * @param damage the rough explosion damage
+     * @return the scaled explosion damage
+     */
+    public static float getExplosionScaledDamage(float damage) {
+        switch (mc.world.getDifficulty()) {
+            case PEACEFUL: return 0.0f;
+            case EASY: return Math.min(damage / 2.0f + 1.0f, damage);
+            case HARD: return damage * 3.0f / 2.0f;
+        }
+
+        return damage;
     }
 }
