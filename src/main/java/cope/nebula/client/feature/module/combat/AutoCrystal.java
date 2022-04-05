@@ -346,6 +346,7 @@ public class AutoCrystal extends Module {
                 if (packet.getType() == 51) {
                     BlockPos pos = new BlockPos(packet.getX(), packet.getY(), packet.getZ());
                     if (placePos != null && placePos.equals(pos.down())) {
+                        ++crystalCount;
                         placedCrystals.add(entityIdSpawn = packet.getEntityID());
 
                         // just attack
