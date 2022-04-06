@@ -7,9 +7,13 @@ import cope.nebula.client.feature.module.Module;
 import cope.nebula.client.feature.module.ModuleCategory;
 import cope.nebula.client.value.Value;
 import cope.nebula.util.renderer.FontUtil;
+import net.minecraft.network.play.client.CPacketEntityAction;
+import net.minecraft.network.play.client.CPacketEntityAction.Action;
 import net.minecraft.network.play.client.CPacketPlayer;
 import net.minecraft.network.play.client.CPacketPlayer.Position;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+
+import java.util.concurrent.ThreadLocalRandom;
 
 public class NoFall extends Module {
     public NoFall() {
@@ -17,7 +21,7 @@ public class NoFall extends Module {
     }
 
     public static final Value<Mode> mode = new Value<>("Mode", Mode.BASIC);
-    public static final Value<Float> fallDistance = new Value<>("FallDistance", 3.0f, 3.0f, 20.0f);
+    public static final Value<Float> fallDistance = new Value<>("FallDistance", 3.0f, 2.0f, 20.0f);
 
     @Override
     public String getDisplayInfo() {
@@ -37,11 +41,18 @@ public class NoFall extends Module {
 
     @Override
     public void onTick() {
-        if (mc.player.fallDistance >= fallDistance.getValue()) {
-            if (mode.getValue().equals(Mode.SETBACK)) {
-                mc.player.connection.sendPacket(new Position(mc.player.posX, mc.player.posY + mc.player.fallDistance, mc.player.posZ, true));
-            } else if (mode.getValue().equals(Mode.NCP)) {
+        switch (mode.getValue()) {
+            case SETBACK: {
+                if (mc.player.fallDistance >= fallDistance.getValue()) {
+                    mc.player.connection.sendPacket(new Position(mc.player.posX, mc.player.posY + mc.player.fallDistance, mc.player.posZ, false));
+                    mc.player.fallDistance = 0.0f;
+                }
+                break;
+            }
+
+            case NCP: {
                 // TODO
+                break;
             }
         }
     }
