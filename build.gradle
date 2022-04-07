@@ -82,11 +82,28 @@ repositories {
     maven {
         url 'https://libraries.minecraft.net'
     }
+
+    maven {
+        name = 'impactdevelopment-repo'
+        url = 'https://impactdevelopment.github.io/maven/'
+    }
+
+    maven {
+        name = "jitpack.io"
+        url = "https://jitpack.io"
+    }
 }
 
 configurations {
     embed
-    compile.extendsFrom embed
+    implementation.extendsFrom embed
+
+    // lil bit of kami-blue macOS compatibility
+    all {
+        resolutionStrategy {
+            force 'org.lwjgl.lwjgl:lwjgl-platform:2.9.4-nightly-20150209'
+        }
+    }
 }
 
 dependencies {
@@ -103,6 +120,10 @@ dependencies {
     }
 
     embed('com.mojang:brigadier:1.0.18')
+
+//    // baritone
+//    implementation('com.github.cabaletta:baritone:1.2.14')
+//    embed('cabaletta:baritone-api:1.2')
 }
 
 processResources {
