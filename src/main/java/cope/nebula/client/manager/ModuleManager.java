@@ -50,6 +50,7 @@ public class ModuleManager implements Globals {
             new XCarry(),
 
             // Movement
+            new AutoWalk(),
             new HoleSnap(),
             new Jesus(),
             new LongJump(),
