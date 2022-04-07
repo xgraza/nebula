@@ -122,9 +122,9 @@ public class CrystalUtil implements Globals {
             }
         }
 
-        float facingX = 0.0f;
-        float facingY = 0.0f;
-        float facingZ = 0.0f;
+        float facingX = 0.5f;
+        float facingY = 0.5f;
+        float facingZ = 0.5f;
 
         if (!vec.equals(Vec3d.ZERO)) {
             facingX = (float) (vec.x - pos.getX());

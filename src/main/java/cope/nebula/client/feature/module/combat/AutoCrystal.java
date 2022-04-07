@@ -41,10 +41,7 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 import java.awt.*;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 public class AutoCrystal extends Module {
     public AutoCrystal() {
@@ -86,6 +83,7 @@ public class AutoCrystal extends Module {
     public static final Value<Boolean> safety = new Value<>("Safety", true);
 
     public static final Value<Boolean> swing = new Value<>("Swing", true);
+    public static final Value<Merge> merge = new Value<>("Merge", Merge.CONFIRM);
 
     // targets
     private EntityPlayer target = null;
@@ -213,8 +211,14 @@ public class AutoCrystal extends Module {
                     }
                 }
 
-                CrystalUtil.attack(attackCrystal.getEntityId(), hand, swing.getValue());
                 inhibitCrystals.put(attackCrystal.getEntityId(), new Stopwatch().resetTime());
+                CrystalUtil.attack(attackCrystal.getEntityId(), hand, swing.getValue());
+
+                if (merge.getValue().equals(Merge.INSTANT)) {
+                    attackCrystal.setDead();
+                    mc.world.removeEntity(attackCrystal);
+                    mc.world.removeEntityDangerously(attackCrystal);
+                }
             }
         }
 
@@ -231,7 +235,7 @@ public class AutoCrystal extends Module {
 
             if (placeTimer.getTime(TimeFormat.MILLISECONDS) / 50.0f >= 20.0f - placeSpeed.getValue()) {
                 // make sure we can place a crystal here
-                if (!CrystalUtil.canPlaceAt(placePos, true, protocol.getValue().equals(Protocol.UPDATED))) {
+                if (!CrystalUtil.canPlaceAt(placePos, inhibit.getValue(), protocol.getValue().equals(Protocol.UPDATED))) {
                     return;
                 }
 
@@ -244,7 +248,11 @@ public class AutoCrystal extends Module {
                     }
                 }
 
-                CrystalUtil.placeAt(placePos, hand, interact.getValue().equals(Interact.STRICT), swing.getValue(), rotate.getValue().rotationType);
+                CrystalUtil.placeAt(placePos,
+                        hand,
+                        interact.getValue().equals(Interact.STRICT),
+                        swing.getValue(),
+                        rotate.getValue().rotationType);
 
                 if (swapping.getValue().equals(SwapType.SERVER)) {
                     swapBack();
@@ -276,8 +284,8 @@ public class AutoCrystal extends Module {
             }
 
             if (event.getEntity().equals(attackCrystal)) {
-                placedCrystals.remove(attackCrystal);
-                inhibitCrystals.remove(attackCrystal);
+                placedCrystals.remove(attackCrystal.getEntityId());
+                inhibitCrystals.remove(attackCrystal.getEntityId());
 
                 attackCrystal.setDead();
                 attackCrystal = null;
@@ -303,43 +311,59 @@ public class AutoCrystal extends Module {
 
                     entity.setDead();
                     mc.world.removeEntity(entity);
+
+                    if (merge.getValue().equals(Merge.CONFIRM)) {
+                        mc.world.removeEntityDangerously(entity);
+                    }
                 }
             } else if (event.getPacket() instanceof SPacketExplosion) {
                 SPacketExplosion packet = event.getPacket();
                 double power = packet.getStrength() * packet.getStrength();
 
-                for (Entity entity : mc.world.loadedEntityList) {
-                    if (!(entity instanceof EntityEnderCrystal) || entity.isDead) {
-                        continue;
-                    }
-
-                    if (entity.getDistanceSq(packet.getX(), packet.getY(), packet.getZ()) < power) {
-                        if (attackCrystal != null && attackCrystal.getEntityId() == entity.getEntityId()) {
-                            attackCrystal = null;
-                        }
-
-                        entity.setDead();
-                        mc.world.removeEntity(entity);
-                    }
-                }
-            } else if (event.getPacket() instanceof SPacketSoundEffect) {
-                SPacketSoundEffect packet = event.getPacket();
-
-                if (packet.getSound().equals(SoundEvents.ENTITY_GENERIC_EXPLODE)) {
-                    for (Entity entity : mc.world.loadedEntityList) {
+                mc.addScheduledTask(() -> {
+                    for (Entity entity : new ArrayList<>(mc.world.loadedEntityList)) {
                         if (!(entity instanceof EntityEnderCrystal) || entity.isDead) {
                             continue;
                         }
 
-                        if (entity.getDistanceSq(packet.getX(), packet.getY(), packet.getZ()) < 12.0) {
+                        if (entity.getDistanceSq(packet.getX(), packet.getY(), packet.getZ()) < power) {
                             if (attackCrystal != null && attackCrystal.getEntityId() == entity.getEntityId()) {
                                 attackCrystal = null;
                             }
 
                             entity.setDead();
                             mc.world.removeEntity(entity);
+
+                            if (merge.getValue().equals(Merge.CONFIRM)) {
+                                mc.world.removeEntityDangerously(entity);
+                            }
                         }
                     }
+                });
+            } else if (event.getPacket() instanceof SPacketSoundEffect) {
+                SPacketSoundEffect packet = event.getPacket();
+
+                if (packet.getSound().equals(SoundEvents.ENTITY_GENERIC_EXPLODE)) {
+                    mc.addScheduledTask(() -> {
+                        for (Entity entity : new ArrayList<>(mc.world.loadedEntityList)) {
+                            if (!(entity instanceof EntityEnderCrystal) || entity.isDead) {
+                                continue;
+                            }
+
+                            if (entity.getDistanceSq(packet.getX(), packet.getY(), packet.getZ()) < 12.0) {
+                                if (attackCrystal != null && attackCrystal.getEntityId() == entity.getEntityId()) {
+                                    attackCrystal = null;
+                                }
+
+                                entity.setDead();
+                                mc.world.removeEntity(entity);
+
+                                if (merge.getValue().equals(Merge.CONFIRM)) {
+                                    mc.world.removeEntityDangerously(entity);
+                                }
+                            }
+                        }
+                    });
                 }
             } else if (event.getPacket() instanceof SPacketSpawnObject) {
                 SPacketSpawnObject packet = event.getPacket();
@@ -347,11 +371,24 @@ public class AutoCrystal extends Module {
                     BlockPos pos = new BlockPos(packet.getX(), packet.getY(), packet.getZ());
                     if (placePos != null && placePos.equals(pos.down())) {
                         ++crystalCount;
-                        placedCrystals.add(entityIdSpawn = packet.getEntityID());
 
-                        // just attack
+                        entityIdSpawn = packet.getEntityID();
+                        placedCrystals.add(packet.getEntityID());
+
                         if (explodeSpeed.getValue() == 20.0) {
-                            CrystalUtil.attack(entityIdSpawn, hand, swing.getValue());
+                            if (!rotate.getValue().equals(Rotate.NONE)) {
+//                                boolean result = sendRotations(AngleUtil.getEyes(attackCrystal, Bone.HEAD));
+//                                if (result) {
+//                                    // TODO
+//                                }
+
+                                Rotation rotation = AngleUtil.toVec(new Vec3d(pos).add(0.5, 0.5, 0.5));
+                                if (rotation.isValid()) {
+                                    getNebula().getRotationManager().setRotation(rotation);
+                                }
+                            }
+
+                            CrystalUtil.attack(packet.getEntityID(), hand, swing.getValue());
                         }
                     }
                 }
@@ -432,7 +469,7 @@ public class AutoCrystal extends Module {
 
         if (crystal == null) {
             double dist = 0.0;
-            for (int entityId : placedCrystals) {
+            for (int entityId : new HashSet<>(placedCrystals)) {
                 Entity entity = mc.world.getEntityByID(entityId);
                 if (entity == null || entity.isDead || entity.ticksExisted < ticksExisted.getValue()) {
                     continue;
@@ -456,14 +493,18 @@ public class AutoCrystal extends Module {
             }
         }
 
-        if (inhibit.getValue() && inhibitCrystals.containsKey(crystal)) {
-            Stopwatch stopwatch = inhibitCrystals.get(crystal);
+        if (crystal != null) {
+            int entityId = crystal.getEntityId();
 
-            int ping = 50 + getNebula().getServerManager().getLatency(mc.player.getUniqueID());
-            if (!stopwatch.passedMs(ping)) {
-                crystal = null;
-            } else {
-                inhibitCrystals.remove(crystal);
+            if (inhibit.getValue() && inhibitCrystals.containsKey(entityId)) {
+                Stopwatch stopwatch = inhibitCrystals.get(entityId);
+
+                int ping = 50 + getNebula().getServerManager().getLatency(mc.player.getUniqueID());
+                if (!stopwatch.passedMs(ping)) {
+                    crystal = null;
+                } else {
+                    inhibitCrystals.remove(entityId);
+                }
             }
         }
 
@@ -600,5 +641,22 @@ public class AutoCrystal extends Module {
          * Limits rotations while placing and exploding crystals
          */
         FULL
+    }
+
+    public enum Merge {
+        /**
+         * Does no merging
+         */
+        NONE,
+
+        /**
+         * Removes the crystal from the world instantly after sending the attack
+         */
+        INSTANT,
+
+        /**
+         * Removes the crystal from the world instantly once a packet has confirmed that crystal is gone
+         */
+        CONFIRM
     }
 }

@@ -44,7 +44,13 @@ public class ExplosionUtil implements Globals {
      */
     public static float calculateExplosionDamage(EntityPlayer player, Vec3d vec, boolean ignoreTerrain, double doublePower, boolean causesFire, boolean damagesTerrain) {
         double size = player.getDistanceSq(vec.x, vec.y, vec.z) / (doublePower * doublePower);
-        double density = RaycastUtil.getBlockDensity(ignoreTerrain, vec, player.getEntityBoundingBox());
+
+        double density = 0.0;
+        if (ignoreTerrain) {
+            density = RaycastUtil.getBlockDensity(ignoreTerrain, vec, player.getEntityBoundingBox());
+        } else {
+            density = mc.world.getBlockDensity(vec, player.getEntityBoundingBox());
+        }
 
         double impact = (1.0 - size) * density;
         float damage = (float) ((impact * impact + impact) / 2.0f * 7.0f * doublePower + 1.0);
