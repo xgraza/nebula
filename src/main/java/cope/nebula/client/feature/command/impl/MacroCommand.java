@@ -18,7 +18,7 @@ public class MacroCommand extends Command {
                             send("Please provide what this macro will do.");
                             return 0;
                         })
-                        .then(RequiredArgumentBuilder.argument("content", StringArgumentType.string())
+                        .then(RequiredArgumentBuilder.argument("content", StringArgumentType.greedyString())
                                 .executes((ctx) -> {
                                     Macro macro = new Macro(StringArgumentType.getString(ctx, "content"), KeyArgumentType.getKey(ctx, "keyCode"));
                                     Nebula.getInstance().getMacroManager().add(macro);
