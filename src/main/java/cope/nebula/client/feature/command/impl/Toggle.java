@@ -15,7 +15,7 @@ public class Toggle extends Command {
                             Module module = ModuleArgumentType.getModule(ctx, "module");
                             if (module == null) {
                                 send("That module does not exist.");
-                                return;
+                                return 0;
                             }
 
                             module.toggle();
