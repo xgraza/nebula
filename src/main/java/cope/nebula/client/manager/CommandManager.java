@@ -37,7 +37,7 @@ public class CommandManager implements Globals {
     @SubscribeEvent
     public void onPacket(PacketEvent event) {
         if (event.getPacket() instanceof CPacketChatMessage && event.getDirection().equals(Direction.OUTGOING)) {
-            CPacketChatMessage packet = (CPacketChatMessage) event.getPacket();
+            CPacketChatMessage packet = event.getPacket();
             if (packet.getMessage().startsWith(prefix)) {
                 event.setCanceled(true);
                 String message = packet.getMessage();
@@ -72,6 +72,14 @@ public class CommandManager implements Globals {
      */
     public String getPrefix() {
         return prefix;
+    }
+
+    /**
+     * Sets the command prefix
+     * @param prefix the command prefix
+     */
+    public void setPrefix(String prefix) {
+        this.prefix = prefix;
     }
 
     /**

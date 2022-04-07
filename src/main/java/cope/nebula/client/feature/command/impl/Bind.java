@@ -20,6 +20,11 @@ public class Bind extends Command {
                         .then(RequiredArgumentBuilder.argument("module", ModuleArgumentType.module())
                                 .executes((ctx) -> {
                                     Module module = ModuleArgumentType.getModule(ctx, "module");
+                                    if (module == null) {
+                                        send("That module does not exist.");
+                                        return 0;
+                                    }
+
                                     module.setKeyBind(KeyArgumentType.getKey(ctx, "keyCode"));
 
                                     send("Set " + module.getName() + "'s bind to "

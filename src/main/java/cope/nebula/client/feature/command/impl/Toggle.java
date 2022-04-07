@@ -13,6 +13,11 @@ public class Toggle extends Command {
                 .then(RequiredArgumentBuilder.argument("module", ModuleArgumentType.module())
                         .executes((ctx) -> {
                             Module module = ModuleArgumentType.getModule(ctx, "module");
+                            if (module == null) {
+                                send("That module does not exist.");
+                                return;
+                            }
+
                             module.toggle();
 
                             send(module.getName() + " toggled " + (
