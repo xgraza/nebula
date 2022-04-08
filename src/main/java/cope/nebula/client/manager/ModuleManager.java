@@ -74,6 +74,7 @@ public class ModuleManager implements Globals {
             // Render
             new AntiRender(),
             new Brightness(),
+            new Chams(),
             new ClickGUI(),
             new CustomFont(),
             new HUD(),
