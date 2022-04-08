@@ -440,7 +440,7 @@ public class AutoCrystal extends Module {
                 float playerDamage = ExplosionUtil.calculateCrystalDamage(player, vec, ignoreTerrain.getValue());
 
                 // protect friends
-                if (((IEntityPlayer) player).isFriend() && playerDamage > minDamage.getValue()) {
+                if (((IEntityPlayer) player).isFriend()) {
                     continue;
                 }
 
