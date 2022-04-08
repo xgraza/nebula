@@ -29,6 +29,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.EntityEnderCrystal;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
+import net.minecraft.init.MobEffects;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.network.play.server.SPacketDestroyEntities;
 import net.minecraft.network.play.server.SPacketExplosion;
@@ -67,6 +68,7 @@ public class AutoCrystal extends Module {
     public static final Value<Double> explodeWallRange = new Value<>(explode, "ExplodeWallRange", 3.0, 1.0, 6.0);
     public static final Value<Boolean> inhibit = new Value<>(explode, "Inhibit", true);
     public static final Value<Integer> ticksExisted = new Value<>(explode, "TicksExisted", 1, 0, 10);
+    public static final Value<Weakness> antiWeakness = new Value<>(explode, "AntiWeakness", Weakness.SERVER);
 
     // swapping
     public static final Value<SwapType> swapping = new Value<>("Swapping", SwapType.CLIENT);
@@ -209,6 +211,13 @@ public class AutoCrystal extends Module {
 
                 // reset time
                 explodeTimer.resetTime();
+
+                if (mc.player.isPotionActive(MobEffects.WEAKNESS) &&
+                        !mc.player.isPotionActive(MobEffects.STRENGTH) &&
+                        !antiWeakness.getValue().equals(Weakness.NONE)) {
+
+                    // TODO: dont just swap to swords, allow axe and pick swapping as well
+                }
 
                 // send rotations and check if we should limit to the next tick
                 if (!rotate.getValue().equals(Rotate.NONE) &&
@@ -611,6 +620,29 @@ public class AutoCrystal extends Module {
          * Updated 1.13+ server crystal placements, 1x1 holes
          */
         UPDATED
+    }
+
+    public enum Weakness {
+        /**
+         * Does nothing about weakness
+         */
+        NONE(SwapType.NONE),
+
+        /**
+         * Swaps to a tool server side
+         */
+        CLIENT(SwapType.CLIENT),
+
+        /**
+         * Swaps to a tool server side
+         */
+        SERVER(SwapType.SERVER);
+
+        private final SwapType swapType;
+
+        Weakness(SwapType swapType) {
+            this.swapType = swapType;
+        }
     }
 
     public enum Rotate {
