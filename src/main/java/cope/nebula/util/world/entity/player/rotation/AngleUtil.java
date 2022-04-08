@@ -22,6 +22,11 @@ public class AngleUtil implements Globals {
      * @return a rotation object to the entity
      */
     public static Rotation toEntity(Entity entity, Bone bone) {
+        // check for null entities
+        if (entity == null) {
+            return Rotation.INVALID_ROTATION;
+        }
+
         return toVec(getEyes(entity, bone));
     }
 
@@ -133,22 +138,5 @@ public class AngleUtil implements Globals {
         }
 
         return end + (start - end) * partialTicks;
-    }
-
-    /**
-     * Checks if a block pos is visible to the local player
-     * @param pos The position
-     * @return if we can see this block position
-     */
-    public static boolean isBlockVisible(BlockPos pos) {
-        RayTraceResult result = mc.world.rayTraceBlocks(
-                new Vec3d(mc.player.posX, mc.player.posY + mc.player.getEyeHeight(), mc.player.posZ),
-                new Vec3d(pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5),
-                false,
-                true,
-                false
-        );
-
-        return result == null;
     }
 }

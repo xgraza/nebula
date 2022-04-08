@@ -191,69 +191,71 @@ public class AutoCrystal extends Module {
         findBestPlacePosition();
         findBestEndCrystal();
 
-        if (explode.getValue()) {
-            if (attackCrystal == null || attackCrystal.isDead) {
-                attackCrystal = null;
+        if (attackCrystal != null) {
+            attackCrystal = null;
+            return;
+        }
+
+        if (explode.getValue() && attackCrystal != null) {
+            // get the entity id for inhibit
+            int entityId = attackCrystal.getEntityId();
+            if (shouldInhibit(entityId)) {
+                return;
             }
 
-            if (attackCrystal != null && explodeTimer.getTime(TimeFormat.MILLISECONDS) / 50.0f >= 20.0f - explodeSpeed.getValue()) {
+            // check if we have passed the required amount of ticks to explode a crystal
+            long elapsed = explodeTimer.getTime(TimeFormat.TICKS);
+            if (elapsed >= 20.0f - explodeSpeed.getValue()) {
+
+                // reset time
                 explodeTimer.resetTime();
 
-                if (!rotate.getValue().equals(Rotate.NONE)) {
-                    boolean result = sendRotations(AngleUtil.getEyes(attackCrystal, Bone.HEAD));
-                    if (result) {
-                        // TODO
-                    }
+                // send rotations and check if we should limit to the next tick
+                if (!rotate.getValue().equals(Rotate.NONE) &&
+                        sendRotations(AngleUtil.toEntity(attackCrystal, Bone.HEAD))) {
 
-                    Rotation rotation = AngleUtil.toEntity(attackCrystal, Bone.HEAD);
-                    if (rotation.isValid()) {
-                        getNebula().getRotationManager().setRotation(rotation);
-                    }
+                    // TODO
                 }
 
-                inhibitCrystals.put(attackCrystal.getEntityId(), new Stopwatch().resetTime());
-                CrystalUtil.attack(attackCrystal.getEntityId(), hand, swing.getValue());
+                // attack the crystal
+                CrystalUtil.explode(entityId, hand, swing.getValue());
 
-                if (merge.getValue().equals(Merge.INSTANT)) {
-                    attackCrystal.setDead();
-                    mc.world.removeEntity(attackCrystal);
-                    mc.world.removeEntityDangerously(attackCrystal);
+                // add crystal to inhibited crystal map
+                if (inhibit.getValue()) {
+                    inhibitCrystals.put(entityId, new Stopwatch().resetTime());
+                } else {
+                    // reset crystal
+                    attackCrystal = null;
                 }
             }
         }
 
-        if (place.getValue()) {
-            // find crystals in our hotbar
-            if (!findCrystals()) {
-                return;
-            }
+        if (place.getValue() && placePos != null) {
 
-            // if there is no place position
-            if (placePos == null) {
-                return;
-            }
+            // check if we have passed the required amount of ticks to place a crystal
+            long elapsed = placeTimer.getTime(TimeFormat.TICKS);
+            if (elapsed >= 20.0f - placeSpeed.getValue()) {
 
-            if (placeTimer.getTime(TimeFormat.MILLISECONDS) / 50.0f >= 20.0f - placeSpeed.getValue()) {
-                // make sure we can place a crystal here
+                // check if there are any crystals in our hotbar.
+                // if not, we cannot continue as theres no crystals...
+                if (!findCrystals()) {
+                    return;
+                }
+
+                // check if we can place a crystal here
+                // where we pass inhibit.getValue(), it will check if theres a crystal already there.
+                // if we cannot place, it'll return. as with above, this prevents unnecessary place packets
                 if (!CrystalUtil.canPlaceAt(placePos, inhibit.getValue(), protocol.getValue().equals(Protocol.UPDATED))) {
                     return;
                 }
 
+                // reset time
                 placeTimer.resetTime();
 
-                if (!rotate.getValue().equals(Rotate.NONE)) {
-                    boolean result = sendRotations(new Vec3d(placePos));
-                    if (result) {
-                        // TODO
-                    }
-                }
+                // place crystal
+                CrystalUtil.placeAt(placePos, hand, interact.getValue().equals(Interact.STRICT), swing.getValue(), rotate.getValue().rotationType);
 
-                CrystalUtil.placeAt(placePos,
-                        hand,
-                        interact.getValue().equals(Interact.STRICT),
-                        swing.getValue(),
-                        rotate.getValue().rotationType);
-
+                // if silent swap is active, we'll swap back
                 if (swapping.getValue().equals(SwapType.SERVER)) {
                     swapBack();
                 }
@@ -377,18 +379,13 @@ public class AutoCrystal extends Module {
 
                         if (explodeSpeed.getValue() == 20.0) {
                             if (!rotate.getValue().equals(Rotate.NONE)) {
-//                                boolean result = sendRotations(AngleUtil.getEyes(attackCrystal, Bone.HEAD));
-//                                if (result) {
-//                                    // TODO
-//                                }
-
                                 Rotation rotation = AngleUtil.toVec(new Vec3d(pos).add(0.5, 0.5, 0.5));
                                 if (rotation.isValid()) {
                                     getNebula().getRotationManager().setRotation(rotation);
                                 }
                             }
 
-                            CrystalUtil.attack(packet.getEntityID(), hand, swing.getValue());
+                            CrystalUtil.explode(packet.getEntityID(), hand, swing.getValue());
                         }
                     }
                 }
@@ -493,22 +490,32 @@ public class AutoCrystal extends Module {
             }
         }
 
-        if (crystal != null) {
-            int entityId = crystal.getEntityId();
-
-            if (inhibit.getValue() && inhibitCrystals.containsKey(entityId)) {
-                Stopwatch stopwatch = inhibitCrystals.get(entityId);
-
-                int ping = 50 + getNebula().getServerManager().getLatency(mc.player.getUniqueID());
-                if (!stopwatch.passedMs(ping)) {
-                    crystal = null;
-                } else {
-                    inhibitCrystals.remove(entityId);
-                }
-            }
+        if (crystal != null && shouldInhibit(crystal.getEntityId())) {
+            crystal = null;
         }
 
         attackCrystal = crystal;
+    }
+
+    /**
+     * Checks if we should limit our attacks based off of inhibit
+     * @param entityId the crystal entity id
+     * @return the entity id
+     */
+    private boolean shouldInhibit(int entityId) {
+        Stopwatch stopwatch  = inhibitCrystals.getOrDefault(entityId, null);
+        if (!inhibit.getValue() || stopwatch == null) {
+            return false;
+        }
+
+        int ping = 50 + getNebula().getServerManager().getLatency(mc.player.getUniqueID());
+        if (!stopwatch.passedMs(ping)) {
+            return true;
+        } else {
+            inhibitCrystals.remove(entityId);
+        }
+
+        return false;
     }
 
     /**
@@ -549,12 +556,18 @@ public class AutoCrystal extends Module {
     }
 
     /**
-     * Spoofs rotations
-     * @param vec the vec to rotate to
+     * Spoofs rotations sent to the server
+     * @param rotation the requested rotation
      * @return if we should limit and wait
      */
-    private boolean sendRotations(Vec3d vec) {
-        return true;
+    private boolean sendRotations(Rotation rotation) {
+        // TODO: limit
+
+        if (rotation.isValid()) {
+            getNebula().getRotationManager().setRotation(rotation);
+        }
+
+        return false;
     }
 
     /**

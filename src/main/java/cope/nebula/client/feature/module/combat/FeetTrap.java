@@ -135,7 +135,7 @@ public class FeetTrap extends Module {
                             getNebula().getRotationManager().setRotation(rotation);
                         }
 
-                        CrystalUtil.attack(entity.getEntityId(), EnumHand.MAIN_HAND, true);
+                        CrystalUtil.explode(entity.getEntityId(), EnumHand.MAIN_HAND, true);
                     }
                 }
             }

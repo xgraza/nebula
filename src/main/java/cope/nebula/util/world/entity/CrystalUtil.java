@@ -1,6 +1,5 @@
 package cope.nebula.util.world.entity;
 
-import cope.nebula.asm.mixins.input.IPlayerControllerMP;
 import cope.nebula.asm.mixins.network.packet.c2s.ICPacketUseEntity;
 import cope.nebula.client.Nebula;
 import cope.nebula.util.Globals;
@@ -142,22 +141,29 @@ public class CrystalUtil implements Globals {
     }
 
     /**
-     * Attacks an end crystal
+     * Explodes an end crystal
      * @param entityId The crystal's entity id
      * @param hand The hand to attack with
      * @param swing If to swing your hand
      */
-    public static void attack(int entityId, EnumHand hand, boolean swing) {
+    public static void explode(int entityId, EnumHand hand, boolean swing) {
         CPacketUseEntity packet = new CPacketUseEntity();
         ((ICPacketUseEntity) packet).setEntityId(entityId);
         ((ICPacketUseEntity) packet).setAction(Action.ATTACK);
 
-        mc.player.connection.sendPacket(packet);
+        mc.addScheduledTask(() -> {
+            try {
+                mc.player.connection.sendPacket(packet);
 
-        if (swing) {
-            mc.player.swingArm(hand);
-        } else {
-            mc.player.connection.sendPacket(new CPacketAnimation(hand));
-        }
+                if (swing) {
+                    mc.player.swingArm(hand);
+                } else {
+                    mc.player.connection.sendPacket(new CPacketAnimation(hand));
+                }
+            } catch (Exception ignored) {
+                // empty catch block
+                // TODO maybe log exception?
+            }
+        });
     }
 }
