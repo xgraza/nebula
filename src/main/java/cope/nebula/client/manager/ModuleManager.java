@@ -77,6 +77,7 @@ public class ModuleManager implements Globals {
             new Chams(),
             new ClickGUI(),
             new CustomFont(),
+            new ESP(),
             new HUD(),
             new LogoutSpots(),
             new Nametags(),

@@ -32,11 +32,13 @@
 
         "render.entity.IEntityRenderer",
         "render.entity.MixinEntityRenderer",
+        "render.entity.MixinRenderLivingBase",
         "render.entity.MixinRenderPlayer",
         "render.entity.MixinRenderXPOrb",
         "render.shader.IShaderGroup",
         "render.ui.MixinGuiIngame",
         "render.ui.MixinGuiToast",
+        "render.IRenderGlobal",
         "render.MixinLayerArmorBase",
         "render.MixinParticleManager",
 
