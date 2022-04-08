@@ -193,11 +193,6 @@ public class AutoCrystal extends Module {
         findBestPlacePosition();
         findBestEndCrystal();
 
-        if (attackCrystal != null) {
-            attackCrystal = null;
-            return;
-        }
-
         if (explode.getValue() && attackCrystal != null) {
             // get the entity id for inhibit
             int entityId = attackCrystal.getEntityId();
