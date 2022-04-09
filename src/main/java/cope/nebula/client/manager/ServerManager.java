@@ -96,6 +96,18 @@ public class ServerManager implements Globals {
     }
 
     /**
+     * Gets the local player's latency
+     * @return the local player's latency
+     */
+    public int getLocalLatency() {
+        if (mc.player != null) {
+            return mc.player.connection.getPlayerInfo(mc.player.getUniqueID()).getResponseTime();
+        }
+
+        return 0;
+    }
+
+    /**
      * Gets the servers TPS (ticks per second)
      *
      * Note: this is the average value

@@ -25,7 +25,7 @@ public class Info implements IHUDComponent {
         }
 
         if (HUD.ping.getValue()) {
-            String text = ChatFormatting.GRAY + "Ping: " + ChatFormatting.RESET + getNebula().getServerManager().getLatency(mc.player.getUniqueID()) + "ms";
+            String text = ChatFormatting.GRAY + "Ping: " + ChatFormatting.RESET + getNebula().getServerManager().getLocalLatency() + "ms";
             FontUtil.drawString(text, resolution.getScaledWidth() - FontUtil.getWidth(text) - 2.0f, posY, -1);
 
             posY -= (FontUtil.getHeight() + 2.0f);

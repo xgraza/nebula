@@ -527,7 +527,7 @@ public class AutoCrystal extends Module {
             return false;
         }
 
-        int ping = 50 + getNebula().getServerManager().getLatency(mc.player.getUniqueID());
+        int ping = 50 + getNebula().getServerManager().getLocalLatency();
         if (!stopwatch.passedMs(ping)) {
             return true;
         } else {
