@@ -2,6 +2,7 @@ package cope.nebula.client.feature.module.movement;
 
 import cope.nebula.client.events.MotionEvent;
 import cope.nebula.client.events.MotionUpdateEvent;
+import cope.nebula.client.events.MotionUpdateEvent.Era;
 import cope.nebula.client.events.PacketEvent;
 import cope.nebula.client.events.PacketEvent.Direction;
 import cope.nebula.client.feature.module.Module;
@@ -12,11 +13,13 @@ import cope.nebula.util.renderer.FontUtil;
 import cope.nebula.util.world.entity.player.MotionUtil;
 import net.minecraft.init.MobEffects;
 import net.minecraft.network.play.server.SPacketPlayerPosLook;
+import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.util.List;
 
 import static cope.nebula.client.feature.module.world.Timer.setTimerSpeed;
 
@@ -33,9 +36,11 @@ public class Speed extends Module {
     public static final Value<Mode> mode = new Value<>("Mode", Mode.STRAFE);
     public static final Value<Boolean> timer = new Value<>("Timer", false);
 
-    private int strafeStage = 1;
+    private int strafeStage = 4;
     private double moveSpeed = 0.0;
     private double distance = 0.0;
+
+    private int speedUpTicks = 0;
 
     private int timerTicks = 0;
     private boolean slowdown = false;
@@ -47,7 +52,7 @@ public class Speed extends Module {
 
     @Override
     protected void onDeactivated() {
-        strafeStage = 1;
+        strafeStage = 4;
         moveSpeed = 0.0;
         distance = 0.0;
         timerTicks = 0;
@@ -57,7 +62,11 @@ public class Speed extends Module {
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public void onMotionUpdate(MotionUpdateEvent event) {
-        distance = Math.sqrt(Math.pow(mc.player.posX - mc.player.prevPosX, 2) + Math.pow(mc.player.posZ - mc.player.prevPosZ, 2));
+        if (event.getEra().equals(Era.PRE)) {
+            distance = Math.sqrt(
+                    (mc.player.posX - mc.player.prevPosX) * (mc.player.posX - mc.player.prevPosX) +
+                    (mc.player.posZ - mc.player.prevPosZ) * (mc.player.posZ - mc.player.prevPosZ));
+        }
     }
 
     @SubscribeEvent
@@ -71,76 +80,42 @@ public class Speed extends Module {
 
     @SubscribeEvent
     public void onMotion(MotionEvent event) {
-        if (mode.getValue().equals(Mode.STRAFE) || mode.getValue().equals(Mode.STRICT_STRAFE)) {
-            if (MotionUtil.isMoving()) {
-                if (mc.player.onGround) {
-                    strafeStage = 2; // jump
+        if (mode.getValue().equals(Mode.STRAFE)) {
+            switch (strafeStage) {
+                case 1: {
+                    moveSpeed = 1.35 * getBaseNCPSpeed() - 0.01;
+                    break;
                 }
 
-                if (timer.getValue()) {
-                    ++timerTicks;
-                    if (timerTicks >= 10) {
-                        timerTicks = 0;
-                        setTimerSpeed(1.0f);
-                    } else {
-                        setTimerSpeed(1.15f);
+                case 2: {
+                    if (MotionUtil.isMoving() && mc.player.onGround) {
+                        mc.player.motionY = getJumpHeight(false);
+                        event.setY(mc.player.motionY);
 
-                        event.setX(event.getX() * 1.019);
-                        event.setZ(event.getZ() * 1.019);
+                        moveSpeed *= slowdown ? 1.395 : 1.6835;
                     }
+                    break;
                 }
 
-                if (mode.getValue().equals(Mode.STRICT_STRAFE)) {
-                    if (round(mc.player.posY - (int) mc.player.posY, 3) == round(0.138, 3)) {
-                        mc.player.motionY -= 0.08;
-                        event.setY(event.getY() - 0.09316090325960147);
-                        mc.player.motionY -= 0.09316090325960147;
+                case 3: {
+                    double adjusted = 0.66 * (distance - getBaseNCPSpeed());
+                    moveSpeed = distance - adjusted;
+                    slowdown = !slowdown;
+                    break;
+                }
+
+                default: {
+                    List<AxisAlignedBB> boxes = mc.world.getCollisionBoxes(mc.player, mc.player.getEntityBoundingBox().offset(0.0, mc.player.motionY, 0.0));
+                    if ((boxes.size() > 0 || mc.player.collidedVertically) && strafeStage > 0) {
+                        strafeStage = MotionUtil.isMoving() ? 1 : 0;
                     }
+
+                    moveSpeed = distance - distance / 159.0;
+                    break;
                 }
-            }
-
-            if (strafeStage == 1) {
-                double multi = 1.35;
-                if (mode.getValue().equals(Mode.STRICT_STRAFE)) {
-                    multi = 1.38;
-                }
-
-                moveSpeed = multi * getBaseNCPSpeed() - 0.01;
-            } else if (strafeStage == 2) {
-                if (MotionUtil.isMoving() && mc.player.onGround) {
-                    double motionY = getJumpHeight(mode.getValue().equals(Mode.STRICT_STRAFE));
-
-                    mc.player.motionY = motionY;
-                    event.setY(motionY);
-
-                    if (mode.getValue().equals(Mode.STRAFE)) {
-                        if (slowdown) {
-                            moveSpeed *= 1.395;
-                        } else {
-                            moveSpeed *= 1.7835;
-                        }
-                    } else {
-                        moveSpeed *= 2.149;
-                    }
-                }
-            } else if (strafeStage == 3) {
-                double diff = 0.66 * (distance - getBaseNCPSpeed());
-                moveSpeed = distance - diff;
-                slowdown = !slowdown;
-            } else {
-                if (!mc.world.getCollisionBoxes(mc.player, mc.player.getEntityBoundingBox().offset(0.0, mc.player.motionY, 0.0)).isEmpty()) {
-                    strafeStage = 1;
-                }
-
-                moveSpeed = distance - distance / 159.0;
             }
 
             moveSpeed = Math.max(moveSpeed, getBaseNCPSpeed());
-
-            // limit out strict strafe speed
-            if (mode.getValue().equals(Mode.STRICT_STRAFE)) {
-                moveSpeed = Math.min(moveSpeed, mc.player.ticksExisted % 6 == 0 ? 0.524 : 0.511);
-            }
 
             Vec2d motion = MotionUtil.strafe(moveSpeed);
 
@@ -148,6 +123,65 @@ public class Speed extends Module {
             event.setZ(motion.getZ());
 
             ++strafeStage;
+        } else if (mode.getValue().equals(Mode.STRICT_STRAFE)) {
+            if (timer.getValue()) {
+                if (MotionUtil.isMoving()) {
+                    setTimerSpeed(1.05f);
+
+                    mc.player.motionX *= 1.019;
+                    mc.player.motionZ *= 1.019;
+                } else {
+                    setTimerSpeed(1.0f);
+                }
+            }
+
+            if (MotionUtil.isMoving() && mc.player.onGround) {
+                strafeStage = 2;
+            }
+
+            if (round(mc.player.posY - (int) mc.player.posY, 3) == round(0.138D, 3)) {
+                mc.player.motionY -= 0.08D;
+                event.setY(event.getY() - 0.09316090325960147D);
+                mc.player.posY -= 0.09316090325960147D;
+            }
+
+            if (strafeStage == 1 && MotionUtil.isMoving()) {
+                strafeStage = 2;
+                moveSpeed = 1.38 * getBaseNCPSpeed() - 0.01;
+            } else if (strafeStage == 2) {
+                strafeStage = 3;
+                mc.player.motionY = getJumpHeight(true);
+                event.setY(mc.player.motionY);
+
+                moveSpeed *= 2.149;
+            } else if (strafeStage == 3) {
+                strafeStage = 4;
+                double adjusted = 0.66 * (distance - getBaseNCPSpeed());
+                moveSpeed = distance - adjusted;
+            } else {
+                List<AxisAlignedBB> boxes = mc.world.getCollisionBoxes(mc.player, mc.player.getEntityBoundingBox().offset(0.0, mc.player.motionY, 0.0));
+                if (boxes.size() > 0 || mc.player.collidedVertically) {
+                    strafeStage = MotionUtil.isMoving() ? 1 : 0;
+                }
+
+                moveSpeed = distance - distance / 159.0;
+            }
+
+            if (moveSpeed < getBaseNCPSpeed()) {
+                moveSpeed = getBaseNCPSpeed();
+            } else {
+                moveSpeed = Math.min(moveSpeed, speedUpTicks > 25 ? 0.511 : 0.5);
+            }
+
+            ++speedUpTicks;
+            if (speedUpTicks > 50) {
+                speedUpTicks = 0;
+            }
+
+            Vec2d motion = MotionUtil.strafe(moveSpeed);
+
+            event.setX(motion.getX());
+            event.setZ(motion.getZ());
         }
     }
 
@@ -170,7 +204,7 @@ public class Speed extends Module {
      * @return the vanilla jump height
      */
     private double getJumpHeight(boolean strict) {
-        double y = strict ? 0.3995 : 0.3999999463558197;
+        double y = strict ? 0.41 : 0.3999999463558197;
         if (mc.player.isPotionActive(MobEffects.JUMP_BOOST)) {
             y += (mc.player.getActivePotionEffect(MobEffects.JUMP_BOOST).getAmplifier() + 1) * 0.1;
         }
