@@ -308,23 +308,29 @@ public class AutoCrystal extends Module {
             if (event.getPacket() instanceof SPacketDestroyEntities) {
                 SPacketDestroyEntities packet = event.getPacket();
 
-                for (int entityId : packet.getEntityIDs()) {
-                    Entity entity = mc.world.getEntityByID(entityId);
-                    if (entity == null || !(entity instanceof EntityEnderCrystal) || entity.isDead) {
-                        continue;
-                    }
 
-                    if (attackCrystal != null && attackCrystal.getEntityId() == entityId) {
-                        attackCrystal = null;
-                    }
+                mc.addScheduledTask(() -> {
+                    for (int entityId : packet.getEntityIDs()) {
+                        if (attackCrystal != null && attackCrystal.getEntityId() == entityId) {
+                            attackCrystal.setDead();
+                            mc.world.removeEntity(attackCrystal);
 
-                    entity.setDead();
-                    mc.world.removeEntity(entity);
+                            if (merge.getValue().equals(Merge.CONFIRM)) {
+                                mc.world.removeEntityDangerously(attackCrystal);
+                            }
+                        } else {
+                            Entity entity = mc.world.getEntityByID(entityId);
+                            if (entity == null || !(entity instanceof EntityEnderCrystal) || entity.isDead) {
+                                return;
+                            }
 
-                    if (merge.getValue().equals(Merge.CONFIRM)) {
-                        mc.world.removeEntityDangerously(entity);
+                            // we can just remove it as the server wants it removed anyway
+                            entity.setDead();
+                            mc.world.removeEntity(attackCrystal);
+                            mc.world.removeEntityDangerously(attackCrystal);
+                        }
                     }
-                }
+                });
             } else if (event.getPacket() instanceof SPacketExplosion) {
                 SPacketExplosion packet = event.getPacket();
                 double power = packet.getStrength() * packet.getStrength();
