@@ -44,6 +44,8 @@ public class FeetTrap extends Module {
     public static final Value<SwapType> swap = new Value<>("Swap", SwapType.CLIENT);
     public static final Value<RotationType> rotate = new Value<>("Rotate", RotationType.SERVER);
 
+    public static final Value<Boolean> groundDisable = new Value<>("GroundDisable", true);
+
     private final Queue<BlockPos> queue = new ConcurrentLinkedQueue<>();
     private final Set<BlockPos> blockCache = new HashSet<>();
     private final Stopwatch stopwatch = new Stopwatch();
@@ -71,6 +73,11 @@ public class FeetTrap extends Module {
                         ((ItemBlock) stack.getItem()).getBlock().equals(Blocks.OBSIDIAN));
 
         if (slot == -1) {
+            disable();
+            return;
+        }
+
+        if (groundDisable.getValue() && !mc.player.onGround) {
             disable();
             return;
         }
