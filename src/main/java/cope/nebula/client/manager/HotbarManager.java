@@ -52,6 +52,10 @@ public class HotbarManager implements Globals {
      * @param type The swap type
      */
     public void sendSlotChange(int slotId, SwapType type) {
+        if (type.equals(SwapType.NONE)) {
+            return;
+        }
+
         mc.player.connection.sendPacket(new CPacketHeldItemChange(slotId));
         if (type.equals(SwapType.CLIENT)) {
             mc.player.inventory.currentItem = slotId;

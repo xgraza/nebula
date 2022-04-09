@@ -556,19 +556,29 @@ public class AutoCrystal extends Module {
         } else {
             hand = EnumHand.MAIN_HAND;
 
-            oldSlot = mc.player.inventory.currentItem;
-            getNebula().getHotbarManager().sendSlotChange(slot, swapping.getValue());
+            // if we have a swapping option, we'll do that now
+            if (!swapping.getValue().equals(SwapType.NONE)) {
 
-            swapTimer.resetTime();
+                // if we have not swapped to anything before, we'll swap
+                if (oldSlot == -1) {
+                    oldSlot = mc.player.inventory.currentItem;
+                    getNebula().getHotbarManager().sendSlotChange(slot, swapping.getValue());
 
-//            if (oldSlot != -1 && !swapTimer.passedTicks(swapDelay.getValue())) {
-//                return false;
-//            } else {
-//                oldSlot = mc.player.inventory.currentItem;
-//                getNebula().getHotbarManager().sendSlotChange(slot, swapping.getValue());
-//
-//                swapTimer.resetTime();
-//            }
+                    // reset our swap timer (useful for servers like 2bpvp that have a swap delay preventing silent swap)
+                    swapTimer.resetTime();
+
+                    // if swapDelay is 0, we can just start placing right away
+                    // if not, we have to wait for the swapTimer to finish
+                    return swapDelay.getValue() == 0;
+                } else {
+                    // check if our swap timer has passed. if so, we can then place crystals
+                    // or if we are packet swapping, we'll be swapping back and forth rapidly anyway so there's no point in waiting
+                    return swapTimer.hasElapsed(swapDelay.getValue(), TimeFormat.TICKS) || swapping.getValue().equals(SwapType.SERVER);
+                }
+            } else {
+                // if we cannot swap, let's hope you're holding onto crystals or sum
+                return InventoryUtil.isHolding(Items.END_CRYSTAL);
+            }
         }
 
         return true;

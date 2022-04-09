@@ -1,5 +1,6 @@
 package cope.nebula.util.world.entity.player.inventory;
 
+import cope.nebula.client.Nebula;
 import cope.nebula.util.Globals;
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
@@ -56,6 +57,15 @@ public class InventoryUtil implements Globals {
      * @return the ItemStack
      */
     public static ItemStack getHeld(EnumHand hand) {
+        if (hand.equals(EnumHand.MAIN_HAND)) {
+            int slot = Nebula.getInstance().getHotbarManager().getServerSlot();
+            if (slot == -1) {
+                slot = mc.player.inventory.currentItem;
+            }
+
+            return mc.player.inventory.getStackInSlot(slot);
+        }
+
         return mc.player.getHeldItem(hand);
     }
 
