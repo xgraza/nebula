@@ -24,6 +24,7 @@
         "item.MixinItemFood",
 
         "network.packet.c2s.ICPacketPlayer",
+        "network.packet.c2s.ICPacketPlayerTryUseItemOnBlock",
         "network.packet.c2s.ICPacketUseEntity",
         "network.packet.s2c.ISPacketEntityVelocity",
         "network.packet.s2c.ISPacketExplosion",
