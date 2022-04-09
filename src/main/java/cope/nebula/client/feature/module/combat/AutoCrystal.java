@@ -23,6 +23,7 @@ import cope.nebula.util.world.entity.player.rotation.AngleUtil;
 import cope.nebula.util.world.entity.player.rotation.Bone;
 import cope.nebula.util.world.entity.player.rotation.Rotation;
 import cope.nebula.util.world.entity.player.rotation.RotationType;
+import io.netty.util.internal.ConcurrentSet;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.entity.Entity;
@@ -43,6 +44,7 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 import java.awt.*;
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class AutoCrystal extends Module {
     public AutoCrystal() {
@@ -104,7 +106,6 @@ public class AutoCrystal extends Module {
 
     // crystals per second calculations
     private int crystalCount = 0;
-    private int lastCrystalCount = 0;
 
     // timing
     private final Stopwatch placeTimer = new Stopwatch();
@@ -112,17 +113,17 @@ public class AutoCrystal extends Module {
     private final Stopwatch swapTimer = new Stopwatch();
     private final Stopwatch crystalCountTimer = new Stopwatch();
 
-    private final Set<Integer> placedCrystals = new HashSet<>();
-    private final Map<Integer, Stopwatch> inhibitCrystals = new HashMap<>();
+    private final Set<Integer> placedCrystals = new ConcurrentSet<>();
+    private final Map<Integer, Stopwatch> inhibitCrystals = new ConcurrentHashMap<>();
 
     @Override
     public String getDisplayInfo() {
-        if (crystalCountTimer.hasElapsed(1L, true, TimeFormat.SECONDS)) {
-            lastCrystalCount = crystalCount;
-            crystalCount = 0;
+        long time = crystalCountTimer.getTime(TimeFormat.SECONDS);
+        if (time == 0L) {
+            return String.valueOf(crystalCount);
         }
 
-        return String.valueOf(lastCrystalCount == 0 ? crystalCount : lastCrystalCount);
+        return String.valueOf(crystalCount / time);
     }
 
     @Override
@@ -145,7 +146,6 @@ public class AutoCrystal extends Module {
         hand = EnumHand.MAIN_HAND;
 
         crystalCount = 0;
-        lastCrystalCount = 0;
 
         placedCrystals.clear();
         inhibitCrystals.clear();
@@ -470,7 +470,7 @@ public class AutoCrystal extends Module {
 
         if (crystal == null) {
             double dist = 0.0;
-            for (int entityId : new HashSet<>(placedCrystals)) {
+            for (int entityId : new ArrayList<>(placedCrystals)) {
                 Entity entity = mc.world.getEntityByID(entityId);
                 if (entity == null || entity.isDead || entity.ticksExisted < ticksExisted.getValue()) {
                     continue;
