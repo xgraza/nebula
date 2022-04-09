@@ -310,7 +310,7 @@ public class AutoCrystal extends Module {
 
                 for (int entityId : packet.getEntityIDs()) {
                     Entity entity = mc.world.getEntityByID(entityId);
-                    if (!(entity instanceof EntityEnderCrystal) || entity.isDead) {
+                    if (entity == null || !(entity instanceof EntityEnderCrystal) || entity.isDead) {
                         continue;
                     }
 
