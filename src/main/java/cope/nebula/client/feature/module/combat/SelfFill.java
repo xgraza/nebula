@@ -31,6 +31,21 @@ public class SelfFill extends Module {
     public static final Value<Boolean> swing = new Value<>("Swing", true);
     public static final Value<Boolean> flag = new Value<>("Flag", true);
 
+    private BlockPos fillPos = null;
+    private EnumHand hand;
+    private int oldSlot = -1;
+
+    @Override
+    protected void onDeactivated() {
+        hand = null;
+        fillPos = null;
+
+        if (oldSlot != -1) {
+            getNebula().getHotbarManager().sendSlotChange(oldSlot, swap.getValue());
+            oldSlot = -1;
+        }
+    }
+
     @Override
     protected void onActivated() {
         BlockPos pos = new BlockPos(mc.player.posX, mc.player.posY, mc.player.posZ);
@@ -49,33 +64,39 @@ public class SelfFill extends Module {
             return;
         }
 
-        EnumHand hand = slot == InventoryUtil.OFFHAND_SLOT ? EnumHand.OFF_HAND : EnumHand.MAIN_HAND;
-        int oldSlot = -1;
-
+        hand = slot == InventoryUtil.OFFHAND_SLOT ? EnumHand.OFF_HAND : EnumHand.MAIN_HAND;
         if (hand.equals(EnumHand.MAIN_HAND) && !InventoryUtil.isHolding(mode.getValue().block)) {
             oldSlot = mc.player.inventory.currentItem;
             getNebula().getHotbarManager().sendSlotChange(slot, swap.getValue());
         }
 
-        for (double offset : FAKE_JUMP) {
-            mc.player.connection.sendPacket(new Position(mc.player.posX, pos.getY() + offset, mc.player.posZ, false));
+        fillPos = pos;
+    }
+
+    @Override
+    public void onTick() {
+        if (hand == null) {
+            disable();
+            return;
         }
 
-        getNebula().getInteractionManager().placeBlock(pos, hand, rotate.getValue(), true, swing.getValue());
-
-        if (flag.getValue()) {
-            mc.player.connection.sendPacket(new Position(mc.player.posX, pos.getY() + 2.3, mc.player.posZ, false));
-        } else {
-            if (!mc.world.getBlockState(pos).getMaterial().isReplaceable()) {
-                mc.player.setPosition(pos.getX(), pos.getY() + 1.0, pos.getZ());
+        if (fillPos != null) {
+            for (double offset : FAKE_JUMP) {
+                mc.player.connection.sendPacket(new Position(mc.player.posX, fillPos.getY() + offset, mc.player.posZ, false));
             }
-        }
 
-        if (oldSlot != -1) {
-            getNebula().getHotbarManager().sendSlotChange(oldSlot, swap.getValue());
-        }
+            getNebula().getInteractionManager().placeBlock(fillPos, hand, rotate.getValue(), true, swing.getValue());
 
-        disable();
+            if (flag.getValue()) {
+                mc.player.connection.sendPacket(new Position(mc.player.posX, fillPos.getY() + 2.3, mc.player.posZ, false));
+            } else {
+                if (!mc.world.getBlockState(fillPos).getMaterial().isReplaceable()) {
+                    mc.player.setPosition(fillPos.getX(), fillPos.getY() + 1.0, fillPos.getZ());
+                }
+            }
+
+            disable();
+        }
     }
 
     public enum BlockType {
