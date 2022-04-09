@@ -43,6 +43,7 @@ public class ModuleManager implements Globals {
             new ChorusControl(),
             new FastProjectile(),
             new NewChunks(),
+            new NoFML(),
             new PacketFly(),
             new PearlBait(),
             new PingSpoof(),
