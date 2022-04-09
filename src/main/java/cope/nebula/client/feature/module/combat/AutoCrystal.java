@@ -212,7 +212,7 @@ public class AutoCrystal extends Module {
 
                 if (mc.player.isPotionActive(MobEffects.WEAKNESS) &&
                         !mc.player.isPotionActive(MobEffects.STRENGTH) &&
-                        !antiWeakness.getValue().equals(Weakness.NONE)) {
+                        !antiWeakness.getValue().equals(SwapType.NONE)) {
 
                     // TODO: dont just swap to swords, allow axe and pick swapping as well
                 }
