@@ -36,6 +36,7 @@ import net.minecraft.network.play.server.SPacketDestroyEntities;
 import net.minecraft.network.play.server.SPacketExplosion;
 import net.minecraft.network.play.server.SPacketSoundEffect;
 import net.minecraft.network.play.server.SPacketSpawnObject;
+import net.minecraft.util.DamageSource;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
@@ -86,6 +87,8 @@ public class AutoCrystal extends Module {
     public static final Value<Float> maxLocal = new Value<>("MaxLocal", 12.0f, 1.0f, 20.0f);
     public static final Value<Boolean> safety = new Value<>("Safety", true);
 
+    // misc
+    public static final Value<Double> targetRange = new Value<>("TargetRange", 12.0, 6.0, 20.0);
     public static final Value<Boolean> swing = new Value<>("Swing", true);
     public static final Value<Merge> merge = new Value<>("Merge", Merge.CONFIRM);
 
@@ -439,7 +442,13 @@ public class AutoCrystal extends Module {
             for (EntityPlayer player : mc.world.playerEntities) {
 
                 // make sure we can attack this entity
-                if (player == null || player.isDead || player.isCreative() || player.equals(mc.player)) {
+                if (player == null || player.isEntityInvulnerable(DamageSource.GENERIC) || player.equals(mc.player)) {
+                    continue;
+                }
+
+                // if they are out of range
+                double range = targetRange.getValue() * targetRange.getValue();
+                if (range < mc.player.getDistanceSq(player)) {
                     continue;
                 }
 
