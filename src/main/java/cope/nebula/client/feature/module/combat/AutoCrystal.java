@@ -522,7 +522,7 @@ public class AutoCrystal extends Module {
      * @return the entity id
      */
     private boolean shouldInhibit(int entityId) {
-        Stopwatch stopwatch  = inhibitCrystals.getOrDefault(entityId, null);
+        Stopwatch stopwatch = inhibitCrystals.getOrDefault(entityId, null);
         if (!inhibit.getValue() || stopwatch == null) {
             return false;
         }
