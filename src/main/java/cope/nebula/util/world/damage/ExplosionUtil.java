@@ -55,7 +55,7 @@ public class ExplosionUtil implements Globals {
         double impact = (1.0 - size) * density;
         float damage = (float) ((impact * impact + impact) / 2.0f * 7.0f * doublePower + 1.0);
 
-        return getBlastReduction(player, getExplosionScaledDamage(damage),
+        return getBlastReduction(player, DamageUtil.getScaledDamage(damage),
                 new Explosion(player.world, player, vec.x, vec.y, vec.z, (float) (doublePower / 2.0), causesFire, damagesTerrain));
     }
 

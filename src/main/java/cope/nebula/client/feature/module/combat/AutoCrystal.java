@@ -437,6 +437,12 @@ public class AutoCrystal extends Module {
             }
 
             for (EntityPlayer player : mc.world.playerEntities) {
+
+                // make sure we can attack this entity
+                if (player == null || player.isDead || player.isCreative() || player.equals(mc.player)) {
+                    continue;
+                }
+
                 float playerDamage = ExplosionUtil.calculateCrystalDamage(player, vec, ignoreTerrain.getValue());
 
                 // protect friends
