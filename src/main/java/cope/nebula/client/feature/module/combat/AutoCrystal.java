@@ -356,7 +356,7 @@ public class AutoCrystal extends Module {
                                 continue;
                             }
 
-                            if (entity.getDistanceSq(packet.getX(), packet.getY(), packet.getZ()) < 12.0) {
+                            if (entity.getDistanceSq(packet.getX(), packet.getY(), packet.getZ()) < 144.0) {
                                 if (attackCrystal != null && attackCrystal.getEntityId() == entity.getEntityId()) {
                                     attackCrystal = null;
                                 }
