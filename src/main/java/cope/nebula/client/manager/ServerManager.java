@@ -100,11 +100,11 @@ public class ServerManager implements Globals {
      * @return the local player's latency
      */
     public int getLocalLatency() {
-        if (mc.player != null) {
-            return mc.player.connection.getPlayerInfo(mc.player.getUniqueID()).getResponseTime();
+        if (nullCheck()) {
+            return 0;
         }
 
-        return 0;
+        return mc.player.connection.getPlayerInfo(mc.player.getUniqueID()).getResponseTime();
     }
 
     /**
