@@ -177,8 +177,8 @@ public class AutoCrystal extends Module {
 
             GlStateManager.translate((placePos.getX() + 0.5f) - renderManager.viewerPosX, (placePos.getY() + 0.5f) - renderManager.viewerPosY, (placePos.getZ() + 0.5f) - renderManager.viewerPosZ);
             GlStateManager.glNormal3f(0.0f, 1.0f, 0.0f);
-            GlStateManager.rotate(-mc.player.rotationYaw, 0.0f, 1.0f, 0.0f);
-            GlStateManager.rotate(mc.player.rotationPitch, mc.gameSettings.thirdPersonView == 2 ? -1.0f : 1.0f, 0.0f, 0.0f);
+            GlStateManager.rotate(-renderManager.playerViewY, 0.0f, 1.0f, 0.0f);
+            GlStateManager.rotate(renderManager.playerViewX, mc.gameSettings.thirdPersonView == 2 ? -1.0f : 1.0f, 0.0f, 0.0f);
             GlStateManager.scale(-0.02666667, -0.02666667, 0.02666667);
 
             GlStateManager.translate(-(FontUtil.getWidth(text) / 2.0), 0.0, 0.0);
