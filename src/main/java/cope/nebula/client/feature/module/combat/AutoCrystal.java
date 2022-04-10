@@ -219,8 +219,7 @@ public class AutoCrystal extends Module {
                 }
 
                 // send rotations and check if we should limit to the next tick
-                if (!rotate.getValue().equals(Rotate.NONE) &&
-                        sendRotations(AngleUtil.toEntity(attackCrystal, Bone.HEAD))) {
+                if (!rotate.getValue().equals(Rotate.NONE) && sendRotations(AngleUtil.toEntity(attackCrystal, Bone.HEAD), yawLimit.getValue().equals(YawLimit.FULL))) {
 
                     // TODO
                 }
@@ -271,6 +270,12 @@ public class AutoCrystal extends Module {
                     return;
                 }
 
+
+                // send rotations and check if we should limit to the next tick
+                if (!rotate.getValue().equals(Rotate.NONE) && sendRotations(AngleUtil.toVec(new Vec3d(placePos)), yawLimit.getValue().equals(YawLimit.SEMI))) {
+
+                    // TODO
+                }
                 // reset time
                 placeTimer.resetTime();
 
@@ -609,13 +614,68 @@ public class AutoCrystal extends Module {
     /**
      * Spoofs rotations sent to the server
      * @param rotation the requested rotation
+     * @param allowLimit if limiting should be done
      * @return if we should limit and wait
      */
-    private boolean sendRotations(Rotation rotation) {
-        // TODO: limit
-
+    private boolean sendRotations(Rotation rotation, boolean allowLimit) {
         if (rotation.isValid()) {
-            getNebula().getRotationManager().setRotation(rotation);
+
+            // if we shouldn't rotate in the first place, disregard
+            if (rotate.getValue().equals(Rotate.NONE)) {
+                return false;
+            }
+
+            if (!allowLimit) {
+                getNebula().getRotationManager().setRotation(rotation);
+                return false;
+            }
+
+            if (nextRotation != null) {
+                getNebula().getRotationManager().setRotation(nextRotation);
+                nextRotation = null;
+                return false;
+            } else {
+                float yaw = getNebula().getRotationManager().getYaw();
+                float pitch = getNebula().getRotationManager().getPitch();
+
+
+                // check for changes in yaw/pitch
+                float yawDiff = Math.abs(yaw - rotation.getYaw());
+                float pitchDiff = Math.abs(pitch - rotation.getPitch());
+
+                boolean yawExceeded = yawDiff >= maxYawRate.getValue();
+                boolean pitchExceeded = pitchDiff >= maxYawRate.getValue();
+
+                if (yawExceeded) {
+                    yawDiff /= 2.0f;
+                }
+
+                if (pitchExceeded) {
+                    pitchDiff /= 2.0f;
+                }
+
+                float halfwayYaw = yaw;
+                if (rotation.getYaw() > yaw) {
+                    halfwayYaw += yawDiff;
+                } else if (rotation.getYaw() < yaw) {
+                    halfwayYaw -= yawDiff;
+                }
+
+                float halfwayPitch = pitch;
+                if (rotation.getPitch() > pitch) {
+                    halfwayPitch += pitchDiff;
+                } else if (rotation.getPitch() < pitch) {
+                    halfwayPitch -= pitch;
+                }
+
+                nextRotation = rotation;
+
+                getNebula().getRotationManager().setRotation(
+                        new Rotation(halfwayYaw, halfwayPitch).setType(rotate.getValue().rotationType));
+
+                // limit
+                return true;
+            }
         }
 
         return false;
