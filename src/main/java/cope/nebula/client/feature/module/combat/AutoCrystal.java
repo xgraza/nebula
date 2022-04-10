@@ -549,13 +549,12 @@ public class AutoCrystal extends Module {
         }
 
         int ping = 50 + getNebula().getServerManager().getLocalLatency();
-        if (!stopwatch.passedMs(ping)) {
-            return true;
-        } else {
+        if (stopwatch.passedMs(ping)) {
             inhibitCrystals.remove(entityId);
+            return false;
         }
 
-        return false;
+        return true;
     }
 
     /**
