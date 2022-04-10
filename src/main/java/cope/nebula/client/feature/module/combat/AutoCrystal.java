@@ -453,9 +453,13 @@ public class AutoCrystal extends Module {
 
             float targetDamage = currDamage;
             if (target != null) {
-                targetDamage = ExplosionUtil.calculateCrystalDamage(target, vec, ignoreTerrain.getValue());
-                if (targetDamage < minDamage.getValue() || localDamage > targetDamage) {
-                    continue;
+                if (target.isDead || target.getHealth() <= 0.0f) {
+                    target = null;
+                } else {
+                    targetDamage = ExplosionUtil.calculateCrystalDamage(target, vec, ignoreTerrain.getValue());
+                    if (targetDamage < minDamage.getValue() || localDamage > targetDamage) {
+                        continue;
+                    }
                 }
             }
 
