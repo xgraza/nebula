@@ -451,9 +451,11 @@ public class AutoCrystal extends Module {
                 continue;
             }
 
+            double targetRangeSq = targetRange.getValue() * targetRange.getValue();
+
             float targetDamage = currDamage;
             if (target != null) {
-                if (target.isDead || target.getHealth() <= 0.0f) {
+                if (target.isDead || target.getHealth() <= 0.0f || target.getDistanceSq(mc.player) > targetRangeSq) {
                     target = null;
                 } else {
                     targetDamage = ExplosionUtil.calculateCrystalDamage(target, vec, ignoreTerrain.getValue());
@@ -463,26 +465,19 @@ public class AutoCrystal extends Module {
                 }
             }
 
-            for (EntityPlayer player : mc.world.playerEntities) {
+            for (EntityPlayer player : new ArrayList<>(mc.world.playerEntities)) {
 
                 // make sure we can attack this entity
-                if (player == null || player.isEntityInvulnerable(DamageSource.GENERIC) || player.equals(mc.player)) {
+                if (player == null || player.isEntityInvulnerable(DamageSource.GENERIC) || player.equals(mc.player) || ((IEntityPlayer) player).isFriend()) {
                     continue;
                 }
 
                 // if they are out of range
-                double range = targetRange.getValue() * targetRange.getValue();
-                if (range < mc.player.getDistanceSq(player)) {
+                if (mc.player.getDistanceSq(player) > targetRangeSq) {
                     continue;
                 }
 
                 float playerDamage = ExplosionUtil.calculateCrystalDamage(player, vec, ignoreTerrain.getValue());
-
-                // protect friends
-                if (((IEntityPlayer) player).isFriend()) {
-                    continue;
-                }
-
                 if (playerDamage > targetDamage && playerDamage > localDamage) {
                     targetDamage = playerDamage;
                     target = player;
