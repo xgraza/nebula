@@ -447,7 +447,7 @@ public class AutoCrystal extends Module {
             }
 
             // if we want to be safe (safety is on)
-            if (safety.getValue() && localDamage >= (mc.player.getHealth() - 0.5f)) {
+            if (safety.getValue() && localDamage >= mc.player.getHealth() + 0.5f) {
                 continue;
             }
 
