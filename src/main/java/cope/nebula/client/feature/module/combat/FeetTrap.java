@@ -85,6 +85,8 @@ public class FeetTrap extends Module {
         hand = slot == InventoryUtil.OFFHAND_SLOT ? EnumHand.OFF_HAND : EnumHand.MAIN_HAND;
 
         if (queue.isEmpty()) {
+            swapBack();
+
             Set<BlockPos> positions = getFeetTrapPositions();
             if (!positions.isEmpty()) {
                 queue.addAll(positions);
@@ -95,7 +97,6 @@ public class FeetTrap extends Module {
                 return;
             }
 
-            swapBack();
             return;
         }
 
