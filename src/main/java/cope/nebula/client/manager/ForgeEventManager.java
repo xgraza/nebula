@@ -1,8 +1,13 @@
 package cope.nebula.client.manager;
 
+import cope.nebula.client.events.PacketEvent;
+import cope.nebula.client.events.PacketEvent.Direction;
+import cope.nebula.client.events.PopEvent;
 import cope.nebula.client.feature.module.Module;
 import cope.nebula.util.Globals;
 import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.network.play.server.SPacketEntityStatus;
 import net.minecraftforge.client.event.RenderGameOverlayEvent.Text;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
 import net.minecraftforge.event.entity.living.LivingEvent.LivingUpdateEvent;
@@ -33,6 +38,18 @@ public class ForgeEventManager implements Globals {
             }
 
             getNebula().getHoleManager().onTick();
+        }
+    }
+
+    @SubscribeEvent
+    public void onPacket(PacketEvent event) {
+        if (event.getDirection().equals(Direction.INCOMING)) {
+            if (event.getPacket() instanceof SPacketEntityStatus) {
+                SPacketEntityStatus packet = event.getPacket();
+                if (packet.getOpCode() == 35 && packet.getEntity(mc.world) instanceof EntityPlayer) {
+                    EVENT_BUS.post(new PopEvent((EntityPlayer) packet.getEntity(mc.world)));
+                }
+            }
         }
     }
 

@@ -70,6 +70,7 @@ public class ModuleManager implements Globals {
             new AutoRespawn(),
             new HotbarRefill(),
             new MiddleClick(),
+            new Notifier(),
             new PacketLogger(),
             new Spammer(),
 

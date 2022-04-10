@@ -38,6 +38,7 @@ public class Nebula {
     private MacroManager macroManager;
     private RelationshipManager relationshipManager;
     private HoleManager holeManager;
+    private TotemPopManager totemPopManager;
 
     private RotationManager rotationManager;
     private InteractionManager interactionManager;
@@ -68,6 +69,7 @@ public class Nebula {
         macroManager = new MacroManager();
         relationshipManager = new RelationshipManager();
         holeManager = new HoleManager();
+        totemPopManager = new TotemPopManager();
 
         rotationManager = new RotationManager();
         interactionManager = new InteractionManager();

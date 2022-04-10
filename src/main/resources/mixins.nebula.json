@@ -30,6 +30,7 @@
         "network.packet.s2c.ISPacketExplosion",
         "network.packet.s2c.ISPacketPlayerPosLook",
         "network.MixinNetworkManager",
+        "network.MixinNetHandlerPlayClient",
 
         "render.entity.IEntityRenderer",
         "render.entity.MixinEntityRenderer",
