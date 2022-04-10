@@ -14,6 +14,7 @@ import cope.nebula.util.renderer.FontUtil;
 import cope.nebula.util.renderer.RenderUtil;
 import cope.nebula.util.world.BlockUtil;
 import cope.nebula.util.world.RaycastUtil;
+import cope.nebula.util.world.damage.DamageUtil;
 import cope.nebula.util.world.damage.ExplosionUtil;
 import cope.nebula.util.world.entity.CrystalUtil;
 import cope.nebula.util.world.entity.player.inventory.InventorySpace;
@@ -412,7 +413,8 @@ public class AutoCrystal extends Module {
                                 }
                             }
 
-                            CrystalUtil.explode(packet.getEntityID(), hand, swing.getValue());
+                            CrystalUtil.explode(entityIdSpawn, hand, swing.getValue());
+                            inhibitCrystals.put(entityIdSpawn, new Stopwatch().resetTime());
                         }
                     }
                 }
