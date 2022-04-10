@@ -116,4 +116,14 @@ public class ModuleManager implements Globals {
     public ArrayList<Module> getModules() {
         return modules;
     }
+
+    public Module getModule(String name) {
+        for (Module module : modules) {
+            if (module.getName().equalsIgnoreCase(name)) {
+                return module;
+            }
+        }
+
+        return null;
+    }
 }

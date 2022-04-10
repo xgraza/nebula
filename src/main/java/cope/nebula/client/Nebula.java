@@ -11,6 +11,7 @@ import cope.nebula.util.renderer.FontUtil;
 import cope.nebula.util.versioning.BuildConfig;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
+import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.lwjgl.opengl.Display;
@@ -42,6 +43,8 @@ public class Nebula {
     private InteractionManager interactionManager;
     private HotbarManager hotbarManager;
     private ServerManager serverManager;
+
+    private PresetManager presetManager;
 
     @EventHandler
     public void init(FMLInitializationEvent event) {
@@ -75,6 +78,14 @@ public class Nebula {
         LOGGER.info("Completed setup of {} in {}ms", NAME, stopwatch.getTime(TimeFormat.MILLISECONDS));
 
         Display.setTitle(NAME + " v" + FULL_VERSION);
+    }
+
+    @Mod.EventHandler
+    public void postInit(FMLPostInitializationEvent event) {
+        presetManager = new PresetManager();
+        LOGGER.info("Loading presets...");
+
+        Runtime.getRuntime().addShutdownHook(new Thread(() -> presetManager.saveProfile(null)));
     }
 
     public static Nebula getInstance() {

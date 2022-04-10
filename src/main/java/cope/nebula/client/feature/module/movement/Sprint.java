@@ -10,7 +10,9 @@ public class Sprint extends Module {
 
     @Override
     protected void onDeactivated() {
-        mc.player.setSprinting(false);
+        if (!nullCheck()) {
+            mc.player.setSprinting(false);
+        }
     }
 
     @Override

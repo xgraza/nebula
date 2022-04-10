@@ -20,7 +20,9 @@ public class Step extends Module {
 
     @Override
     protected void onDeactivated() {
-        mc.player.stepHeight = 0.6f;
+        if (!nullCheck()) {
+            mc.player.stepHeight = 0.6f;
+        }
     }
 
     @Override

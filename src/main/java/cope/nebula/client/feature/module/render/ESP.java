@@ -26,11 +26,13 @@ public class ESP extends Module {
 
     @Override
     protected void onDeactivated() {
-        mc.world.loadedEntityList.forEach((entity) -> {
-            if (entity.isGlowing()) {
-                entity.setGlowing(false);
-            }
-        });
+        if (!nullCheck()) {
+            mc.world.loadedEntityList.forEach((entity) -> {
+                if (entity.isGlowing()) {
+                    entity.setGlowing(false);
+                }
+            });
+        }
     }
 
     @Override
