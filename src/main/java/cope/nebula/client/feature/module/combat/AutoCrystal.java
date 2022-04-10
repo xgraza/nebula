@@ -249,6 +249,20 @@ public class AutoCrystal extends Module {
                     return;
                 }
 
+                // if we cannot place because a crystal is in the way, we'll target this crystal to allow us to place
+                for (Entity entity : new ArrayList<>(mc.world.loadedEntityList)) {
+
+                    // ignore entities that are too far away (6 blocks)
+                    if (entity.getDistanceSq(entity) > 36.0) {
+                        continue;
+                    }
+
+                    if (entity.getPosition().equals(placePos.up()) && entity instanceof EntityEnderCrystal) {
+                        attackCrystal = (EntityEnderCrystal) entity;
+                        return;
+                    }
+                }
+
                 // check if we can place a crystal here
                 // where we pass inhibit.getValue(), it will check if theres a crystal already there.
                 // if we cannot place, it'll return. as with above, this prevents unnecessary place packets
@@ -489,29 +503,31 @@ public class AutoCrystal extends Module {
     private void findBestEndCrystal() {
         EntityEnderCrystal crystal = attackCrystal;
 
-        if (crystal == null) {
-            double dist = 0.0;
-            for (int entityId : new ArrayList<>(placedCrystals)) {
-                Entity entity = mc.world.getEntityByID(entityId);
-                if (entity == null || entity.isDead || entity.ticksExisted < ticksExisted.getValue()) {
-                    continue;
-                }
+        double dist = 0.0;
+        if (crystal != null) {
+            dist = mc.player.getDistanceSq(crystal);
+        }
 
-                double distance = mc.player.getDistanceSq(entity);
+        for (int entityId : new ArrayList<>(placedCrystals)) {
+            Entity entity = mc.world.getEntityByID(entityId);
+            if (entity == null || entity.isDead || entity.ticksExisted < ticksExisted.getValue()) {
+                continue;
+            }
 
-                double range = explodeRange.getValue() * explodeRange.getValue();
-                if (!mc.player.canEntityBeSeen(entity)) {
-                    range = explodeWallRange.getValue() * explodeWallRange.getValue();
-                }
+            double distance = mc.player.getDistanceSq(entity);
 
-                if (distance > range) {
-                    continue;
-                }
+            double range = explodeRange.getValue() * explodeRange.getValue();
+            if (!mc.player.canEntityBeSeen(entity)) {
+                range = explodeWallRange.getValue() * explodeWallRange.getValue();
+            }
 
-                if (crystal == null || distance < dist) {
-                    dist = distance;
-                    crystal = (EntityEnderCrystal) entity;
-                }
+            if (distance > range) {
+                continue;
+            }
+
+            if (crystal == null || distance < dist) {
+                dist = distance;
+                crystal = (EntityEnderCrystal) entity;
             }
         }
 
