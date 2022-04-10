@@ -128,7 +128,7 @@ public class FeetTrap extends Module {
             for (Entity entity : mc.world.getEntitiesWithinAABB(Entity.class, new AxisAlignedBB(pos))) {
 
                 // if its an end crystal and it is not dead
-                if (entity instanceof EntityEnderCrystal && !entity.isDead) {
+                if (entity instanceof EntityEnderCrystal) {
                     // if we are within 4 blocks of the crystal
                     double range = 16.0; // 4.0
                     if (!mc.player.canEntityBeSeen(entity)) {
@@ -170,7 +170,7 @@ public class FeetTrap extends Module {
                     }
 
                     BlockPos extend = neighbor.offset(dir);
-                    if (BlockUtil.isReplaceable(neighbor) && !BlockUtil.hasIntersectingBoundingBoxes(neighbor)) {
+                    if (BlockUtil.isReplaceable(extend) && !BlockUtil.hasIntersectingBoundingBoxes(extend)) {
                         positions.add(extend);
                     }
                 }
