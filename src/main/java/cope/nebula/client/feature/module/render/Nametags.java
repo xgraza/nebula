@@ -13,6 +13,12 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.ItemStack;
+import net.minecraft.util.EnumHand;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 public class Nametags extends Module {
     public static Nametags INSTANCE;
@@ -33,7 +39,7 @@ public class Nametags extends Module {
     public static final Value<Boolean> ping = new Value<>("Ping", true);
     public static final Value<Boolean> pops = new Value<>("Pops", true);
 
-    public static final Value<Double> scaling = new Value<>("Scaling", 3.0, 1.0, 5.0);
+    public static final Value<Double> scaling = new Value<>("Scaling", 2.0, 1.0, 5.0);
 
     @Override
     public void onRender3d() {
@@ -88,11 +94,34 @@ public class Nametags extends Module {
         int xOffset = -24 / 2 * player.inventory.armorInventory.size();
 
         if (held.getValue()) {
+            ItemStack stack = player.getHeldItemMainhand();
+            if (!stack.isEmpty()) {
+                renderItem(stack, xOffset);
+            }
 
+            xOffset += 16;
         }
 
         if (armor.getValue()) {
+            List<ItemStack> items = new ArrayList<>(player.inventory.armorInventory);
+            if (reversed.getValue()) {
+                Collections.reverse(items);
+            }
 
+            for (ItemStack stack : items) {
+                if (!stack.isEmpty()) {
+                    renderItem(stack, xOffset);
+                    xOffset += 16;
+                }
+            }
+        }
+
+        if (held.getValue()) {
+            ItemStack stack = player.getHeldItemOffhand();
+            if (!stack.isEmpty()) {
+                renderItem(stack, xOffset);
+                xOffset += 16;
+            }
         }
 
         GlStateManager.enableDepth();
@@ -103,6 +132,26 @@ public class Nametags extends Module {
         GlStateManager.doPolygonOffset(1.0f, 1500000.0f);
         GlStateManager.disablePolygonOffset();
 
+        GlStateManager.popMatrix();
+    }
+
+    private void renderItem(ItemStack stack, int x) {
+        GlStateManager.pushMatrix();
+        GlStateManager.depthMask(true);
+        RenderHelper.enableStandardItemLighting();
+        mc.getRenderItem().zLevel = -150.0f;
+        GlStateManager.disableAlpha();
+        GlStateManager.enableDepth();
+        GlStateManager.disableCull();
+
+        mc.getRenderItem().renderItemAndEffectIntoGUI(stack, x, -26);
+        mc.getRenderItem().renderItemOverlays(mc.fontRenderer, stack, x, -26);
+
+        mc.getRenderItem().zLevel = 0.0f;
+        RenderHelper.disableStandardItemLighting();
+        GlStateManager.enableCull();
+        GlStateManager.enableAlpha();
+        GlStateManager.enableDepth();
         GlStateManager.popMatrix();
     }
 
