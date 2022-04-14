@@ -53,6 +53,7 @@ public class ModuleManager implements Globals {
 
             // Movement
             new AutoWalk(),
+            new FastSwim(),
             new HoleSnap(),
             new Jesus(),
             new LongJump(),
