@@ -329,7 +329,8 @@ public class AutoCrystal extends Module {
                 CrystalUtil.placeAt(placePos, hand, interact.getValue().equals(Interact.STRICT), swing.getValue(), rotate.getValue().rotationType);
 
                 // if silent swap is active, we'll swap back
-                if (swapping.getValue().equals(SwapType.SERVER)) {
+                if (swapping.getValue().equals(Swapping.SERVER)) {
+                    mc.playerController.updateController();
                     swapBack();
                 }
             }
@@ -645,7 +646,7 @@ public class AutoCrystal extends Module {
                 } else {
                     // check if our swap timer has passed. if so, we can then place crystals
                     // or if we are packet swapping, we'll be swapping back and forth rapidly anyway so there's no point in waiting
-                    return swapTimer.hasElapsed(swapDelay.getValue(), TimeFormat.TICKS) || swapping.getValue().equals(SwapType.SERVER);
+                    return swapTimer.hasElapsed(swapDelay.getValue(), TimeFormat.TICKS) || swapping.getValue().equals(Swapping.SERVER);
                 }
             } else {
                 // if we cannot swap, let's hope you're holding onto crystals or sum
