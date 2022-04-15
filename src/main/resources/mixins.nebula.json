@@ -29,6 +29,7 @@
         "network.packet.s2c.ISPacketEntityVelocity",
         "network.packet.s2c.ISPacketExplosion",
         "network.packet.s2c.ISPacketPlayerPosLook",
+        "network.INetHandlerPlayClient",
         "network.MixinNetworkManager",
         "network.MixinNetHandlerPlayClient",
 
