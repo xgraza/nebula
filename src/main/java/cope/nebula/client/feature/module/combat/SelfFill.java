@@ -44,6 +44,9 @@ public class SelfFill extends Module {
             getNebula().getHotbarManager().sendSlotChange(oldSlot, swap.getValue());
             oldSlot = -1;
         }
+
+        // resume if not already
+        AutoCrystal.resume();
     }
 
     @Override
@@ -79,6 +82,9 @@ public class SelfFill extends Module {
             disable();
             return;
         }
+
+        // stop AutoCrystal from doing shit so we can burrow
+        AutoCrystal.pause();
 
         if (fillPos != null) {
             for (double offset : FAKE_JUMP) {

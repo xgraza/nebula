@@ -53,6 +53,16 @@ public class FeetTrap extends Module {
     private int oldSlot = -1;
     private EnumHand hand = EnumHand.MAIN_HAND;
 
+    @Override
+    protected void onDeactivated() {
+        if (oldSlot != -1) {
+            swapBack();
+        }
+
+        // resume AutoCrystal
+        AutoCrystal.resume();
+    }
+
     @SubscribeEvent
     public void onPacket(PacketEvent event) {
         if (event.getDirection().equals(Direction.INCOMING)) {
@@ -125,6 +135,8 @@ public class FeetTrap extends Module {
     }
 
     private void placeBlock(BlockPos pos) {
+        AutoCrystal.pause();
+
         if (attack.getValue()) {
             for (Entity entity : mc.world.getEntitiesWithinAABB(Entity.class, new AxisAlignedBB(pos))) {
 
@@ -150,6 +162,8 @@ public class FeetTrap extends Module {
         }
 
         getNebula().getInteractionManager().placeBlock(pos, hand, rotate.getValue(), true,true);
+
+        AutoCrystal.resume();
     }
 
     private Set<BlockPos> getFeetTrapPositions() {

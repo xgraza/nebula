@@ -14,7 +14,6 @@ import cope.nebula.util.renderer.FontUtil;
 import cope.nebula.util.renderer.RenderUtil;
 import cope.nebula.util.world.BlockUtil;
 import cope.nebula.util.world.RaycastUtil;
-import cope.nebula.util.world.damage.DamageUtil;
 import cope.nebula.util.world.damage.ExplosionUtil;
 import cope.nebula.util.world.entity.CrystalUtil;
 import cope.nebula.util.world.entity.player.inventory.InventorySpace;
@@ -45,12 +44,49 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 import java.awt.*;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class AutoCrystal extends Module {
+    public static AutoCrystal INSTANCE;
+
+    /**
+     * If we should pause AutoCrystal because other modules require rotations/block placements/attacks
+     */
+    private static boolean paused = false;
+
+    /**
+     * Pauses AutoCrystal
+     */
+    public static boolean pause() {
+        return paused = true;
+    }
+
+    /**
+     * Resumes AutoCrystal
+     * @return
+     */
+    public static boolean resume() {
+        return paused = false;
+    }
+
+    /**
+     * Checks if we are paused
+     * @return
+     */
+    public static boolean isPaused() {
+        if (INSTANCE.isOff()) {
+            return true;
+        }
+
+        return paused;
+    }
+
     public AutoCrystal() {
         super("AutoCrystal", ModuleCategory.COMBAT, "Automatically places and explodes crystals");
+        INSTANCE = this;
     }
 
     // placements
@@ -133,6 +169,7 @@ public class AutoCrystal extends Module {
     @Override
     protected void onActivated() {
         crystalCountTimer.resetTime();
+        paused = false;
     }
 
     @Override
@@ -153,6 +190,8 @@ public class AutoCrystal extends Module {
 
         placedCrystals.clear();
         inhibitCrystals.clear();
+
+        paused = false;
     }
 
     @Override
@@ -196,6 +235,11 @@ public class AutoCrystal extends Module {
         // find place position and best end crystal to attack
         findBestPlacePosition();
         findBestEndCrystal();
+
+        // do not do anything while paused
+        if (paused) {
+            return;
+        }
 
         if (explode.getValue() && attackCrystal != null) {
             // get the entity id for inhibit
@@ -327,7 +371,6 @@ public class AutoCrystal extends Module {
         if (event.getDirection().equals(Direction.INCOMING)) {
             if (event.getPacket() instanceof SPacketDestroyEntities) {
                 SPacketDestroyEntities packet = event.getPacket();
-
 
                 mc.addScheduledTask(() -> {
                     for (int entityId : packet.getEntityIDs()) {
