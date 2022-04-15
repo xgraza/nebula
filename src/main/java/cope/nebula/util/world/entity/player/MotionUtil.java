@@ -1,9 +1,12 @@
 package cope.nebula.util.world.entity.player;
 
+import cope.nebula.client.events.MotionEvent;
 import cope.nebula.util.Globals;
 import cope.nebula.util.internal.math.Vec2d;
 import cope.nebula.util.world.entity.player.rotation.AngleUtil;
 import net.minecraft.init.MobEffects;
+
+import javax.annotation.Nullable;
 
 /**
  * Checks/calculates movement values
@@ -57,11 +60,33 @@ public class MotionUtil implements Globals {
     }
 
     /**
+     * Automatically sets the x and z motion of an event/of the player
+     * @param event the event (if null, will directly modify motionX and motionZ)
+     * @param moveSpeed the movement speed to use
+     */
+    public static void strafe(@Nullable MotionEvent event, double moveSpeed) {
+        Vec2d vec = strafe(moveSpeed);
+
+        if (event != null) {
+            event.setX(mc.player.motionX = vec.getX());
+            event.setZ(mc.player.motionZ = vec.getZ());
+        } else {
+            mc.player.motionX = vec.getX();
+            mc.player.motionZ = vec.getZ();
+        }
+    }
+
+    /**
      * Gets the base NCP speed
      * @return the base NCP speed
      */
     public static double getBaseNCPSpeed() {
         double baseSpeed = 0.2873;
+
+        if (mc.player == null) {
+            return baseSpeed;
+        }
+
         if (mc.player.isPotionActive(MobEffects.SPEED)) {
             baseSpeed *= 1.0 + 0.2 * (mc.player.getActivePotionEffect(MobEffects.SPEED).getAmplifier() + 1);
         }
@@ -75,7 +100,12 @@ public class MotionUtil implements Globals {
      * @return the vanilla jump height
      */
     public static double getJumpHeight(boolean strict) {
-        double y = strict ? 0.42 : 0.3995;
+        double y = strict ? 0.41 : 0.3995;
+
+        if (mc.player == null) {
+            return y;
+        }
+
         if (mc.player.isPotionActive(MobEffects.JUMP_BOOST)) {
             y += (mc.player.getActivePotionEffect(MobEffects.JUMP_BOOST).getAmplifier() + 1) * 0.1;
         }

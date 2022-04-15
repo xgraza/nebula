@@ -11,7 +11,6 @@ import cope.nebula.client.value.Value;
 import cope.nebula.util.internal.math.Vec2d;
 import cope.nebula.util.renderer.FontUtil;
 import cope.nebula.util.world.entity.player.MotionUtil;
-import net.minecraft.init.MobEffects;
 import net.minecraft.network.play.server.SPacketPlayerPosLook;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
@@ -83,13 +82,13 @@ public class Speed extends Module {
         if (mode.getValue().equals(Mode.STRAFE)) {
             switch (strafeStage) {
                 case 1: {
-                    moveSpeed = 1.35 * getBaseNCPSpeed() - 0.01;
+                    moveSpeed = 1.35 * MotionUtil.getBaseNCPSpeed() - 0.01;
                     break;
                 }
 
                 case 2: {
                     if (MotionUtil.isMoving() && mc.player.onGround) {
-                        mc.player.motionY = getJumpHeight(false);
+                        mc.player.motionY = MotionUtil.getJumpHeight(false);
                         event.setY(mc.player.motionY);
 
                         moveSpeed *= slowdown ? 1.395 : 1.6835;
@@ -98,7 +97,7 @@ public class Speed extends Module {
                 }
 
                 case 3: {
-                    double adjusted = 0.66 * (distance - getBaseNCPSpeed());
+                    double adjusted = 0.66 * (distance - MotionUtil.getBaseNCPSpeed());
                     moveSpeed = distance - adjusted;
                     slowdown = !slowdown;
                     break;
@@ -115,7 +114,7 @@ public class Speed extends Module {
                 }
             }
 
-            moveSpeed = Math.max(moveSpeed, getBaseNCPSpeed());
+            moveSpeed = Math.max(moveSpeed, MotionUtil.getBaseNCPSpeed());
 
             Vec2d motion = MotionUtil.strafe(moveSpeed);
 
@@ -147,16 +146,16 @@ public class Speed extends Module {
 
             if (strafeStage == 1 && MotionUtil.isMoving()) {
                 strafeStage = 2;
-                moveSpeed = 1.38 * getBaseNCPSpeed() - 0.01;
+                moveSpeed = 1.38 * MotionUtil.getBaseNCPSpeed() - 0.01;
             } else if (strafeStage == 2) {
                 strafeStage = 3;
-                mc.player.motionY = getJumpHeight(true);
+                mc.player.motionY = MotionUtil.getJumpHeight(true);
                 event.setY(mc.player.motionY);
 
                 moveSpeed *= 2.149;
             } else if (strafeStage == 3) {
                 strafeStage = 4;
-                double adjusted = 0.66 * (distance - getBaseNCPSpeed());
+                double adjusted = 0.66 * (distance - MotionUtil.getBaseNCPSpeed());
                 moveSpeed = distance - adjusted;
             } else {
                 List<AxisAlignedBB> boxes = mc.world.getCollisionBoxes(mc.player, mc.player.getEntityBoundingBox().offset(0.0, mc.player.motionY, 0.0));
@@ -167,8 +166,8 @@ public class Speed extends Module {
                 moveSpeed = distance - distance / 159.0;
             }
 
-            if (moveSpeed < getBaseNCPSpeed()) {
-                moveSpeed = getBaseNCPSpeed();
+            if (moveSpeed < MotionUtil.getBaseNCPSpeed()) {
+                moveSpeed = MotionUtil.getBaseNCPSpeed();
             } else {
                 moveSpeed = Math.min(moveSpeed, speedUpTicks > 25 ? 0.511 : 0.5);
             }
@@ -183,33 +182,6 @@ public class Speed extends Module {
             event.setX(motion.getX());
             event.setZ(motion.getZ());
         }
-    }
-
-    /**
-     * Gets the base NCP speed
-     * @return the base NCP speed
-     */
-    private double getBaseNCPSpeed() {
-        double baseSpeed = 0.2873;
-        if (mc.player.isPotionActive(MobEffects.SPEED)) {
-            baseSpeed *= 1.0 + 0.2 * (mc.player.getActivePotionEffect(MobEffects.SPEED).getAmplifier() + 1);
-        }
-
-        return baseSpeed;
-    }
-
-    /**
-     * Gets the vanilla jump height
-     * @param strict if to use a more strict y height
-     * @return the vanilla jump height
-     */
-    private double getJumpHeight(boolean strict) {
-        double y = strict ? 0.41 : 0.3999999463558197;
-        if (mc.player.isPotionActive(MobEffects.JUMP_BOOST)) {
-            y += (mc.player.getActivePotionEffect(MobEffects.JUMP_BOOST).getAmplifier() + 1) * 0.1;
-        }
-
-        return y;
     }
 
     private double round(double value, int places) {
