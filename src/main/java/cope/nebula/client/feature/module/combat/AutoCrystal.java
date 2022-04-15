@@ -32,6 +32,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
 import net.minecraft.init.MobEffects;
 import net.minecraft.init.SoundEvents;
+import net.minecraft.inventory.ClickType;
 import net.minecraft.network.play.server.SPacketDestroyEntities;
 import net.minecraft.network.play.server.SPacketExplosion;
 import net.minecraft.network.play.server.SPacketSoundEffect;
@@ -111,7 +112,7 @@ public class AutoCrystal extends Module {
     public static final Value<SwapType> antiWeakness = new Value<>(explode, "AntiWeakness", SwapType.SERVER);
 
     // swapping
-    public static final Value<SwapType> swapping = new Value<>("Swapping", SwapType.CLIENT);
+    public static final Value<Swapping> swapping = new Value<>("Swapping", Swapping.CLIENT);
     public static final Value<Integer> swapDelay = new Value<>(swapping, "SwapDelay", 2, 0, 10);
 
     // rotations
@@ -143,6 +144,7 @@ public class AutoCrystal extends Module {
     // swapping
     private int oldSlot = -1;
     private EnumHand hand = EnumHand.MAIN_HAND;
+    private int windowOld, windowCrystal;
 
     // crystals per second calculations
     private int crystalCount = 0;
@@ -627,12 +629,12 @@ public class AutoCrystal extends Module {
             hand = EnumHand.MAIN_HAND;
 
             // if we have a swapping option, we'll do that now
-            if (!swapping.getValue().equals(SwapType.NONE)) {
+            if (!swapping.getValue().equals(Swapping.NONE)) {
 
                 // if we have not swapped to anything before, we'll swap
                 if (oldSlot == -1) {
                     oldSlot = mc.player.inventory.currentItem;
-                    getNebula().getHotbarManager().sendSlotChange(slot, swapping.getValue());
+                    getNebula().getHotbarManager().sendSlotChange(slot, swapping.getValue().swapType);
 
                     // reset our swap timer (useful for servers like 2bpvp that have a swap delay preventing silent swap)
                     swapTimer.resetTime();
@@ -729,7 +731,7 @@ public class AutoCrystal extends Module {
      */
     private void swapBack() {
         if (oldSlot != -1) {
-            getNebula().getHotbarManager().sendSlotChange(oldSlot, swapping.getValue());
+            getNebula().getHotbarManager().sendSlotChange(oldSlot, swapping.getValue().swapType);
             oldSlot = -1;
         }
     }
@@ -825,5 +827,21 @@ public class AutoCrystal extends Module {
          * Removes the crystal from the world instantly once a packet has confirmed that crystal is gone
          */
         CONFIRM
+    }
+
+    public enum Swapping {
+        NONE(SwapType.NONE),
+
+        CLIENT(SwapType.CLIENT),
+
+        SERVER(SwapType.SERVER),
+
+        ALT_SILENT(SwapType.SERVER);
+
+        private final SwapType swapType;
+
+        Swapping(SwapType swapType) {
+            this.swapType = swapType;
+        }
     }
 }
