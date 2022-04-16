@@ -121,10 +121,31 @@ public class ModuleManager implements Globals {
         return modules;
     }
 
+    /**
+     * Gets a module from its name
+     * @param name The module name
+     * @return the module instance
+     */
     public Module getModule(String name) {
         for (Module module : modules) {
             if (module.getName().equalsIgnoreCase(name)) {
                 return module;
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     * Gets a module from its class type
+     * @param clazz the class type
+     * @param <T> the specific module class
+     * @return the module instance or null
+     */
+    public <T extends Module> T getModule(Class<T> clazz) {
+        for (Module module : modules) {
+            if (clazz.isInstance(module)) {
+                return (T) module;
             }
         }
 
