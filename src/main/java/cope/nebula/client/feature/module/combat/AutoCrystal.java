@@ -413,10 +413,13 @@ public class AutoCrystal extends Module {
                             }
 
                             entity.setDead();
-                            mc.world.removeEntity(entity);
 
-                            if (merge.getValue().equals(Merge.CONFIRM)) {
-                                mc.world.removeEntityDangerously(entity);
+                            if (!merge.getValue().equals(Merge.NONE)) {
+                                mc.world.removeEntity(entity);
+
+                                if (merge.getValue().equals(Merge.CONFIRM)) {
+                                    mc.world.removeEntityDangerously(entity);
+                                }
                             }
                         }
                     }
@@ -437,10 +440,13 @@ public class AutoCrystal extends Module {
                                 }
 
                                 entity.setDead();
-                                mc.world.removeEntity(entity);
 
-                                if (merge.getValue().equals(Merge.CONFIRM)) {
-                                    mc.world.removeEntityDangerously(entity);
+                                if (!merge.getValue().equals(Merge.NONE)) {
+                                    mc.world.removeEntity(entity);
+
+                                    if (merge.getValue().equals(Merge.CONFIRM)) {
+                                        mc.world.removeEntityDangerously(entity);
+                                    }
                                 }
                             }
                         }
@@ -449,24 +455,22 @@ public class AutoCrystal extends Module {
             } else if (event.getPacket() instanceof SPacketSpawnObject) {
                 SPacketSpawnObject packet = event.getPacket();
                 if (packet.getType() == 51) {
-                    BlockPos pos = new BlockPos(packet.getX(), packet.getY(), packet.getZ());
-                    if (placePos != null && placePos.equals(pos.down())) {
+                    BlockPos pos = new BlockPos(packet.getX(), packet.getY() - 1, packet.getZ());
+                    if (placePos != null && placePos.equals(pos)) {
                         ++crystalCount;
 
                         entityIdSpawn = packet.getEntityID();
                         placedCrystals.add(packet.getEntityID());
 
-                        if (explodeSpeed.getValue() == 20.0) {
-                            if (!rotate.getValue().equals(Rotate.NONE)) {
-                                Rotation rotation = AngleUtil.toVec(new Vec3d(pos).add(0.5, 0.5, 0.5));
-                                if (rotation.isValid()) {
-                                    getNebula().getRotationManager().setRotation(rotation);
-                                }
+                        if (!rotate.getValue().equals(Rotate.NONE)) {
+                            Rotation rotation = AngleUtil.toVec(new Vec3d(pos).add(0.5, 0.5, 0.5));
+                            if (rotation.isValid()) {
+                                getNebula().getRotationManager().setRotation(rotation);
                             }
-
-                            CrystalUtil.explode(entityIdSpawn, hand, swing.getValue());
-                            inhibitCrystals.put(entityIdSpawn, new Stopwatch().resetTime());
                         }
+
+                        CrystalUtil.explode(entityIdSpawn, hand, swing.getValue());
+                        inhibitCrystals.put(entityIdSpawn, new Stopwatch().resetTime());
                     }
                 }
             }
@@ -558,6 +562,12 @@ public class AutoCrystal extends Module {
         double dist = 0.0;
         if (crystal != null) {
             dist = mc.player.getDistanceSq(crystal);
+        } else {
+            Entity entity = mc.world.getEntityByID(entityIdSpawn);
+            if (entity != null && entity instanceof EntityEnderCrystal) {
+                crystal = (EntityEnderCrystal) entity;
+                dist = mc.player.getDistanceSq(entity);
+            }
         }
 
         for (int entityId : new ArrayList<>(placedCrystals)) {
@@ -683,7 +693,6 @@ public class AutoCrystal extends Module {
             } else {
                 float yaw = getNebula().getRotationManager().getYaw();
                 float pitch = getNebula().getRotationManager().getPitch();
-
 
                 // check for changes in yaw/pitch
                 float yawDiff = Math.abs(yaw - rotation.getYaw());

@@ -151,19 +151,18 @@ public class CrystalUtil implements Globals {
         ((ICPacketUseEntity) packet).setEntityId(entityId);
         ((ICPacketUseEntity) packet).setAction(Action.ATTACK);
 
-        mc.addScheduledTask(() -> {
-            try {
-                mc.player.connection.sendPacket(packet);
+        try {
+            mc.player.connection.sendPacket(packet);
+            mc.player.resetCooldown();
 
-                if (swing) {
-                    mc.player.swingArm(hand);
-                } else {
-                    mc.player.connection.sendPacket(new CPacketAnimation(hand));
-                }
-            } catch (Exception ignored) {
-                // empty catch block
-                // TODO maybe log exception?
+            if (swing) {
+                mc.player.swingArm(hand);
+            } else {
+                mc.player.connection.sendPacket(new CPacketAnimation(hand));
             }
-        });
+        } catch (Exception ignored) {
+            // empty catch block
+            // TODO maybe log exception?
+        }
     }
 }
