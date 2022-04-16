@@ -16,6 +16,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumHand;
 
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -88,8 +89,9 @@ public class Nametags extends Module {
         String info = getNametagInfo(player);
         float width = FontUtil.getWidth(info) / 2.0f;
 
-        RenderUtil.drawRectangle(-(width - 4.0), -(FontUtil.getHeight() - 1.0f), (width * 2.0f) + 4.0f, FontUtil.getHeight() + 2.0f, 0x70000000);
-        FontUtil.drawString(info, -(width - 6.0f), -(FontUtil.getHeight() - 2.0f), -1);
+        RenderUtil.drawRectangle(-(width - 2.0), -(FontUtil.getHeight() - 1.0f), (width * 2.0f) + 2.0f, FontUtil.getHeight() + 2.0f, 0x70000000);
+        RenderUtil.drawOutlinedRectangle(-(width - 2.0), -(FontUtil.getHeight() - 1.0f), (width * 2.0f) + 2.0f, FontUtil.getHeight() + 2.0f, 1.0f, Color.BLACK.getRGB());
+        FontUtil.drawString(info, -(width - 4.0f), -(FontUtil.getHeight() - 2.5f), -1);
 
         int xOffset = -24 / 2 * player.inventory.armorInventory.size();
 
@@ -98,9 +100,9 @@ public class Nametags extends Module {
             if (!stack.isEmpty()) {
                 renderItem(stack, xOffset);
             }
-
-            xOffset += 16;
         }
+
+        xOffset += 16;
 
         if (armor.getValue()) {
             List<ItemStack> items = new ArrayList<>(player.inventory.armorInventory);

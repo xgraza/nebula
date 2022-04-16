@@ -145,6 +145,49 @@ public class RenderUtil implements Globals {
         GlStateManager.enableTexture2D();
     }
 
+    public static void drawOutlinedRectangle(double x, double y, double width, double height, float lineWidth, int color) {
+        float alpha = (color >> 24 & 0xff) / 255f;
+        float red = (color >> 16 & 0xff) / 255f;
+        float green = (color >> 8 & 0xff) / 255f;
+        float blue = (color & 0xff) / 255f;
+
+        GlStateManager.enableBlend();
+        GlStateManager.tryBlendFuncSeparate(770, 771, 0, 1);
+        GlStateManager.disableTexture2D();
+        GlStateManager.shadeModel(GL_SMOOTH);
+
+        GlStateManager.glLineWidth(lineWidth);
+        glEnable(GL_LINE_SMOOTH);
+        glHint(GL_LINE_SMOOTH, GL_LINE_SMOOTH_HINT);
+
+        Tessellator tessellator = Tessellator.getInstance();
+        BufferBuilder buffer = tessellator.getBuffer();
+
+        buffer.begin(GL_LINES, DefaultVertexFormats.POSITION_COLOR);
+
+        // top
+        buffer.pos(x, y, 0.0).color(red, green, blue, alpha).endVertex();
+        buffer.pos(x + width, y, 0.0).color(red, green, blue, alpha).endVertex();
+
+        // right
+        buffer.pos(x + width, y, 0.0).color(red, green, blue, alpha).endVertex();
+        buffer.pos(x + width, y + height, 0.0).color(red, green, blue, alpha).endVertex();
+
+        // bottom
+        buffer.pos(x, y + height, 0.0).color(red, green, blue, alpha).endVertex();
+        buffer.pos(x + width, y + height, 0.0).color(red, green, blue, alpha).endVertex();
+
+        // left
+        buffer.pos(x, y + height, 0.0).color(red, green, blue, alpha).endVertex();
+        buffer.pos(x, y, 0.0).color(red, green, blue, alpha).endVertex();
+
+        tessellator.draw();
+
+        glDisable(GL_LINE_SMOOTH);
+        GlStateManager.shadeModel(GL_FLAT);
+        GlStateManager.enableTexture2D();
+    }
+
     /**
      * Draws a half rounded rectangle
      *
