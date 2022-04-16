@@ -20,13 +20,13 @@ import static org.lwjgl.opengl.GL11.*;
  */
 public class AWTFont {
     private final Font font;
-    private final DynamicTexture texture;
+    private DynamicTexture texture;
     private final Glyph[] glyphs;
 
     public AWTFont(Font font) {
         this.font = font;
         this.glyphs = new Glyph[font.getNumGlyphs()];
-        this.texture = setupBitmap();
+        setupBitmap();
     }
 
     /**
@@ -61,9 +61,8 @@ public class AWTFont {
 
     /**
      * Creates a bitmap texture
-     * @return a DynamicTexture of the bitmap
      */
-    private DynamicTexture setupBitmap() {
+    private void setupBitmap() {
         // create our bitmap image
         BufferedImage image = new BufferedImage(512, 512, BufferedImage.TYPE_INT_ARGB);
         // get our graphics environment
@@ -115,15 +114,7 @@ public class AWTFont {
             x += charWidth;
         }
 
-        try {
-            File file = Paths.get("").resolve("image.png").toFile();
-            System.out.println(file.getAbsolutePath());
-            ImageIO.write(image, "png", file);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        return new DynamicTexture(image);
+        texture = new DynamicTexture(image);
     }
 
     public Font getFont() {

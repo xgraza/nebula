@@ -36,6 +36,8 @@ public class ClickGUIScreen extends GuiScreen implements Globals {
 
     @Override
     public void drawScreen(int mouseX, int mouseY, float partialTicks) {
+        super.drawScreen(mouseX, mouseY, partialTicks);
+
         if (ClickGUI.shader.getValue()) {
             blurShader.render(partialTicks);
         }
