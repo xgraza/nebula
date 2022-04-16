@@ -23,7 +23,7 @@ public class Avoid extends Module {
             mc.player.motionY = 0.0; // hold onto dear life
         }
 
-        if (unloaded.getValue() && mc.world.getChunk(mc.player.getPosition()).isLoaded()) {
+        if (unloaded.getValue() && !mc.world.getChunk(mc.player.getPosition()).isLoaded()) {
             mc.player.motionX = 0.0;
             mc.player.motionZ = 0.0;
         }
