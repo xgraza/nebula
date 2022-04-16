@@ -93,6 +93,7 @@ public class ModuleManager implements Globals {
             new FastBreak(),
             new FastPlace(),
             new NoGlitchBlocks(),
+            new NoInteract(),
             new Scaffold(),
             new Timer()
     );
