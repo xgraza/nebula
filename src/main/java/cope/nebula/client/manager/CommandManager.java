@@ -50,7 +50,7 @@ public class CommandManager implements Globals {
 
                 try {
                     dispatcher.execute(dispatcher.parse(message.substring(prefix.length()), 1));
-                } catch (CommandSyntaxException e) {
+                } catch (Exception ignored) {
                     sendChatMessage("An exception occurred, please run the help command.");
                 }
             }
