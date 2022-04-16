@@ -23,7 +23,13 @@ import java.util.ArrayList;
 public class CommandManager implements Globals {
     private final CommandDispatcher<Object> dispatcher = new CommandDispatcher<>();
     private final ArrayList<Command> commands = Lists.newArrayList(
-            new Bind(), new FakePlayer(), new MacroCommand(), new Seen(), new Toggle());
+            new Bind(),
+            new FakePlayer(),
+            new Friend(),
+            new MacroCommand(),
+            new Seen(),
+            new Toggle()
+    );
 
     private String prefix = ",";
 

@@ -1,5 +1,6 @@
 package cope.nebula.client.feature.module.other;
 
+import com.mojang.realmsclient.gui.ChatFormatting;
 import cope.nebula.asm.duck.IEntityPlayer;
 import cope.nebula.client.events.MiddleClickEvent;
 import cope.nebula.client.feature.module.Module;
@@ -64,7 +65,7 @@ public class MiddleClick extends Module {
                 if (result.entityHit instanceof EntityPlayer && friend.getValue()) {
                     sendChatMessage(
                             (((IEntityPlayer) result.entityHit).friend() ? "Added" : "Removed")
-                                    + " " + result.entityHit.getName() + " as a friend.");
+                                    + " " + ChatFormatting.DARK_PURPLE + result.entityHit.getName() + ChatFormatting.RESET + " as a friend.");
                 }
                 break;
             }
