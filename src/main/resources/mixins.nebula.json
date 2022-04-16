@@ -43,10 +43,12 @@
         "render.ui.MixinGuiIngame",
         "render.ui.MixinGuiToast",
         "render.IRenderGlobal",
+        "render.MixinBufferBuilder",
         "render.MixinLayerArmorBase",
         "render.MixinParticleManager",
 
         "world.block.state.MixinStateImplementation",
+        "world.block.MixinBlock",
         "world.block.MixinBlockCactus",
         "world.block.MixinBlockFire",
         "world.IWorldProvider",

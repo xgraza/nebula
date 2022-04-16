@@ -97,7 +97,8 @@ public class ModuleManager implements Globals {
             new NoGlitchBlocks(),
             new NoInteract(),
             new Scaffold(),
-            new Timer()
+            new Timer(),
+            new Wallhack()
     );
 
     public ModuleManager() {

@@ -1,6 +1,7 @@
 package cope.nebula.asm.mixins.world.block.state;
 
 import cope.nebula.client.events.BlockCollisionEvent;
+import cope.nebula.client.feature.module.world.Wallhack;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.BlockStateContainer.StateImplementation;
 import net.minecraft.block.state.IBlockState;
@@ -13,7 +14,9 @@ import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.Redirect;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import java.util.List;
 
@@ -28,6 +31,13 @@ public class MixinStateImplementation {
         MinecraftForge.EVENT_BUS.post(event);
         if (!event.isCanceled()) {
             block.addCollisionBoxToList(state, worldIn, pos, entityBox, collidingBoxes, entityIn, p_185908_6_);
+        }
+    }
+
+    @Inject(method = "getLightValue()I", at = @At("HEAD"), cancellable = true)
+    public void getLightValue(CallbackInfoReturnable<Integer> info) {
+        if (Wallhack.INSTANCE.isOn()) {
+            info.setReturnValue(100);
         }
     }
 }
