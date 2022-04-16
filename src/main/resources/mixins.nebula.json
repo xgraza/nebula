@@ -49,6 +49,7 @@
         "world.block.state.MixinStateImplementation",
         "world.block.MixinBlockCactus",
         "world.block.MixinBlockFire",
+        "world.IWorldProvider",
         "world.MixinWorld",
         "world.MixinWorldClient"
     ],
