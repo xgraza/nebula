@@ -76,6 +76,7 @@ public class ModuleManager implements Globals {
             new Spammer(),
 
             // Render
+            new Ambience(),
             new AntiRender(),
             new Brightness(),
             new Chams(),
