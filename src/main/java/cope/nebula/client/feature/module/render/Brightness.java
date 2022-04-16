@@ -33,4 +33,12 @@ public class Brightness extends Module {
             }
         }
     }
+
+    @Override
+    public void onTick() {
+        WorldProvider provider = mc.world.provider;
+        for (int i = 0; i < 16; ++i) {
+            ((IWorldProvider) provider).getLightBrightnessTable()[i] = 1.0f;
+        }
+    }
 }
