@@ -114,6 +114,10 @@ public class Nebula {
         return holeManager;
     }
 
+    public TotemPopManager getTotemPopManager() {
+        return totemPopManager;
+    }
+
     public RelationshipManager getRelationshipManager() {
         return relationshipManager;
     }

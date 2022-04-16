@@ -190,7 +190,10 @@ public class Nametags extends Module {
         }
 
         if (pops.getValue()) {
-            // TODO
+            int pops = getNebula().getTotemPopManager().getPops(player.getEntityId());
+            if (pops >= 1) {
+                builder.append(" -").append(pops);
+            }
         }
 
         return builder.toString();
