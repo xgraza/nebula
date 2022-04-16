@@ -71,9 +71,9 @@ public class TotemPopManager implements Globals {
                         + " has died after popping "
                         + ChatFormatting.DARK_PURPLE + total + ChatFormatting.RESET
                         + " totem" + (total > 1 ? "s." : "."), player.hashCode());
-
-                pops.put(player.getEntityId(), 0);
             }
+
+            pops.put(player.getEntityId(), 0);
         }
     }
 
