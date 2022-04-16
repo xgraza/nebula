@@ -79,7 +79,11 @@ public class FontUtil implements Globals {
      * @param color The text color
      */
     public static void drawString(String text, boolean shadow, float x, float y, int color) {
-        getCurrentFontRenderer().drawString(text, x, y, color, shadow);
+        if (shadow) {
+            getCurrentFontRenderer().drawStringWithShadow(text, x, y, color);
+        } else {
+            getCurrentFontRenderer().drawString(text, x, y, color, false);
+        }
     }
 
     /**

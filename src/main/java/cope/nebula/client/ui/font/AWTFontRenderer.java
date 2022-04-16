@@ -45,6 +45,10 @@ public class AWTFontRenderer extends FontRenderer implements Globals {
             colour = 0xFFFFFFFF;
         }
 
+        if (dropShadow) {
+            colour = (colour & 0xFCFCFC) >> 2 | colour & 0xFF000000;
+        }
+
         double x1 = x - 1.5;
         double y1 = y - 0.5;
 
