@@ -22,7 +22,7 @@ public class AWTFontRenderer extends FontRenderer implements Globals {
         super(mc.gameSettings, new ResourceLocation("textures/font/ascii.png"), mc.renderEngine, false);
         this.font = font;
 
-        FONT_HEIGHT = font.getFont().getSize() - 9;
+        FONT_HEIGHT = font.getFont().getSize() / 2;
         registerCustomColorCodes();
     }
 
@@ -118,16 +118,12 @@ public class AWTFontRenderer extends FontRenderer implements Globals {
             char c = text.charAt(i);
 
             Glyph charData = font.getGlyphs()[c];
-            if (charData == null) {
-                continue;
-            }
 
             if (c == '\u00a7') {
                 ++i;
-                continue; // ignore color codes
+            } else if (c < font.getGlyphs().length) {
+                width += (charData.getWidth() - 8);
             }
-
-            width += charData.getWidth() - 8;
         }
 
         return width / 2;
