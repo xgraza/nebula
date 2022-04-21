@@ -84,6 +84,6 @@ public class ToggleableFeature extends Feature {
      * @return If state is false
      */
     public boolean isOff() {
-        return state;
+        return !state;
     }
 }

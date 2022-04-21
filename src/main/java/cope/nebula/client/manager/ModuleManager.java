@@ -94,6 +94,7 @@ public class ModuleManager implements Globals {
             new Avoid(),
             new FastBreak(),
             new FastPlace(),
+            new MultiTask(),
             new NoGlitchBlocks(),
             new NoInteract(),
             new Scaffold(),
