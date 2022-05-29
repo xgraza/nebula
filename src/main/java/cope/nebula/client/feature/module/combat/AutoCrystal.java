@@ -117,6 +117,7 @@ public class AutoCrystal extends Module {
 
     // rotations
     public static final Value<Rotate> rotate = new Value<>("Rotate", Rotate.SERVER);
+    public static final Value<Boolean> raytrace = new Value<>(rotate, "Raytrace", false);
     public static final Value<YawLimit> yawLimit = new Value<>(rotate, "YawLimit", YawLimit.SEMI);
     public static final Value<Float> maxYawRate = new Value<>(yawLimit, "MaxYawRate", 55.0f, 10.0f, 100.0f);
 
@@ -140,6 +141,7 @@ public class AutoCrystal extends Module {
 
     // rotations
     private Rotation nextRotation = Rotation.INVALID_ROTATION;
+    private Rotation lastCrystalRotation = Rotation.INVALID_ROTATION;
 
     // swapping
     private int oldSlot = -1;
@@ -181,6 +183,7 @@ public class AutoCrystal extends Module {
         attackCrystal = null;
 
         nextRotation = Rotation.INVALID_ROTATION;
+        lastCrystalRotation = Rotation.INVALID_ROTATION;
 
         if (oldSlot != -1) {
             swapBack();
@@ -243,42 +246,51 @@ public class AutoCrystal extends Module {
             return;
         }
 
-        if (explode.getValue() && attackCrystal != null) {
-            // get the entity id for inhibit
-            int entityId = attackCrystal.getEntityId();
-            if (shouldInhibit(entityId)) {
-                return;
-            }
-
-            // check if we have passed the required amount of ticks to explode a crystal
-            long elapsed = explodeTimer.getTime(TimeFormat.TICKS);
-            if (elapsed >= 20.0f - explodeSpeed.getValue()) {
-
-                // reset time
-                explodeTimer.resetTime();
-
-                if (mc.player.isPotionActive(MobEffects.WEAKNESS) &&
-                        !mc.player.isPotionActive(MobEffects.STRENGTH) &&
-                        !antiWeakness.getValue().equals(SwapType.NONE)) {
-
-                    // TODO: dont just swap to swords, allow axe and pick swapping as well
+        if (explode.getValue()) {
+            if (attackCrystal != null) {
+                // get the entity id for inhibit
+                int entityId = attackCrystal.getEntityId();
+                if (shouldInhibit(entityId)) {
+                    return;
                 }
 
-                // send rotations and check if we should limit to the next tick
-                if (!rotate.getValue().equals(Rotate.NONE) && sendRotations(AngleUtil.toEntity(attackCrystal, Bone.HEAD), yawLimit.getValue().equals(YawLimit.FULL))) {
+                // check if we have passed the required amount of ticks to explode a crystal
+                long elapsed = explodeTimer.getTime(TimeFormat.TICKS);
+                if (elapsed >= 20.0f - explodeSpeed.getValue()) {
 
-                    // TODO
+                    // reset time
+                    explodeTimer.resetTime();
+
+                    if (mc.player.isPotionActive(MobEffects.WEAKNESS) &&
+                            !mc.player.isPotionActive(MobEffects.STRENGTH) &&
+                            !antiWeakness.getValue().equals(SwapType.NONE)) {
+
+                        // TODO: dont just swap to swords, allow axe and pick swapping as well
+                    }
+
+                    // send rotations and check if we should limit to the next tick
+                    lastCrystalRotation = AngleUtil.toEntity(attackCrystal, Bone.HEAD);
+
+                    if (!rotate.getValue().equals(Rotate.NONE) && sendRotations(lastCrystalRotation, yawLimit.getValue().equals(YawLimit.FULL))) {
+
+                        // TODO
+                    }
+
+                    // attack the crystal
+                    CrystalUtil.explode(entityId, hand, swing.getValue());
+
+                    // add crystal to inhibited crystal map
+                    if (inhibit.getValue()) {
+                        inhibitCrystals.put(entityId, new Stopwatch().resetTime());
+                    } else {
+                        // reset crystal
+                        attackCrystal = null;
+                    }
                 }
-
-                // attack the crystal
-                CrystalUtil.explode(entityId, hand, swing.getValue());
-
-                // add crystal to inhibited crystal map
-                if (inhibit.getValue()) {
-                    inhibitCrystals.put(entityId, new Stopwatch().resetTime());
-                } else {
-                    // reset crystal
-                    attackCrystal = null;
+            } else {
+                if (!rotate.getValue().equals(Rotate.NONE) && raytrace.getValue() && lastCrystalRotation != null) {
+                    float invertedYaw = -lastCrystalRotation.getYaw(); // TODO: actual calculations
+                    getNebula().getRotationManager().setRotation(new Rotation(invertedYaw, lastCrystalRotation.getPitch()).setType(rotate.getValue().rotationType));
                 }
             }
         }
@@ -645,6 +657,11 @@ public class AutoCrystal extends Module {
                 // if we have not swapped to anything before, we'll swap
                 if (oldSlot == -1) {
                     oldSlot = mc.player.inventory.currentItem;
+
+                    if (swapping.getValue().equals(Swapping.SERVER)) {
+                        mc.playerController.pickItem(slot);
+                    }
+
                     getNebula().getHotbarManager().sendSlotChange(slot, swapping.getValue().swapType);
 
                     // reset our swap timer (useful for servers like 2bpvp that have a swap delay preventing silent swap)
@@ -741,7 +758,12 @@ public class AutoCrystal extends Module {
      */
     private void swapBack() {
         if (oldSlot != -1) {
+            if (swapping.getValue().equals(Swapping.SERVER)) {
+                mc.playerController.pickItem(oldSlot);
+            }
+
             getNebula().getHotbarManager().sendSlotChange(oldSlot, swapping.getValue().swapType);
+
             oldSlot = -1;
         }
     }
