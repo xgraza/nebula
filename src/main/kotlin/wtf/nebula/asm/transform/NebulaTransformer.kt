@@ -4,6 +4,7 @@ import net.minecraft.launchwrapper.IClassTransformer
 import org.apache.logging.log4j.LogManager
 import wtf.nebula.asm.transform.api.Injection
 import wtf.nebula.asm.transform.api.TransformerManager
+import wtf.nebula.asm.transform.api.TransformerManager.Companion.CLASS_REGEX
 import wtf.nebula.asm.transform.api.util.ASMUtil
 
 class NebulaTransformer : IClassTransformer {
@@ -31,7 +32,21 @@ class NebulaTransformer : IClassTransformer {
                 val inject = it.getAnnotation(Injection::class.java)
 
                 classNode.methods.forEach { methodNode ->
-                    if (methodNode.name == inject.name) {
+                    var name = methodNode.name
+                    var desc = methodNode.desc
+
+                    if (transformerManager.runtimeObfuscation) {
+                        val clazzMatcher = CLASS_REGEX.matcher(desc)
+                        val groups = clazzMatcher.groupCount()
+
+                        if (groups > 0) {
+                            for (i in 0..groups) {
+                                val group = clazzMatcher.group(i)
+                            }
+                        }
+                    }
+
+                    if (name == inject.name && desc == inject.descriptor) {
                         it.invoke(classTransformer, methodNode)
                     }
                 }

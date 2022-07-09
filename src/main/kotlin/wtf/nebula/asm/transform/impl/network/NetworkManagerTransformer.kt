@@ -10,7 +10,7 @@ import wtf.nebula.asm.transform.api.Injection
 
 @ClassInjection("net.minecraft.network.NetworkManager")
 class NetworkManagerTransformer : ClassTransformer() {
-    @Injection(name = "sendPacket")
+    @Injection(name = "sendPacket", descriptor = "(Lnet/minecraft/network/Packet;)V")
     fun sendPacket(node: MethodNode) {
         val instructions = InsnList()
 
@@ -35,7 +35,7 @@ class NetworkManagerTransformer : ClassTransformer() {
         node.instructions.insert(instructions)
     }
 
-    @Injection(name = "channelRead0")
+    @Injection(name = "channelRead0", descriptor = "(Lio/netty/channel/ChannelHandlerContext;Lnet/minecraft/network/Packet;)V")
     fun channelRead0(node: MethodNode) {
         val instructions = InsnList()
 
