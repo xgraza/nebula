@@ -1,6 +1,6 @@
 package wtf.nebula.client
 
-import cope.nebula.util.versioning.BuildConfig
+import wtf.nebula.util.versioning.BuildConfig
 import me.bush.eventbuskotlin.Config
 import me.bush.eventbuskotlin.EventBus
 import net.minecraftforge.fml.common.Mod

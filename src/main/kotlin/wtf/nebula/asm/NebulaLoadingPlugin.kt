@@ -12,12 +12,11 @@ class NebulaLoadingPlugin : IFMLLoadingPlugin {
     var transformerManager = TransformerManager.getInstance()
 
     override fun getASMTransformerClass(): Array<String> {
-        transformerManager.logger.info("Loading transformer...")
         return arrayOf(NebulaTransformer::class.java.name)
     }
 
-    override fun getModContainerClass(): String {
-        return "wtf.nebula.client.Nebula"
+    override fun getModContainerClass(): String? {
+        return null
     }
 
     override fun getSetupClass(): String? {
@@ -31,9 +30,10 @@ class NebulaLoadingPlugin : IFMLLoadingPlugin {
 
         // check if notch obfuscation is being used (aka we're no longer in an IDE and a mod env)
         val notch = data.getOrDefault("runtimeDeobfuscationEnabled", true) as Boolean
+        transformerManager.runtimeObfuscation = notch
+
         if (notch) {
             transformerManager.logger.info("Notch obfuscation detected")
-            transformerManager.runtimeObfuscation = notch
         }
     }
 

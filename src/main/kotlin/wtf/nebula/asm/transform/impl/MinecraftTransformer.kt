@@ -10,11 +10,13 @@ import wtf.nebula.asm.transform.api.ClassInjection
 import wtf.nebula.asm.transform.api.ClassTransformer
 import wtf.nebula.asm.transform.api.Injection
 
-@ClassInjection("Lnet/minecraft/client/Minecraft")
+@ClassInjection("net.minecraft.client.Minecraft")
 class MinecraftTransformer : ClassTransformer() {
     @Injection(name = "runTick")
     fun runTick(node: MethodNode) {
         val instructions = InsnList()
+
+        // invoke MinecraftHook#runTick()V
         instructions.add(MethodInsnNode(
             INVOKESTATIC,
             Type.getInternalName(MinecraftHook::class.java),
@@ -23,6 +25,7 @@ class MinecraftTransformer : ClassTransformer() {
             false
         ))
 
+        // add instructions to the method node
         node.instructions.insert(instructions)
     }
 }

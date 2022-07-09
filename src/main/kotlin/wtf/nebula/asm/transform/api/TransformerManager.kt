@@ -8,7 +8,7 @@ import java.lang.reflect.Field
 import java.lang.reflect.Method
 
 class TransformerManager {
-    var logger = LogManager.getLogger("TransformerManager")
+    val logger = LogManager.getLogger("TransformerManager")
 
     var runtimeObfuscation: Boolean = false
     private val transformers = mutableMapOf<String, ClassTransformer>()

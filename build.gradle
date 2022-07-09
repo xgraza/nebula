@@ -27,7 +27,7 @@ apply plugin: 'net.minecraftforge.gradle'
 apply plugin: 'de.fuerstenau.buildconfig'
 
 version = '1.0.0'
-group = 'cope.nebula'
+group = 'wtf.nebula'
 archivesBaseName = 'Nebula'
 
 def getGitHash = { ->
@@ -49,7 +49,7 @@ buildConfig {
     buildConfigField "String", "HASH", "${getGitHash()}"
     buildConfigField "String", "VERSION", "${project.version}"
 
-    packageName "cope.nebula.util.versioning"
+    packageName "wtf.nebula.util.versioning"
 }
 
 sourceSets.main.java.srcDirs += "build/gen/buildconfig/src/main"
@@ -87,7 +87,7 @@ minecraft {
 
             property 'forge.logging.markers', 'SCAN,REGISTRIES,REGISTRYDUMP'
             property 'forge.logging.console.level', 'debug'
-            property 'fml.coreMods.load', 'cope.nebula.asm.NebulaLoadingPlugin'
+            property 'fml.coreMods.load', 'wtf.nebula.asm.NebulaLoadingPlugin'
         }
     }
 }
@@ -144,7 +144,7 @@ jar {
     }
 
     manifest.attributes(
-            'FMLCorePlugin': 'cope.nebula.asm.NebulaLoadingPlugin',
+            'FMLCorePlugin': 'wtf.nebula.asm.NebulaLoadingPlugin',
             'FMLCorePluginContainsFMLMod': 'true',
             'ForceLoadAsMod': 'true'
     )
