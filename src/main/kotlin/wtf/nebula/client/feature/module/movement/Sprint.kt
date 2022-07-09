@@ -3,7 +3,7 @@ package wtf.nebula.client.feature.module.movement
 import me.bush.eventbuskotlin.EventListener
 import me.bush.eventbuskotlin.listener
 import org.lwjgl.input.Keyboard
-import wtf.nebula.client.event.TickEvent
+import wtf.nebula.client.event.tick.TickEvent
 import wtf.nebula.client.feature.module.Module
 import wtf.nebula.client.feature.module.ModuleCategory
 

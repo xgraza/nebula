@@ -4,6 +4,7 @@ import net.minecraftforge.fml.common.ObfuscationReflectionHelper
 import net.minecraftforge.fml.common.asm.transformers.deobf.FMLDeobfuscatingRemapper
 import org.apache.logging.log4j.LogManager
 import wtf.nebula.asm.transform.impl.MinecraftTransformer
+import wtf.nebula.asm.transform.impl.network.NetworkManagerTransformer
 import java.lang.reflect.Field
 import java.lang.reflect.Method
 
@@ -15,6 +16,7 @@ class TransformerManager {
 
     init {
         add(MinecraftTransformer())
+        add(NetworkManagerTransformer())
 
         logger.info("Loaded ${transformers.size} transformer classes")
     }

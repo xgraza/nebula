@@ -1,4 +1,4 @@
-package wtf.nebula.client.event
+package wtf.nebula.client.event.tick
 
 import me.bush.eventbuskotlin.Event
 
