@@ -7,6 +7,7 @@ import wtf.nebula.client.event.KeyInputEvent
 import wtf.nebula.client.feature.module.Module
 import wtf.nebula.client.feature.module.combat.Aura
 import wtf.nebula.client.feature.module.combat.Criticals
+import wtf.nebula.client.feature.module.combat.FastProjectile
 import wtf.nebula.client.feature.module.movement.Sprint
 import wtf.nebula.client.registry.Registry
 
@@ -14,6 +15,7 @@ class ModuleRegistry : Registry<Module>() {
     override fun load() {
         loadMember(Aura())
         loadMember(Criticals())
+        loadMember(FastProjectile())
 
         loadMember(Sprint())
 

@@ -9,10 +9,6 @@ import wtf.nebula.util.rotation.InvalidRotation
 import wtf.nebula.util.rotation.Rotation
 
 class RotationManager : Globals {
-    init {
-        Nebula.BUS.subscribe(this)
-    }
-
     var rotation: Rotation = InvalidRotation()
         set(value) {
             field = value

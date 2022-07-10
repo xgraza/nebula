@@ -9,6 +9,7 @@ import net.minecraftforge.fml.common.event.FMLPostInitializationEvent
 import org.apache.logging.log4j.LogManager
 import org.lwjgl.opengl.Display
 import wtf.nebula.client.event.translate.ForgeEventListener
+import wtf.nebula.client.manager.InventoryManager
 import wtf.nebula.client.manager.RotationManager
 import wtf.nebula.client.registry.RegistryContainer
 import wtf.nebula.client.registry.impl.ModuleRegistry
@@ -26,6 +27,7 @@ class Nebula {
         val logger = LogManager.getLogger(NAME)
         val BUS = EventBus(config = Config(logger, annotationRequired = true))
 
+        val inventoryManager = InventoryManager()
         val rotationManager = RotationManager()
     }
 
@@ -36,6 +38,7 @@ class Nebula {
         RegistryContainer.register(ModuleRegistry())
         ForgeEventListener()
 
+        BUS.subscribe(inventoryManager)
         BUS.subscribe(rotationManager)
     }
 
