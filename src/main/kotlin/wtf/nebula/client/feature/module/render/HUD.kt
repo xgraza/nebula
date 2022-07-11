@@ -20,7 +20,7 @@ class HUD : Module(ModuleCategory.RENDER, "Renders an overlay of the vanilla HUD
 
         if (arraylist) {
             val modules = ModuleRegistry.INSTANCE!!.registers
-                .filter { mod -> mod.isActive() }
+                .filter { mod -> mod.isActive() && mod.drawn }
                 .sortedBy { mod ->
                     val width = mc.fontRenderer.getStringWidth(mod.name)
                     mod.animation.max = width.toFloat()
