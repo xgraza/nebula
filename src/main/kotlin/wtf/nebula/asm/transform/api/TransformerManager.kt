@@ -6,6 +6,8 @@ import org.apache.logging.log4j.LogManager
 import wtf.nebula.asm.transform.impl.MinecraftTransformer
 import wtf.nebula.asm.transform.impl.entity.player.EntityPlayerSPTransformer
 import wtf.nebula.asm.transform.impl.network.NetworkManagerTransformer
+import wtf.nebula.asm.transform.impl.render.EntityRendererTransformer
+import wtf.nebula.asm.transform.impl.render.gui.GuiIngameTransformer
 import java.lang.reflect.Field
 import java.lang.reflect.Method
 import java.util.regex.Pattern
@@ -20,6 +22,8 @@ class TransformerManager {
         add(MinecraftTransformer())
         add(NetworkManagerTransformer())
         add(EntityPlayerSPTransformer())
+        add(GuiIngameTransformer())
+        add(EntityRendererTransformer())
 
         logger.info("Loaded ${transformers.size} transformer classes")
     }
