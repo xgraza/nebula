@@ -9,6 +9,7 @@ import wtf.nebula.client.feature.module.ModuleCategory
 import wtf.nebula.client.feature.module.combat.Aura
 import wtf.nebula.client.feature.module.combat.Criticals
 import wtf.nebula.client.feature.module.combat.FastProjectile
+import wtf.nebula.client.feature.module.miscellaneous.Notifications
 import wtf.nebula.client.feature.module.movement.LongJump
 import wtf.nebula.client.feature.module.movement.Speed
 import wtf.nebula.client.feature.module.movement.Sprint
@@ -32,6 +33,8 @@ class ModuleRegistry : Registry<Module>() {
         loadMember(Aura())
         loadMember(Criticals())
         loadMember(FastProjectile())
+
+        loadMember(Notifications())
 
         loadMember(LongJump())
         loadMember(Speed())
@@ -62,7 +65,7 @@ class ModuleRegistry : Registry<Module>() {
 
         moduleByCategory[member.category] = values
 
-        if (member is HUD || member is Colors) {
+        if (member is HUD || member is Colors || member is Notifications) {
             member.drawn = false
             member.toggled = true
         }

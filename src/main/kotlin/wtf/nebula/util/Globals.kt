@@ -9,7 +9,7 @@ interface Globals {
         get() = Minecraft.getMinecraft()
 
     private val PREFIX
-        get() = ChatFormatting.DARK_PURPLE.toString() + "[Nebula] " + ChatFormatting.RESET.toString()
+        get() = ChatFormatting.RED.toString() + "[Nebula] " + ChatFormatting.RESET.toString()
 
     fun printChatMessage(message: String) {
         mc.ingameGUI.chatGUI.printChatMessage(TextComponentString(PREFIX + message))
@@ -17,5 +17,9 @@ interface Globals {
 
     fun printChatMessage(id: Int, message: String) {
         mc.ingameGUI.chatGUI.printChatMessageWithOptionalDeletion(TextComponentString(PREFIX + message), id)
+    }
+
+    fun nullCheck(): Boolean {
+        return mc.player == null || mc.world == null
     }
 }

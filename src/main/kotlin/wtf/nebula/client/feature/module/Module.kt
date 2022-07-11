@@ -2,7 +2,9 @@ package wtf.nebula.client.feature.module
 
 import com.mojang.realmsclient.gui.ChatFormatting
 import org.lwjgl.input.Keyboard
+import wtf.nebula.client.Nebula
 import wtf.nebula.client.config.ConfigurableFeature
+import wtf.nebula.client.event.ModuleToggledEvent
 import wtf.nebula.util.animation.Animation
 import wtf.nebula.util.animation.Easing
 
@@ -18,11 +20,15 @@ open class Module(val category: ModuleCategory, val description: String) : Confi
         .setMax(100.0f)
 
     override fun onActivated() {
+        Nebula.BUS.post(ModuleToggledEvent(this))
+
         animation.isReversed = false
         animation.value = 0.0f
     }
 
     override fun onDeactivated() {
+        Nebula.BUS.post(ModuleToggledEvent(this))
+
         animation.isReversed = true
     }
 
