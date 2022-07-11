@@ -14,11 +14,11 @@ class Timer : Module(ModuleCategory.WORLD, "Makes game go fast fast or slow slow
     @EventListener
     private val tickListener = listener<TickEvent> {
         if (tpsSync) {
-            Nebula.tickManager.setTimerSpeed(1.0f) // TODO
+            Nebula.tickManager.speed = 1.0f
         }
 
         else {
-            Nebula.tickManager.setTimerSpeed(speed)
+            Nebula.tickManager.speed = speed
         }
     }
 }

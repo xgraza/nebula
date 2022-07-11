@@ -70,18 +70,14 @@ class Speed : Module(ModuleCategory.MOVEMENT, "vroom vroom") {
                             mc.player.motionY = MotionUtil.getJumpHeight(mode == Mode.STRICT_STRAFE)
                             it.y = mc.player.motionY
 
-                            moveSpeed *= if (mode == Mode.STRAFE) {
-                                if (boost) {
-                                    1.608
-                                } else {
-                                    1.345
-                                }
+                            moveSpeed *= if (boost) {
+                                1.608
                             } else {
-                                2.149
+                                1.345
                             }
 
                             if (timerBoost) {
-                                Nebula.tickManager.setTimerSpeed(1.088f)
+                                Nebula.tickManager.speed = 1.088f
                             }
                         }
                     }
@@ -89,7 +85,7 @@ class Speed : Module(ModuleCategory.MOVEMENT, "vroom vroom") {
                     StrafeStage.SPEED -> {
                         stage = StrafeStage.COLLIDE
 
-                        val adjusted = (if (mode == Mode.STRAFE) 0.66 else 0.8) * (distance - MotionUtil.getBaseNCPSpeed())
+                        val adjusted = (if (mode == Mode.STRAFE) 0.66 else 0.72) * (distance - MotionUtil.getBaseNCPSpeed())
                         moveSpeed = distance - adjusted
 
                         boost = !boost
