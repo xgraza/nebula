@@ -4,12 +4,12 @@ import net.minecraftforge.fml.common.ObfuscationReflectionHelper
 import net.minecraftforge.fml.common.asm.transformers.deobf.FMLDeobfuscatingRemapper
 import org.apache.logging.log4j.LogManager
 import wtf.nebula.asm.transform.impl.MinecraftTransformer
+import wtf.nebula.asm.transform.impl.entity.EntityTransformer
 import wtf.nebula.asm.transform.impl.entity.player.EntityPlayerSPTransformer
 import wtf.nebula.asm.transform.impl.network.NetworkManagerTransformer
 import wtf.nebula.asm.transform.impl.render.EntityRendererTransformer
 import wtf.nebula.asm.transform.impl.render.gui.GuiIngameTransformer
 import java.lang.reflect.Field
-import java.lang.reflect.Method
 import java.util.regex.Pattern
 
 class TransformerManager {
@@ -22,6 +22,7 @@ class TransformerManager {
         add(MinecraftTransformer())
         add(NetworkManagerTransformer())
         add(EntityPlayerSPTransformer())
+        add(EntityTransformer())
         add(GuiIngameTransformer())
         add(EntityRendererTransformer())
 

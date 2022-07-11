@@ -12,6 +12,7 @@ import wtf.nebula.client.feature.module.combat.FastProjectile
 import wtf.nebula.client.feature.module.movement.LongJump
 import wtf.nebula.client.feature.module.movement.Speed
 import wtf.nebula.client.feature.module.movement.Sprint
+import wtf.nebula.client.feature.module.movement.Step
 import wtf.nebula.client.feature.module.render.ClickGUI
 import wtf.nebula.client.feature.module.render.Colors
 import wtf.nebula.client.feature.module.render.Fullbright
@@ -35,6 +36,7 @@ class ModuleRegistry : Registry<Module>() {
         loadMember(LongJump())
         loadMember(Speed())
         loadMember(Sprint())
+        loadMember(Step())
 
         loadMember(ClickGUI())
         loadMember(Colors())
