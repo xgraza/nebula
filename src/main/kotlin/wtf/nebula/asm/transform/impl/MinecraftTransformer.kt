@@ -9,6 +9,7 @@ import wtf.nebula.asm.hooks.MinecraftHook
 import wtf.nebula.asm.transform.api.ClassInjection
 import wtf.nebula.asm.transform.api.ClassTransformer
 import wtf.nebula.asm.transform.api.Injection
+import wtf.nebula.util.animation.Delta
 
 @ClassInjection("net.minecraft.client.Minecraft")
 class MinecraftTransformer : ClassTransformer() {
@@ -21,6 +22,23 @@ class MinecraftTransformer : ClassTransformer() {
             INVOKESTATIC,
             Type.getInternalName(MinecraftHook::class.java),
             "runTick",
+            "()V",
+            false
+        ))
+
+        // add instructions to the method node
+        node.instructions.insert(instructions)
+    }
+
+    @Injection(name = "runGameLoop")
+    fun runGameLoop(node: MethodNode) {
+        val instructions = InsnList()
+
+        // invoke MinecraftHook#runTick()V
+        instructions.add(MethodInsnNode(
+            INVOKESTATIC,
+            Type.getInternalName(Delta::class.java),
+            "updateDelta",
             "()V",
             false
         ))

@@ -38,7 +38,6 @@ class NebulaLoadingPlugin : IFMLLoadingPlugin {
     }
 
     override fun getAccessTransformerClass(): String? {
-        // we are not using access transformers, so we will return null
         return null
     }
 }

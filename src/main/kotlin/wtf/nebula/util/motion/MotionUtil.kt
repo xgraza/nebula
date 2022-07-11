@@ -64,7 +64,7 @@ object MotionUtil : Globals {
     }
 
     fun getJumpHeight(strict: Boolean): Double {
-        var y = if (strict) 0.41 else 0.3995
+        var y = if (strict) 0.41999998688697815 else 0.3995
         if (mc.player == null) {
             return y
         }

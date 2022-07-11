@@ -1,4 +1,4 @@
-package wtf.nebula.client.event.motion.update
+package wtf.nebula.client.event.player.motion.update
 
 class PreMotionUpdate(
     var x: Double,

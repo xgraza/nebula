@@ -29,7 +29,7 @@ open class Setting<T>(val name: String, valueIn: T) {
             return -1
         }
 
-        fun increase(clazz: Enum<*>): Enum<*>? {
+        fun increase(clazz: Enum<*>): Enum<*> {
             val index = current(clazz)
             val next = index + 1
             val constants = clazz.javaClass.enumConstants
@@ -38,7 +38,7 @@ open class Setting<T>(val name: String, valueIn: T) {
             } else constants[next]
         }
 
-        fun decrease(clazz: Enum<*>): Enum<*>? {
+        fun decrease(clazz: Enum<*>): Enum<*> {
             val index = current(clazz)
             val last = index - 1
             val constants = clazz.javaClass.enumConstants
@@ -47,7 +47,7 @@ open class Setting<T>(val name: String, valueIn: T) {
             } else constants[last]
         }
 
-        fun formatEnum(clazz: Enum<*>): String? {
+        fun formatEnum(clazz: Enum<*>): String {
             val name = clazz.toString().replace("_".toRegex(), " ")
             return name[0].toString().uppercase(Locale.getDefault()) + name.substring(1).lowercase(Locale.getDefault())
         }

@@ -81,6 +81,8 @@ minecraft {
     mappings channel: 'stable', version: '39-1.12'
     // makeObfSourceJar = false
 
+    accessTransformer = file('src/main/resources/nebula_at.cfg')
+
     runs {
         client {
             workingDirectory project.file('run')
@@ -146,6 +148,7 @@ jar {
     manifest.attributes(
             'FMLCorePlugin': 'wtf.nebula.asm.NebulaLoadingPlugin',
             'FMLCorePluginContainsFMLMod': 'true',
-            'ForceLoadAsMod': 'true'
+            'ForceLoadAsMod': 'true',
+            'FMLAT': 'nebula_at.cfg'
     )
 }

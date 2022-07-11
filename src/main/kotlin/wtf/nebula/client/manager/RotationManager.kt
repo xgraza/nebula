@@ -3,7 +3,7 @@ package wtf.nebula.client.manager
 import me.bush.eventbuskotlin.EventListener
 import me.bush.eventbuskotlin.listener
 import wtf.nebula.client.Nebula
-import wtf.nebula.client.event.motion.update.PreMotionUpdate
+import wtf.nebula.client.event.player.motion.update.PreMotionUpdate
 import wtf.nebula.util.Globals
 import wtf.nebula.util.rotation.InvalidRotation
 import wtf.nebula.util.rotation.Rotation

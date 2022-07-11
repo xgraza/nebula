@@ -3,16 +3,16 @@ package wtf.nebula.client.event.translate
 import me.bush.eventbuskotlin.EventListener
 import me.bush.eventbuskotlin.listener
 import net.minecraft.network.play.client.CPacketEntityAction
-import net.minecraft.network.play.client.CPacketPlayer
+import net.minecraft.network.play.server.SPacketPlayerPosLook
 import net.minecraftforge.common.MinecraftForge
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent
 import net.minecraftforge.fml.common.gameevent.InputEvent.KeyInputEvent
 import org.lwjgl.input.Keyboard
 import wtf.nebula.asm.hooks.EntityPlayerSPHook
 import wtf.nebula.client.Nebula
+import wtf.nebula.client.event.packet.PacketReceiveEvent
 import wtf.nebula.client.event.packet.PacketSendEvent
-import java.lang.Float.isFinite
-import java.lang.Double.isFinite
+import wtf.nebula.client.event.player.SetbackEvent
 
 class ForgeEventListener {
     init {
@@ -74,5 +74,12 @@ class ForgeEventListener {
 //                EntityPlayerSPHook.prevZ = z;
 //            }
 //        }
+    }
+
+    @EventListener
+    private val packetReceiveListener = listener<PacketReceiveEvent> {
+        if (it.packet is SPacketPlayerPosLook) {
+            Nebula.BUS.post(SetbackEvent())
+        }
     }
 }

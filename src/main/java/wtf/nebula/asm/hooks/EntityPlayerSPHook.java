@@ -10,8 +10,8 @@ import net.minecraft.network.play.client.CPacketPlayer.Position;
 import net.minecraft.network.play.client.CPacketPlayer.PositionRotation;
 import net.minecraft.network.play.client.CPacketPlayer.Rotation;
 import wtf.nebula.client.Nebula;
-import wtf.nebula.client.event.motion.update.PostMotionUpdate;
-import wtf.nebula.client.event.motion.update.PreMotionUpdate;
+import wtf.nebula.client.event.player.motion.update.PostMotionUpdate;
+import wtf.nebula.client.event.player.motion.update.PreMotionUpdate;
 
 public class EntityPlayerSPHook {
     public static boolean playerSprintState = false;
