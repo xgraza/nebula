@@ -10,6 +10,7 @@ import net.minecraft.util.EnumHand
 import net.minecraftforge.fml.common.gameevent.TickEvent
 import wtf.nebula.client.Nebula
 import wtf.nebula.client.event.player.motion.update.PreMotionUpdate
+import wtf.nebula.client.event.world.EntityRemovedEvent
 import wtf.nebula.client.feature.module.Module
 import wtf.nebula.client.feature.module.ModuleCategory
 import wtf.nebula.util.ext.closestEntity
