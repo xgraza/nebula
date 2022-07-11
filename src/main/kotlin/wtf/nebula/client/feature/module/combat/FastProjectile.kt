@@ -8,7 +8,6 @@ import net.minecraft.network.play.client.CPacketEntityAction
 import net.minecraft.network.play.client.CPacketPlayer
 import net.minecraft.network.play.client.CPacketPlayerDigging
 import net.minecraft.network.play.client.CPacketPlayerTryUseItem
-import org.lwjgl.input.Keyboard
 import wtf.nebula.client.Nebula
 import wtf.nebula.client.event.packet.PacketSendEvent
 import wtf.nebula.client.feature.module.Module
@@ -17,10 +16,6 @@ import kotlin.math.cos
 import kotlin.math.sin
 
 class FastProjectile : Module(ModuleCategory.COMBAT, "Makes projectiles go further") {
-    init {
-        bind = Keyboard.KEY_M
-    }
-
     val boost by double("Boost", 10.0, 1.0..100.0)
     val sprint by bool("Sprint", true)
 

@@ -8,7 +8,6 @@ import net.minecraft.item.ItemSword
 import net.minecraft.network.play.client.CPacketAnimation
 import net.minecraft.util.EnumHand
 import net.minecraftforge.fml.common.gameevent.TickEvent
-import org.lwjgl.input.Keyboard
 import wtf.nebula.client.Nebula
 import wtf.nebula.client.event.player.motion.update.PreMotionUpdate
 import wtf.nebula.client.feature.module.Module
@@ -19,10 +18,6 @@ import wtf.nebula.util.rotation.AngleUtil
 import wtf.nebula.util.rotation.Bone
 
 class Aura : Module(ModuleCategory.COMBAT, "Attacks entities around you") {
-    init {
-        bind = Keyboard.KEY_K
-    }
-
     val range by double("Range", 4.5, 1.0..6.0)
     val walls by double("Walls", 3.5, 1.0..6.0)
 

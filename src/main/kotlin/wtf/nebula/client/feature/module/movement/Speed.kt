@@ -2,7 +2,6 @@ package wtf.nebula.client.feature.module.movement
 
 import me.bush.eventbuskotlin.EventListener
 import me.bush.eventbuskotlin.listener
-import org.lwjgl.input.Keyboard
 import wtf.nebula.client.event.player.SetbackEvent
 import wtf.nebula.client.event.player.motion.MotionEvent
 import wtf.nebula.client.event.player.motion.update.PreMotionUpdate
@@ -14,10 +13,6 @@ import java.lang.Double.max
 import kotlin.math.sqrt
 
 class Speed : Module(ModuleCategory.MOVEMENT, "vroom vroom") {
-    init {
-        bind = Keyboard.KEY_R
-    }
-
     val mode by setting("Mode", Mode.STRAFE)
     val timerBoost by bool("Timer Boost", true)
     val damageBoost by bool("Damage Boost", true)
@@ -61,7 +56,7 @@ class Speed : Module(ModuleCategory.MOVEMENT, "vroom vroom") {
                     StrafeStage.START -> {
                         if (mc.player.isMoving()) {
                             stage = StrafeStage.JUMP
-                            moveSpeed = 1.38 * MotionUtil.getBaseNCPSpeed() - 0.01
+                            moveSpeed = (if (mode == Mode.STRAFE) 1.38 else 1.35) * MotionUtil.getBaseNCPSpeed() - 0.01
                         }
 
                         mc.timer.tickLength = 50.0f
@@ -71,13 +66,17 @@ class Speed : Module(ModuleCategory.MOVEMENT, "vroom vroom") {
                         stage = StrafeStage.SPEED
 
                         if (mc.player.onGround && mc.player.isMoving()) {
-                            mc.player.motionY = MotionUtil.getJumpHeight(false)
+                            mc.player.motionY = MotionUtil.getJumpHeight(mode == Mode.STRICT_STRAFE)
                             it.y = mc.player.motionY
 
-                            moveSpeed *= if (boost) {
-                                1.608
+                            moveSpeed *= if (mode == Mode.STRAFE) {
+                                if (boost) {
+                                    1.608
+                                } else {
+                                    1.345
+                                }
                             } else {
-                                1.345
+                                2.149
                             }
 
                             if (timerBoost) {
@@ -89,7 +88,7 @@ class Speed : Module(ModuleCategory.MOVEMENT, "vroom vroom") {
                     StrafeStage.SPEED -> {
                         stage = StrafeStage.COLLIDE
 
-                        val adjusted = 0.66 * (distance - MotionUtil.getBaseNCPSpeed())
+                        val adjusted = (if (mode == Mode.STRAFE) 0.66 else 0.8) * (distance - MotionUtil.getBaseNCPSpeed())
                         moveSpeed = distance - adjusted
 
                         boost = !boost
