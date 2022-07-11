@@ -14,6 +14,7 @@ import wtf.nebula.client.feature.module.movement.Sprint
 import wtf.nebula.client.feature.module.render.ClickGUI
 import wtf.nebula.client.feature.module.render.Colors
 import wtf.nebula.client.feature.module.render.HUD
+import wtf.nebula.client.feature.module.world.Timer
 import wtf.nebula.client.registry.Registry
 
 class ModuleRegistry : Registry<Module>() {
@@ -34,6 +35,8 @@ class ModuleRegistry : Registry<Module>() {
         loadMember(ClickGUI())
         loadMember(Colors())
         loadMember(HUD())
+
+        loadMember(Timer())
 
         logger.info("Loaded ${registers.size} modules")
     }

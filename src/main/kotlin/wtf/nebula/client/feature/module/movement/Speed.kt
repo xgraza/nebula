@@ -2,6 +2,7 @@ package wtf.nebula.client.feature.module.movement
 
 import me.bush.eventbuskotlin.EventListener
 import me.bush.eventbuskotlin.listener
+import wtf.nebula.client.Nebula
 import wtf.nebula.client.event.player.SetbackEvent
 import wtf.nebula.client.event.player.motion.MotionEvent
 import wtf.nebula.client.event.player.motion.update.PreMotionUpdate
@@ -59,7 +60,7 @@ class Speed : Module(ModuleCategory.MOVEMENT, "vroom vroom") {
                             moveSpeed = (if (mode == Mode.STRAFE) 1.38 else 1.35) * MotionUtil.getBaseNCPSpeed() - 0.01
                         }
 
-                        mc.timer.tickLength = 50.0f
+                        Nebula.tickManager.reset()
                     }
 
                     StrafeStage.JUMP -> {
@@ -80,7 +81,7 @@ class Speed : Module(ModuleCategory.MOVEMENT, "vroom vroom") {
                             }
 
                             if (timerBoost) {
-                                mc.timer.tickLength = 50.0f / 1.088f;
+                                Nebula.tickManager.setTimerSpeed(1.088f)
                             }
                         }
                     }

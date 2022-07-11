@@ -11,6 +11,7 @@ import org.lwjgl.opengl.Display
 import wtf.nebula.client.event.translate.ForgeEventListener
 import wtf.nebula.client.manager.InventoryManager
 import wtf.nebula.client.manager.RotationManager
+import wtf.nebula.client.manager.TickManager
 import wtf.nebula.client.registry.RegistryContainer
 import wtf.nebula.client.registry.impl.ModuleRegistry
 
@@ -29,6 +30,7 @@ class Nebula {
 
         val inventoryManager = InventoryManager()
         val rotationManager = RotationManager()
+        val tickManager = TickManager()
     }
 
     @Mod.EventHandler
@@ -40,6 +42,7 @@ class Nebula {
 
         BUS.subscribe(inventoryManager)
         BUS.subscribe(rotationManager)
+        BUS.subscribe(tickManager)
     }
 
     @Mod.EventHandler
