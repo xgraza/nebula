@@ -3,17 +3,14 @@ package wtf.nebula.client.registry.impl
 import me.bush.eventbuskotlin.EventListener
 import me.bush.eventbuskotlin.listener
 import org.lwjgl.input.Keyboard
-import wtf.nebula.client.event.KeyInputEvent
+import wtf.nebula.client.event.input.KeyInputEvent
 import wtf.nebula.client.feature.module.Module
 import wtf.nebula.client.feature.module.ModuleCategory
 import wtf.nebula.client.feature.module.combat.Aura
 import wtf.nebula.client.feature.module.combat.Criticals
 import wtf.nebula.client.feature.module.combat.FastProjectile
 import wtf.nebula.client.feature.module.miscellaneous.Notifications
-import wtf.nebula.client.feature.module.movement.LongJump
-import wtf.nebula.client.feature.module.movement.Speed
-import wtf.nebula.client.feature.module.movement.Sprint
-import wtf.nebula.client.feature.module.movement.Step
+import wtf.nebula.client.feature.module.movement.*
 import wtf.nebula.client.feature.module.render.ClickGUI
 import wtf.nebula.client.feature.module.render.Colors
 import wtf.nebula.client.feature.module.render.Fullbright
@@ -37,6 +34,7 @@ class ModuleRegistry : Registry<Module>() {
         loadMember(Notifications())
 
         loadMember(LongJump())
+        loadMember(NoSlow())
         loadMember(Speed())
         loadMember(Sprint())
         loadMember(Step())

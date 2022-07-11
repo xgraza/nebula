@@ -7,12 +7,14 @@ import net.minecraft.network.play.client.CPacketEntityAction
 import net.minecraft.network.play.server.SPacketEntityMetadata
 import net.minecraft.network.play.server.SPacketEntityStatus
 import net.minecraft.network.play.server.SPacketPlayerPosLook
+import net.minecraftforge.client.event.InputUpdateEvent
 import net.minecraftforge.common.MinecraftForge
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent
 import net.minecraftforge.fml.common.gameevent.InputEvent.KeyInputEvent
 import org.lwjgl.input.Keyboard
 import wtf.nebula.asm.hooks.EntityPlayerSPHook
 import wtf.nebula.client.Nebula
+import wtf.nebula.client.event.input.MovementInputEvent
 import wtf.nebula.client.event.packet.PacketReceiveEvent
 import wtf.nebula.client.event.packet.PacketSendEvent
 import wtf.nebula.client.event.player.DeathEvent
@@ -27,8 +29,16 @@ class ForgeEventListener : Globals {
 
     @SubscribeEvent
     fun onKeyInput(event: KeyInputEvent) {
-        Nebula.BUS.post(wtf.nebula.client.event.KeyInputEvent(
-            Keyboard.getEventKey(), Keyboard.getEventKeyState()))
+        Nebula.BUS.post(
+            wtf.nebula.client.event.input.KeyInputEvent(
+                Keyboard.getEventKey(), Keyboard.getEventKeyState()
+            )
+        )
+    }
+
+    @SubscribeEvent
+    fun onMovementUpdate(event: InputUpdateEvent) {
+        Nebula.BUS.post(MovementInputEvent(event.movementInput))
     }
 
     @EventListener
