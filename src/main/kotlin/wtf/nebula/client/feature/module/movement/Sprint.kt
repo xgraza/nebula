@@ -8,6 +8,7 @@ import wtf.nebula.client.feature.module.ModuleCategory
 
 class Sprint : Module(ModuleCategory.MOVEMENT, "Makes you automatically sprint") {
     override fun onDeactivated() {
+        super.onDeactivated()
         if (!mc.gameSettings.keyBindSprint.isKeyDown) {
             mc.player.isSprinting = false
         }

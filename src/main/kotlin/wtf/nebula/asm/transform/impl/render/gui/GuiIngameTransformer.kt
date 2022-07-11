@@ -7,7 +7,8 @@ import wtf.nebula.asm.transform.api.ClassInjection
 import wtf.nebula.asm.transform.api.ClassTransformer
 import wtf.nebula.asm.transform.api.Injection
 
-@ClassInjection("net.minecraft.client.gui.GuiIngame")
+// forge sucks
+@ClassInjection("net.minecraftforge.client.GuiIngameForge", remap = false)
 class GuiIngameTransformer : ClassTransformer() {
     @Injection(name = "renderGameOverlay", descriptor = "(F)V")
     fun renderGameOverlay(node: MethodNode) {

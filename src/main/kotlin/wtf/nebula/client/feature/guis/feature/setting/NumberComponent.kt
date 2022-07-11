@@ -4,6 +4,7 @@ import com.mojang.realmsclient.gui.ChatFormatting
 import org.lwjgl.input.Mouse
 import wtf.nebula.client.config.setting.NumberSetting
 import wtf.nebula.client.feature.guis.common.Component
+import wtf.nebula.client.feature.module.render.Colors
 import wtf.nebula.util.render.RenderUtil
 import java.awt.Color
 import kotlin.math.roundToInt
@@ -26,7 +27,8 @@ class NumberComponent(val setting: NumberSetting<Number>) : Component(setting.na
         val percent = (setting.value.toFloat() - setting.min.toFloat()) / difference
         val barWidth = if (setting.value.toFloat() <= setting.min.toFloat()) 0.0 else width * percent
 
-        RenderUtil.rect(x, y, barWidth, height, Color(191, 52, 52, 140).rgb)
+        // Color(191, 52, 52, 140).rgb
+        RenderUtil.rect(x, y, barWidth, height, Colors.color())
 
         val textY = (y + (height / 2.0) - (mc.fontRenderer.FONT_HEIGHT / 2.0)).toFloat()
         mc.fontRenderer.drawStringWithShadow(name, (x + 2.3).toFloat(), textY, -1)

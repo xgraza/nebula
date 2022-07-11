@@ -9,6 +9,7 @@ import wtf.nebula.client.feature.guis.feature.setting.BooleanComponent
 import wtf.nebula.client.feature.guis.feature.setting.EnumComponent
 import wtf.nebula.client.feature.guis.feature.setting.NumberComponent
 import wtf.nebula.client.feature.module.Module
+import wtf.nebula.client.feature.module.render.Colors
 import wtf.nebula.util.render.RenderUtil
 import java.awt.Color
 
@@ -38,7 +39,8 @@ class ModuleComponent(val module: Module) : Component(module.name) {
     private var expanded = false
 
     override fun render(mouseX: Int, mouseY: Int, partialTicks: Float) {
-        RenderUtil.rect(x, y, width, height, if (module.toggled) Color(191, 52, 52, 140).rgb else Color(41, 41, 41).rgb)
+        // Color(191, 52, 52, 140).rgb
+        RenderUtil.rect(x, y, width, height, if (module.toggled) Colors.color() else Color(41, 41, 41).rgb)
 
         val textY = (y + (height / 2.0) - (mc.fontRenderer.FONT_HEIGHT / 2.0)).toFloat()
         mc.fontRenderer.drawStringWithShadow(name, (x + 2.3).toFloat(), textY, -1)

@@ -11,6 +11,7 @@ class ClickGUI : Module(ModuleCategory.RENDER, "Opens a navigable GUI to configu
     }
 
     override fun onActivated() {
+        super.onActivated()
         mc.displayGuiScreen(FeatureListGuiScreen.INSTANCE)
     }
 }

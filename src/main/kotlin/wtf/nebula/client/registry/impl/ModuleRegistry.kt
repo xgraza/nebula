@@ -12,6 +12,8 @@ import wtf.nebula.client.feature.module.combat.FastProjectile
 import wtf.nebula.client.feature.module.movement.Speed
 import wtf.nebula.client.feature.module.movement.Sprint
 import wtf.nebula.client.feature.module.render.ClickGUI
+import wtf.nebula.client.feature.module.render.Colors
+import wtf.nebula.client.feature.module.render.HUD
 import wtf.nebula.client.registry.Registry
 
 class ModuleRegistry : Registry<Module>() {
@@ -30,6 +32,8 @@ class ModuleRegistry : Registry<Module>() {
         loadMember(Sprint())
 
         loadMember(ClickGUI())
+        loadMember(Colors())
+        loadMember(HUD())
 
         logger.info("Loaded ${registers.size} modules")
     }
@@ -46,6 +50,11 @@ class ModuleRegistry : Registry<Module>() {
         values += member
 
         moduleByCategory[member.category] = values
+
+        if (member is HUD || member is Colors) {
+            member.drawn = false
+            member.toggled = true
+        }
     }
 
     @EventListener
