@@ -52,6 +52,26 @@ object MotionUtil : Globals {
         )
     }
 
+    fun getMovement(): FloatArray {
+        var forward: Float = mc.player.movementInput.moveForward
+        var strafe: Float = mc.player.movementInput.moveStrafe
+        var yaw: Float = mc.player.rotationYaw
+        if (forward != 0.0f) {
+            if (strafe > 0.0f) {
+                yaw += if (forward > 0.0f) -45.0f else 45.0f
+            } else if (strafe < 0.0f) {
+                yaw += if (forward > 0.0f) 45.0f else -45.0f
+            }
+            strafe = 0.0f
+            if (forward > 0.0f) {
+                forward = 1.0f
+            } else if (forward < 0.0f) {
+                forward = -1.0f
+            }
+        }
+        return floatArrayOf(forward, strafe, yaw)
+    }
+
     fun getBaseNCPSpeed(): Double {
         var baseSpeed = 0.2873
         if (mc.player == null) {

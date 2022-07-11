@@ -9,11 +9,14 @@ import wtf.nebula.client.feature.module.ModuleCategory
 import wtf.nebula.client.feature.module.combat.Aura
 import wtf.nebula.client.feature.module.combat.Criticals
 import wtf.nebula.client.feature.module.combat.FastProjectile
+import wtf.nebula.client.feature.module.movement.LongJump
 import wtf.nebula.client.feature.module.movement.Speed
 import wtf.nebula.client.feature.module.movement.Sprint
 import wtf.nebula.client.feature.module.render.ClickGUI
 import wtf.nebula.client.feature.module.render.Colors
+import wtf.nebula.client.feature.module.render.Fullbright
 import wtf.nebula.client.feature.module.render.HUD
+import wtf.nebula.client.feature.module.world.Avoid
 import wtf.nebula.client.feature.module.world.Timer
 import wtf.nebula.client.registry.Registry
 
@@ -29,13 +32,16 @@ class ModuleRegistry : Registry<Module>() {
         loadMember(Criticals())
         loadMember(FastProjectile())
 
+        loadMember(LongJump())
         loadMember(Speed())
         loadMember(Sprint())
 
         loadMember(ClickGUI())
         loadMember(Colors())
+        loadMember(Fullbright())
         loadMember(HUD())
 
+        loadMember(Avoid())
         loadMember(Timer())
 
         logger.info("Loaded ${registers.size} modules")

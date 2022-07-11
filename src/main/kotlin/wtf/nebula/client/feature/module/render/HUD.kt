@@ -19,29 +19,26 @@ class HUD : Module(ModuleCategory.RENDER, "Renders an overlay of the vanilla HUD
         }
 
         if (arraylist) {
-            val modules = ModuleRegistry.INSTANCE!!.registers
+            var y = 2.0
+            ModuleRegistry.INSTANCE!!.registers
                 .filter { mod -> mod.isActive() && mod.drawn }
-                .sortedBy { mod ->
+                .sortedBy { mod -> -mc.fontRenderer.getStringWidth(mod.getInfo()) }
+                .forEach { mod ->
                     val width = mc.fontRenderer.getStringWidth(mod.getInfo())
                     mod.animation.max = width.toFloat()
-                    return@sortedBy -width
+                    mod.animation.update()
+
+                    val x = (it.res.scaledWidth_double - mod.animation.value - 4.0)
+                    val height = mc.fontRenderer.FONT_HEIGHT + 2.0
+
+                    mc.fontRenderer.drawStringWithShadow(
+                        mod.getInfo(),
+                        (x + 2.3).toFloat(),
+                        (y + (height / 2.0) - (mc.fontRenderer.FONT_HEIGHT / 2.0)).toFloat(),
+                        Colors.color())
+
+                    y += height
                 }
-
-            var y = 2.0
-            for (module in modules) {
-                module.animation.update()
-
-                val x = (it.res.scaledWidth - module.animation.value - 4.0)
-                val height = mc.fontRenderer.FONT_HEIGHT + 2.0
-
-                mc.fontRenderer.drawStringWithShadow(
-                    module.getInfo(),
-                    (x + 2.3).toFloat(),
-                    (y + (height / 2.0) - (mc.fontRenderer.FONT_HEIGHT / 2.0)).toFloat(),
-                    Colors.color())
-
-                y += height
-            }
         }
     }
 
