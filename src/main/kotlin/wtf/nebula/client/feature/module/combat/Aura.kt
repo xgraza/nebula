@@ -30,6 +30,14 @@ class Aura : Module(ModuleCategory.COMBAT, "Attacks entities around you") {
 
     private var target: EntityLivingBase? = null
 
+    override fun getDisplayInfo(): String? {
+        if (target != null) {
+            return target!!.name
+        }
+
+        return null
+    }
+
     @EventListener
     private val tickListener = listener<TickEvent> {
         if (target != null && rotate) {
