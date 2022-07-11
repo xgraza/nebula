@@ -35,7 +35,7 @@ class Criticals : Module(ModuleCategory.COMBAT, "Lands critical hits") {
                         position(0.0)
                     }
 
-                    Mode.STRICTNCP -> {
+                    Mode.STRICT -> {
                         position(0.11)
                         position(0.1100013579)
                         position(0.0000013579)
@@ -60,6 +60,6 @@ class Criticals : Module(ModuleCategory.COMBAT, "Lands critical hits") {
     }
 
     enum class Mode {
-        PACKET, STRICTNCP, MOTION
+        PACKET, STRICT, MOTION
     }
 }
