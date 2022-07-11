@@ -22,7 +22,7 @@ class HUD : Module(ModuleCategory.RENDER, "Renders an overlay of the vanilla HUD
             val modules = ModuleRegistry.INSTANCE!!.registers
                 .filter { mod -> mod.isActive() && mod.drawn }
                 .sortedBy { mod ->
-                    val width = mc.fontRenderer.getStringWidth(mod.name)
+                    val width = mc.fontRenderer.getStringWidth(mod.getInfo())
                     mod.animation.max = width.toFloat()
                     return@sortedBy -width
                 }
@@ -35,7 +35,7 @@ class HUD : Module(ModuleCategory.RENDER, "Renders an overlay of the vanilla HUD
                 val height = mc.fontRenderer.FONT_HEIGHT + 2.0
 
                 mc.fontRenderer.drawStringWithShadow(
-                    module.name,
+                    module.getInfo(),
                     (x + 2.3).toFloat(),
                     (y + (height / 2.0) - (mc.fontRenderer.FONT_HEIGHT / 2.0)).toFloat(),
                     Colors.color())

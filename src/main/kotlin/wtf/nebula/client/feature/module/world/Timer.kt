@@ -11,6 +11,10 @@ class Timer : Module(ModuleCategory.WORLD, "Makes game go fast fast or slow slow
     val speed by float("Speed", 1.0f, 0.1f..20.0f)
     val tpsSync by bool("TPS Sync", false)
 
+    override fun getDisplayInfo(): String {
+        return speed.toString()
+    }
+
     @EventListener
     private val tickListener = listener<TickEvent> {
         if (tpsSync) {

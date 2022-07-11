@@ -1,5 +1,6 @@
 package wtf.nebula.client.feature.module
 
+import com.mojang.realmsclient.gui.ChatFormatting
 import org.lwjgl.input.Keyboard
 import wtf.nebula.client.config.ConfigurableFeature
 import wtf.nebula.util.animation.Animation
@@ -23,6 +24,25 @@ open class Module(val category: ModuleCategory, val description: String) : Confi
 
     override fun onDeactivated() {
         animation.isReversed = true
+    }
+
+    open fun getDisplayInfo(): String? {
+        return null
+    }
+
+    fun getInfo(): String {
+        val displayInfo = getDisplayInfo() ?: return name
+
+        return StringBuilder()
+            .append(name)
+            .append(" ")
+            .append(ChatFormatting.GRAY.toString())
+            .append("[")
+            .append(ChatFormatting.WHITE.toString())
+            .append(displayInfo)
+            .append(ChatFormatting.GRAY.toString())
+            .append("]")
+            .toString()
     }
 
     fun isActive(): Boolean {

@@ -3,6 +3,7 @@ package wtf.nebula.client.feature.module.movement
 import me.bush.eventbuskotlin.EventListener
 import me.bush.eventbuskotlin.listener
 import wtf.nebula.client.Nebula
+import wtf.nebula.client.config.setting.Setting
 import wtf.nebula.client.event.player.SetbackEvent
 import wtf.nebula.client.event.player.motion.MotionEvent
 import wtf.nebula.client.event.player.motion.update.PreMotionUpdate
@@ -25,6 +26,15 @@ class Speed : Module(ModuleCategory.MOVEMENT, "vroom vroom") {
     private var boost = false
 
     private var lagTicks = 0
+
+    override fun getDisplayInfo(): String {
+        return when (mode) {
+            Mode.STRICT_STRAFE -> "Strict Strafe"
+            Mode.YPORT -> "YPort"
+            Mode.ONGROUND -> "OnGround"
+            else -> Setting.formatEnum(mode)
+        }
+    }
 
     override fun onDeactivated() {
         super.onDeactivated()
