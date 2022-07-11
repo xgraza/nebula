@@ -40,8 +40,8 @@ class Nebula {
         logger.info("Loading $FULL")
 
         RegistryContainer.register(ModuleRegistry())
-        ForgeEventListener()
 
+        BUS.subscribe(ForgeEventListener())
         BUS.subscribe(inventoryManager)
         BUS.subscribe(rotationManager)
         BUS.subscribe(tickManager)

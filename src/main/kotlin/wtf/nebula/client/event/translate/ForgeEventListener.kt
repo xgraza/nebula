@@ -20,10 +20,9 @@ import wtf.nebula.client.event.player.SetbackEvent
 import wtf.nebula.client.event.player.TotemPopEvent
 import wtf.nebula.util.Globals
 
-class ForgeEventListener : Globals{
+class ForgeEventListener : Globals {
     init {
         MinecraftForge.EVENT_BUS.register(this)
-        Nebula.BUS.subscribe(this)
     }
 
     @SubscribeEvent
