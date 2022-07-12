@@ -7,6 +7,7 @@ import wtf.nebula.client.event.input.KeyInputEvent
 import wtf.nebula.client.feature.module.Module
 import wtf.nebula.client.feature.module.ModuleCategory
 import wtf.nebula.client.feature.module.combat.Aura
+import wtf.nebula.client.feature.module.combat.BowRelease
 import wtf.nebula.client.feature.module.combat.Criticals
 import wtf.nebula.client.feature.module.combat.FastProjectile
 import wtf.nebula.client.feature.module.miscellaneous.AntiAim
@@ -33,6 +34,7 @@ class ModuleRegistry : Registry<Module>() {
 
     override fun load() {
         loadMember(Aura())
+        loadMember(BowRelease())
         loadMember(Criticals())
         loadMember(FastProjectile())
 
