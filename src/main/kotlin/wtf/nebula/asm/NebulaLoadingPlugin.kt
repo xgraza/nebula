@@ -37,7 +37,7 @@ class NebulaLoadingPlugin : IFMLLoadingPlugin {
         }
     }
 
-    override fun getAccessTransformerClass(): String? {
-        return null
+    override fun getAccessTransformerClass(): String {
+        return NebulaAccessTransformer::class.java.name
     }
 }
