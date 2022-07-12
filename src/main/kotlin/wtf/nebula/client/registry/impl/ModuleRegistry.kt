@@ -37,6 +37,7 @@ class ModuleRegistry : Registry<Module>() {
 
         loadMember(LongJump())
         loadMember(NoSlow())
+        loadMember(PacketFlight())
         loadMember(Speed())
         loadMember(Sprint())
         loadMember(Step())
