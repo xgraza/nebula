@@ -40,6 +40,7 @@ class ModuleRegistry : Registry<Module>() {
         loadMember(Sprint())
         loadMember(Step())
         loadMember(TickShift())
+        loadMember(Velocity())
 
         loadMember(ClickGUI())
         loadMember(Colors())
