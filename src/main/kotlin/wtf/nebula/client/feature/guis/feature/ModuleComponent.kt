@@ -45,7 +45,7 @@ class ModuleComponent(val module: Module) : Component(module.name) {
         val textY = (y + (height / 2.0) - (mc.fontRenderer.FONT_HEIGHT / 2.0)).toFloat()
         mc.fontRenderer.drawStringWithShadow(name, (x + 2.3).toFloat(), textY, -1)
 
-        val indicator = if (expanded) ".." else "..."
+        val indicator = if (expanded) "-" else "+"
         mc.fontRenderer.drawStringWithShadow(indicator, (x + width - (mc.fontRenderer.getStringWidth(indicator) + 4.0)).toFloat(), textY, -1)
 
         if (expanded) {
