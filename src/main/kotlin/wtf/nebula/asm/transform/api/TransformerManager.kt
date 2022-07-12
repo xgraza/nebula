@@ -3,7 +3,7 @@ package wtf.nebula.asm.transform.api
 import net.minecraftforge.fml.common.ObfuscationReflectionHelper
 import net.minecraftforge.fml.common.asm.transformers.deobf.FMLDeobfuscatingRemapper
 import org.apache.logging.log4j.LogManager
-import wtf.nebula.asm.transform.impl.MinecraftTransformer
+import wtf.nebula.asm.transform.impl.client.MinecraftTransformer
 import wtf.nebula.asm.transform.impl.entity.EntityTransformer
 import wtf.nebula.asm.transform.impl.entity.player.EntityPlayerSPTransformer
 import wtf.nebula.asm.transform.impl.network.NetworkManagerTransformer

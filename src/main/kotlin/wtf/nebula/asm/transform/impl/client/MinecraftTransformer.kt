@@ -1,4 +1,4 @@
-package wtf.nebula.asm.transform.impl
+package wtf.nebula.asm.transform.impl.client
 
 import jdk.internal.org.objectweb.asm.Type
 import org.objectweb.asm.Opcodes.INVOKESTATIC

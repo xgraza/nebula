@@ -9,6 +9,7 @@ import wtf.nebula.client.feature.module.ModuleCategory
 import wtf.nebula.client.feature.module.combat.Aura
 import wtf.nebula.client.feature.module.combat.Criticals
 import wtf.nebula.client.feature.module.combat.FastProjectile
+import wtf.nebula.client.feature.module.miscellaneous.NoFML
 import wtf.nebula.client.feature.module.miscellaneous.Notifications
 import wtf.nebula.client.feature.module.movement.*
 import wtf.nebula.client.feature.module.render.ClickGUI
@@ -33,6 +34,7 @@ class ModuleRegistry : Registry<Module>() {
         loadMember(Criticals())
         loadMember(FastProjectile())
 
+        loadMember(NoFML())
         loadMember(Notifications())
 
         loadMember(LongJump())
