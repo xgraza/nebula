@@ -6,10 +6,7 @@ import org.lwjgl.input.Keyboard
 import wtf.nebula.client.event.input.KeyInputEvent
 import wtf.nebula.client.feature.module.Module
 import wtf.nebula.client.feature.module.ModuleCategory
-import wtf.nebula.client.feature.module.combat.Aura
-import wtf.nebula.client.feature.module.combat.BowRelease
-import wtf.nebula.client.feature.module.combat.Criticals
-import wtf.nebula.client.feature.module.combat.FastProjectile
+import wtf.nebula.client.feature.module.combat.*
 import wtf.nebula.client.feature.module.miscellaneous.AntiAim
 import wtf.nebula.client.feature.module.miscellaneous.NoFML
 import wtf.nebula.client.feature.module.miscellaneous.Notifications
@@ -37,6 +34,7 @@ class ModuleRegistry : Registry<Module>() {
         loadMember(BowRelease())
         loadMember(Criticals())
         loadMember(FastProjectile())
+        loadMember(SelfFill())
 
         loadMember(AntiAim())
         loadMember(NoFML())

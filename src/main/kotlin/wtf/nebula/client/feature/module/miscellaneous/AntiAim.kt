@@ -7,6 +7,7 @@ import wtf.nebula.client.event.tick.TickEvent
 import wtf.nebula.client.feature.module.Module
 import wtf.nebula.client.feature.module.ModuleCategory
 import wtf.nebula.client.feature.module.combat.Aura
+import wtf.nebula.client.feature.module.combat.SelfFill
 import wtf.nebula.client.registry.impl.ModuleRegistry
 import wtf.nebula.util.MathUtil
 import wtf.nebula.util.rotation.InvalidRotation
@@ -32,7 +33,8 @@ class AntiAim : Module(ModuleCategory.MISCELLANEOUS, "wtf") {
         }
 
         // TODO: more modules when they're added
-        if (ModuleRegistry.INSTANCE!!.registerMap[Aura::class.java]!!.isActive()) {
+        if (ModuleRegistry.INSTANCE!!.registerMap[Aura::class.java]!!.isActive() ||
+            ModuleRegistry.INSTANCE!!.registerMap[SelfFill::class.java]!!.isActive()) {
             return@listener
         }
 
