@@ -17,6 +17,7 @@ import wtf.nebula.client.feature.module.render.Fullbright
 import wtf.nebula.client.feature.module.render.HUD
 import wtf.nebula.client.feature.module.world.Avoid
 import wtf.nebula.client.feature.module.world.BlockFly
+import wtf.nebula.client.feature.module.world.FastPlace
 import wtf.nebula.client.feature.module.world.Timer
 import wtf.nebula.client.registry.Registry
 
@@ -49,6 +50,7 @@ class ModuleRegistry : Registry<Module>() {
 
         loadMember(Avoid())
         loadMember(BlockFly())
+        loadMember(FastPlace())
         loadMember(Timer())
 
         logger.info("Loaded ${registers.size} modules")
