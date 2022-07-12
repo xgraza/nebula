@@ -11,6 +11,7 @@ import wtf.nebula.client.feature.module.combat.Criticals
 import wtf.nebula.client.feature.module.combat.FastProjectile
 import wtf.nebula.client.feature.module.miscellaneous.NoFML
 import wtf.nebula.client.feature.module.miscellaneous.Notifications
+import wtf.nebula.client.feature.module.miscellaneous.Respawn
 import wtf.nebula.client.feature.module.movement.*
 import wtf.nebula.client.feature.module.render.ClickGUI
 import wtf.nebula.client.feature.module.render.Colors
@@ -36,6 +37,7 @@ class ModuleRegistry : Registry<Module>() {
 
         loadMember(NoFML())
         loadMember(Notifications())
+        loadMember(Respawn())
 
         loadMember(LongJump())
         loadMember(NoSlow())

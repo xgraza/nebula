@@ -1,7 +1,9 @@
 package wtf.nebula.asm.hooks;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiScreen;
 import wtf.nebula.client.Nebula;
+import wtf.nebula.client.event.GuiOpenedEvent;
 import wtf.nebula.client.event.tick.TickEvent;
 import wtf.nebula.client.event.tick.UnsafeTickEvent;
 
@@ -16,5 +18,9 @@ public class MinecraftHook {
         else {
             Nebula.Companion.getBUS().post(new UnsafeTickEvent());
         }
+    }
+
+    public static void guiOpened(GuiScreen opened) {
+        Nebula.Companion.getBUS().post(new GuiOpenedEvent(Minecraft.getMinecraft().currentScreen, opened));
     }
 }

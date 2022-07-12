@@ -1,10 +1,12 @@
 package wtf.nebula.asm.transform.impl.client
 
 import jdk.internal.org.objectweb.asm.Type
+import org.objectweb.asm.Opcodes.ALOAD
 import org.objectweb.asm.Opcodes.INVOKESTATIC
 import org.objectweb.asm.tree.InsnList
 import org.objectweb.asm.tree.MethodInsnNode
 import org.objectweb.asm.tree.MethodNode
+import org.objectweb.asm.tree.VarInsnNode
 import wtf.nebula.asm.hooks.MinecraftHook
 import wtf.nebula.asm.transform.api.ClassInjection
 import wtf.nebula.asm.transform.api.ClassTransformer
@@ -44,6 +46,16 @@ class MinecraftTransformer : ClassTransformer() {
         ))
 
         // add instructions to the method node
+        node.instructions.insert(instructions)
+    }
+
+    @Injection(name = "displayGuiScreen", descriptor = "(Lnet/minecraft/client/gui/GuiScreen;)V")
+    fun displayGuiScreen(node: MethodNode) {
+        val instructions = InsnList()
+
+        instructions.add(VarInsnNode(ALOAD, 1))
+        instructions.add(invokeStatic(MinecraftHook::class.java, "guiOpened", "(Lnet/minecraft/client/gui/GuiScreen;)V"))
+
         node.instructions.insert(instructions)
     }
 }
