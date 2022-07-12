@@ -2,7 +2,8 @@ package wtf.nebula.client.manager
 
 import me.bush.eventbuskotlin.EventListener
 import me.bush.eventbuskotlin.listener
-import wtf.nebula.client.Nebula
+import net.minecraft.network.play.client.CPacketPlayer
+import wtf.nebula.client.event.packet.PacketSendEvent
 import wtf.nebula.client.event.player.motion.update.PreMotionUpdate
 import wtf.nebula.util.Globals
 import wtf.nebula.util.rotation.InvalidRotation
@@ -31,6 +32,17 @@ class RotationManager : Globals {
             it.pitch = rotation.pitch
 
             it.cancel()
+        }
+    }
+
+    @EventListener
+    private val packetSendListener = listener<PacketSendEvent> {
+        if (it.packet is CPacketPlayer && rotation.valid) {
+            val packet = it.packet
+            if (packet.rotating) {
+                packet.yaw = rotation.yaw
+                packet.pitch = rotation.pitch
+            }
         }
     }
 }
