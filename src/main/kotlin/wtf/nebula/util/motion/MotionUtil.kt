@@ -72,6 +72,30 @@ object MotionUtil : Globals {
         return floatArrayOf(forward, strafe, yaw)
     }
 
+    fun clampRotation(): Float {
+        var rotationYaw = mc.player.rotationYaw
+        var n = 1.0f
+
+        if (mc.player.movementInput.moveForward < 0.0f) {
+            rotationYaw += 180.0f
+            n = -0.5f
+        }
+
+        else if (mc.player.movementInput.moveForward > 0.0f) {
+            n = 0.5f
+        }
+
+        if (mc.player.movementInput.moveStrafe > 0.0f) {
+            rotationYaw -= 90.0f * n
+        }
+
+        if (mc.player.movementInput.moveStrafe < 0.0f) {
+            rotationYaw += 90.0f * n
+        }
+
+        return rotationYaw * 0.017453292f
+    }
+
     fun getBaseNCPSpeed(): Double {
         var baseSpeed = 0.2873
         if (mc.player == null) {

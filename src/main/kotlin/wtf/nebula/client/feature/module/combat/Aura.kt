@@ -78,6 +78,13 @@ class Aura : Module(ModuleCategory.COMBAT, "Attacks entities around you") {
             }
         }
 
+        if (rotate) {
+            val rotation = AngleUtil.toEntity(target, bone)
+            if (rotation!!.valid) {
+                Nebula.rotationManager.rotation = rotation
+            }
+        }
+
         // more of a delay
         if (mc.player.getCooledAttackStrength(1.0f) == 1.0f) {
             mc.playerController.attackEntity(mc.player, target!!)

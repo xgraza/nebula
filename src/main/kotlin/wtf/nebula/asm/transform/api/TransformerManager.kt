@@ -8,6 +8,7 @@ import wtf.nebula.asm.transform.impl.entity.EntityTransformer
 import wtf.nebula.asm.transform.impl.entity.player.EntityPlayerSPTransformer
 import wtf.nebula.asm.transform.impl.network.NetworkManagerTransformer
 import wtf.nebula.asm.transform.impl.render.EntityRendererTransformer
+import wtf.nebula.asm.transform.impl.render.RenderPlayerTransformer
 import wtf.nebula.asm.transform.impl.render.gui.GuiIngameTransformer
 import wtf.nebula.asm.transform.impl.world.WorldTransformer
 import java.lang.reflect.Field
@@ -26,6 +27,7 @@ class TransformerManager {
         add(EntityTransformer())
         add(GuiIngameTransformer())
         add(EntityRendererTransformer())
+        add(RenderPlayerTransformer())
         add(WorldTransformer())
 
         logger.info("Loaded ${transformers.size} transformer classes")
