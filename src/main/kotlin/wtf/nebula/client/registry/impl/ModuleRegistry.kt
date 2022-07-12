@@ -7,10 +7,7 @@ import wtf.nebula.client.event.input.KeyInputEvent
 import wtf.nebula.client.feature.module.Module
 import wtf.nebula.client.feature.module.ModuleCategory
 import wtf.nebula.client.feature.module.combat.*
-import wtf.nebula.client.feature.module.miscellaneous.AntiAim
-import wtf.nebula.client.feature.module.miscellaneous.NoFML
-import wtf.nebula.client.feature.module.miscellaneous.Notifications
-import wtf.nebula.client.feature.module.miscellaneous.Respawn
+import wtf.nebula.client.feature.module.miscellaneous.*
 import wtf.nebula.client.feature.module.movement.*
 import wtf.nebula.client.feature.module.render.ClickGUI
 import wtf.nebula.client.feature.module.render.Colors
@@ -40,6 +37,7 @@ class ModuleRegistry : Registry<Module>() {
         loadMember(NoFML())
         loadMember(Notifications())
         loadMember(Respawn())
+        loadMember(XCarry())
 
         loadMember(LongJump())
         loadMember(NoSlow())
