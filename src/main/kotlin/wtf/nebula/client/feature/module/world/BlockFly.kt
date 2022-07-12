@@ -17,6 +17,8 @@ import wtf.nebula.util.ext.getHitVecForPlacement
 import wtf.nebula.util.inventory.InventoryRegion
 import wtf.nebula.util.inventory.InventoryUtil
 import wtf.nebula.util.rotation.AngleUtil
+import wtf.nebula.util.rotation.InvalidRotation
+import wtf.nebula.util.rotation.Rotation
 
 class BlockFly : Module(ModuleCategory.WORLD, "Places blocks under you") {
     val rotations by setting("Rotations", Rotations.NORMAL)
@@ -25,6 +27,8 @@ class BlockFly : Module(ModuleCategory.WORLD, "Places blocks under you") {
 
     private var previous: PlaceInfo? = null
     private var current: PlaceInfo? = null
+
+    private var lastRotation: Rotation = InvalidRotation()
 
     private var slot = -1
 
@@ -38,10 +42,19 @@ class BlockFly : Module(ModuleCategory.WORLD, "Places blocks under you") {
         slot = -1
         previous = null
         current = null
+        lastRotation = InvalidRotation()
     }
 
     @EventListener
     private val postMotionListener = listener<PostMotionUpdate> {
+        if (!lastRotation.valid) {
+            lastRotation = Rotation(mc.player.rotationYaw, 89.0f)
+        }
+
+        else {
+            Nebula.rotationManager.rotation = lastRotation
+        }
+
         current = calcNextPlace()
         if (current == null) {
             return@listener
@@ -71,6 +84,7 @@ class BlockFly : Module(ModuleCategory.WORLD, "Places blocks under you") {
                     val rot = AngleUtil.toBlock(previous!!.pos, previous!!.direction)
                     if (rot!!.valid) {
                         Nebula.rotationManager.rotation = rot
+                        lastRotation = rot
                     }
                 }
             }
@@ -79,6 +93,7 @@ class BlockFly : Module(ModuleCategory.WORLD, "Places blocks under you") {
                 val rot = AngleUtil.toBlock(current!!.pos, current!!.direction.opposite)
                 if (rot!!.valid) {
                     Nebula.rotationManager.rotation = rot
+                    lastRotation = rot
                 }
             }
         }
