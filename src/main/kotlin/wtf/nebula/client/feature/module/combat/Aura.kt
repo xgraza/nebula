@@ -29,6 +29,7 @@ class Aura : Module(ModuleCategory.COMBAT, "Attacks entities around you") {
     val weapon by setting("Weapon", Weapon.SWORD)
 
     private var target: EntityLivingBase? = null
+    private var attacking = false
 
     override fun getDisplayInfo(): String? {
         if (target != null) {
@@ -36,6 +37,12 @@ class Aura : Module(ModuleCategory.COMBAT, "Attacks entities around you") {
         }
 
         return null
+    }
+
+    override fun onDeactivated() {
+        super.onDeactivated()
+        target = null
+        attacking = false
     }
 
     @EventListener
@@ -55,6 +62,7 @@ class Aura : Module(ModuleCategory.COMBAT, "Attacks entities around you") {
         }
 
         if (target == null) {
+            attacking = false
             return@listener
         }
 
@@ -62,21 +70,23 @@ class Aura : Module(ModuleCategory.COMBAT, "Attacks entities around you") {
             when (weapon) {
                 Weapon.SWORD -> {
                     if (mc.player.heldItemMainhand.item !is ItemSword) {
+                        attacking = false
                         return@listener
                     }
                 }
 
                 Weapon.AXE -> {
                     if (mc.player.heldItemMainhand.item !is ItemAxe) {
+                        attacking = false
                         return@listener
                     }
                 }
 
-                else -> {
-
-                }
+                else -> { }
             }
         }
+
+        attacking = true
 
         if (rotate) {
             val rotation = AngleUtil.toEntity(target, bone)
@@ -97,6 +107,10 @@ class Aura : Module(ModuleCategory.COMBAT, "Attacks entities around you") {
                 mc.player.connection.sendPacket(CPacketAnimation(EnumHand.MAIN_HAND))
             }
         }
+    }
+
+    override fun isActive(): Boolean {
+        return super.isActive() && target != null && attacking
     }
 
     enum class Weapon {

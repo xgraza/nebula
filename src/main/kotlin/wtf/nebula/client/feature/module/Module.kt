@@ -51,7 +51,7 @@ open class Module(val category: ModuleCategory, val description: String) : Confi
             .toString()
     }
 
-    fun isActive(): Boolean {
+    open fun isActive(): Boolean {
         if (!toggled) {
             return animation.value > 0.0f;
         }
