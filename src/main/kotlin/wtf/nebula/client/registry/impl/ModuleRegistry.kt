@@ -32,7 +32,9 @@ class ModuleRegistry : Registry<Module>() {
 
         loadMember(AntiAim())
         loadMember(NoFML())
+        loadMember(NoRotate())
         loadMember(Notifications())
+        loadMember(PingSpoof())
         loadMember(Respawn())
         loadMember(XCarry())
 
