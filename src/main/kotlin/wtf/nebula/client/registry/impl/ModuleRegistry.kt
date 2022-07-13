@@ -13,10 +13,7 @@ import wtf.nebula.client.feature.module.render.ClickGUI
 import wtf.nebula.client.feature.module.render.Colors
 import wtf.nebula.client.feature.module.render.Fullbright
 import wtf.nebula.client.feature.module.render.HUD
-import wtf.nebula.client.feature.module.world.Avoid
-import wtf.nebula.client.feature.module.world.BlockFly
-import wtf.nebula.client.feature.module.world.FastPlace
-import wtf.nebula.client.feature.module.world.Timer
+import wtf.nebula.client.feature.module.world.*
 import wtf.nebula.client.registry.Registry
 
 class ModuleRegistry : Registry<Module>() {
@@ -58,6 +55,7 @@ class ModuleRegistry : Registry<Module>() {
         loadMember(BlockFly())
         loadMember(FastPlace())
         loadMember(Timer())
+        loadMember(Yaw())
 
         logger.info("Loaded ${registers.size} modules")
     }
