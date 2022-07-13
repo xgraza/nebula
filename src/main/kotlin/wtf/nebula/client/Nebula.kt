@@ -1,6 +1,5 @@
 package wtf.nebula.client
 
-import wtf.nebula.util.versioning.BuildConfig
 import me.bush.eventbuskotlin.Config
 import me.bush.eventbuskotlin.EventBus
 import net.minecraftforge.fml.common.Mod
@@ -16,6 +15,7 @@ import wtf.nebula.client.manager.TotemPopManager
 import wtf.nebula.client.registry.RegistryContainer
 import wtf.nebula.client.registry.impl.CommandRegistry
 import wtf.nebula.client.registry.impl.ModuleRegistry
+import wtf.nebula.util.versioning.BuildConfig
 
 @Mod(useMetadata = true, clientSideOnly = true, modid = Nebula.ID)
 class Nebula {

@@ -112,6 +112,8 @@ dependencies {
     embed "com.mojang:brigadier:1.0.18"
     embed "com.github.therealbush:eventbus-kotlin:v1.0.1"
 
+    embed "com.github.litarvan:OpenAuth:1.1.2"
+
     // stupid kotlin shit
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
     implementation "org.jetbrains.kotlin:kotlin-reflect:$kotlin_version"
