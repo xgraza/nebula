@@ -8,10 +8,14 @@ import wtf.nebula.client.event.packet.PacketSendEvent;
 public class NetworkManagerHook {
 
     public static boolean sendPacket(Packet<?> packet) {
-        return Nebula.Companion.getBUS().post(new PacketSendEvent(packet));
+        PacketSendEvent event = new PacketSendEvent(packet);
+        Nebula.Companion.getBUS().post(event);
+        return event.getCancelled();
     }
 
     public static boolean channelRead0(Packet<?> packet) {
-        return Nebula.Companion.getBUS().post(new PacketReceiveEvent(packet));
+        PacketReceiveEvent event = new PacketReceiveEvent(packet);
+        Nebula.Companion.getBUS().post(event);
+        return event.getCancelled();
     }
 }

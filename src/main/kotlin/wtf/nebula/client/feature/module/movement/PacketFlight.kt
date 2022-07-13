@@ -9,9 +9,10 @@ import net.minecraft.util.math.Vec3d
 import wtf.nebula.client.event.packet.PacketReceiveEvent
 import wtf.nebula.client.event.packet.PacketSendEvent
 import wtf.nebula.client.event.player.motion.MotionEvent
-import wtf.nebula.client.event.player.motion.update.PreMotionUpdate
 import wtf.nebula.client.feature.module.Module
 import wtf.nebula.client.feature.module.ModuleCategory
+import wtf.nebula.util.ext.isMoving
+import wtf.nebula.util.motion.MotionUtil
 import kotlin.math.floor
 import kotlin.math.sqrt
 
@@ -33,18 +34,18 @@ class PacketFlight : Module(ModuleCategory.MOVEMENT, "Funny mojang") {
 
     override fun onDeactivated() {
         super.onDeactivated()
+
+        movements.clear()
         teleports.clear()
+
         teleportId = -1
-    }
-
-    @EventListener
-    private val preMotionListener = listener<PreMotionUpdate> {
-
+        flagTicks = 0
+        moveSpeed = 0.0
     }
 
     @EventListener
     private val motionListener = listener<MotionEvent> {
-        moveSpeed = if (conceal) CONCEAL else 0.2873
+        moveSpeed = if (conceal || isPhased()) CONCEAL else 0.2873
 
         var motionY = 0.0
         val shouldAntiKick = antiKick && !isPhased() && mc.player.ticksExisted % 40 == 0 && !mc.player.onGround
@@ -65,21 +66,58 @@ class PacketFlight : Module(ModuleCategory.MOVEMENT, "Funny mojang") {
 
         var loops = floor(factor).toInt()
 
+        if (mode == Mode.FACTOR) {
+            --flagTicks
+            if (flagTicks > 0) {
+                moveSpeed = BASE
+                loops = 0
+            }
 
+            else {
+
+                if (!isPhased() && mc.player.ticksExisted % 10 < 10 * (factor - floor(factor))) {
+                    ++loops
+                }
+            }
+        } else loops = 0
+
+        if (isPhased() && phase == Phase.NCP) {
+            moveSpeed = BASE
+
+            if (mc.gameSettings.keyBindJump.isKeyDown) {
+                motionY = 0.036
+                moveSpeed *= CONCEAL
+            }
+
+            else if (mc.gameSettings.keyBindSneak.isKeyDown) {
+                motionY = -0.03
+                moveSpeed *= CONCEAL
+            }
+
+            loops = 0
+        }
+
+        move(motionY, loops)
 
         it.x = mc.player.motionX
         it.y = motionY
         it.z = mc.player.motionZ
 
-        mc.player.noClip = true
+        if (phase != Phase.NONE) {
+            mc.player.noClip = true
+        }
     }
 
     @EventListener
     private val packetSendListener = listener<PacketSendEvent> {
         if (it.packet is CPacketPlayer) {
             val packet = it.packet
-            if (!movements.remove(packet)) {
+            if (!movements.contains(packet)) {
                 it.cancel()
+            }
+
+            else {
+                movements -= packet
             }
         }
     }
@@ -89,29 +127,68 @@ class PacketFlight : Module(ModuleCategory.MOVEMENT, "Funny mojang") {
         if (it.packet is SPacketPlayerPosLook) {
             val packet = it.packet
 
-            val teleport = teleports[packet.teleportId]
-            if (teleport != null) {
+            val teleport = teleports[packet.teleportId] ?: return@listener
+            if (packet.x == teleport.vec.x && packet.y == teleport.vec.y && packet.z == teleport.vec.z) {
 
-                // funny
-                if (packet.x == teleport.vec.x && packet.y == teleport.vec.y && packet.z == teleport.vec.z) {
+                if (mode == Mode.FACTOR) {
                     it.cancel()
-
-                    if (frequency) {
-                        mc.player.connection.sendPacket(CPacketConfirmTeleport(packet.teleportId))
-                    }
                 }
+
+                if (frequency) {
+                    mc.player.connection.sendPacket(CPacketConfirmTeleport(packet.teleportId))
+                }
+
+                teleports -= teleportId
+
+                return@listener
             }
 
-            else {
-
-                // didn't predict in time :(
-                flagTicks = 20
-            }
+            teleportId = packet.teleportId
 
             // fuck you
             packet.yaw = mc.player.rotationYaw
             packet.pitch = mc.player.rotationPitch
         }
+    }
+
+    private fun move(motionY: Double, loops: Int) {
+        val strafe = MotionUtil.strafe(moveSpeed)
+
+        var x = strafe[0]
+        var z = strafe[1]
+
+        if (!mc.player.isMoving()) {
+            x = 0.0
+            z = 0.0
+        }
+
+        val pos = mc.player.positionVector
+
+        val motionX = x * loops
+        val motionZ = z * loops
+
+        for (i in 1 until loops + 1) {
+            val playerPos = pos.add(motionX, motionY * i, motionZ)
+            mc.player.setVelocity(motionX, motionY * i, motionZ)
+
+            sendPacket(playerPos)
+
+            if (!mc.isSingleplayer) {
+                sendPacket(mc.player.positionVector.add(bounds.x, bounds.y, bounds.z))
+            }
+
+            teleports[++teleportId] = Prediction(pos, System.currentTimeMillis())
+
+            if (frequency) {
+                mc.player.connection.sendPacket(CPacketConfirmTeleport(teleportId))
+            }
+        }
+    }
+
+    private fun sendPacket(vec: Vec3d) {
+        val packet = CPacketPlayer.Position(vec.x, vec.y, vec.z, true)
+        movements += packet
+        mc.player.connection.sendPacket(packet)
     }
 
     private fun isPhased(): Boolean =
