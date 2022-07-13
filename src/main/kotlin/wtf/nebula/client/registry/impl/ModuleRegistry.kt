@@ -36,6 +36,7 @@ class ModuleRegistry : Registry<Module>() {
         loadMember(Respawn())
         loadMember(XCarry())
 
+        loadMember(FastFall())
         loadMember(LongJump())
         loadMember(NoSlow())
         loadMember(PacketFlight())
