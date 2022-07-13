@@ -14,6 +14,7 @@ import wtf.nebula.client.manager.RotationManager
 import wtf.nebula.client.manager.TickManager
 import wtf.nebula.client.manager.TotemPopManager
 import wtf.nebula.client.registry.RegistryContainer
+import wtf.nebula.client.registry.impl.CommandRegistry
 import wtf.nebula.client.registry.impl.ModuleRegistry
 
 @Mod(useMetadata = true, clientSideOnly = true, modid = Nebula.ID)
@@ -40,6 +41,7 @@ class Nebula {
         logger.info("Loading $FULL")
 
         RegistryContainer.register(ModuleRegistry())
+        RegistryContainer.register(CommandRegistry())
 
         BUS.subscribe(ForgeEventListener())
         BUS.subscribe(inventoryManager)
