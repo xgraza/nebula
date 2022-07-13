@@ -62,7 +62,18 @@ class ModuleComponent(val module: Module) : Component(module.name) {
 
                 posY += it.height + 1.0
             }
-        } else height = 15.0
+        } else {
+            height = 15.0
+
+            children.forEach {
+                if (it is BindComponent) {
+                    val comp = it
+                    if (comp.listening) {
+                        comp.listening = false
+                    }
+                }
+            }
+        }
     }
 
     override fun mouseClick(mouseX: Int, mouseY: Int, mouseButton: Int) {
@@ -84,7 +95,9 @@ class ModuleComponent(val module: Module) : Component(module.name) {
             return
         }
 
-        children.forEach { it.mouseClick(mouseX, mouseY, mouseButton) }
+        if (expanded) {
+            children.forEach { it.mouseClick(mouseX, mouseY, mouseButton) }
+        }
     }
 
     override fun mouseScroll(mouseX: Int, mouseY: Int, scroll: Int) {
