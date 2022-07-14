@@ -28,7 +28,7 @@ class Nebula {
         const val FULL = "$NAME v$VERSION/git-$HASH"
 
         val logger = LogManager.getLogger(NAME)
-        val BUS = EventBus(config = Config(logger, annotationRequired = true))
+        val BUS = EventBus(Config(logger, annotationRequired = true))
 
         val inventoryManager = InventoryManager()
         val rotationManager = RotationManager()
