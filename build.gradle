@@ -6,7 +6,7 @@
 //file:noinspection GroovyUnusedAssignment I don't like warnings!!!! fuck you!!!
 
 buildscript {
-    ext.kotlin_version = '1.7.0'
+    ext.kotlin_version = '1.7.10'
 
     repositories {
         mavenCentral()
