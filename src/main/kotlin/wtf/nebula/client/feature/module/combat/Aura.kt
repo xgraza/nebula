@@ -110,7 +110,11 @@ class Aura : Module(ModuleCategory.COMBAT, "Attacks entities around you") {
     }
 
     override fun isActive(): Boolean {
-        return super.isActive() && target != null && attacking
+        if (target != null && attacking) {
+            return true
+        }
+
+        return super.isActive()
     }
 
     enum class Weapon {
