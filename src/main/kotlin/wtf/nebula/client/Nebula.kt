@@ -8,6 +8,8 @@ import net.minecraftforge.fml.common.event.FMLPostInitializationEvent
 import org.apache.logging.log4j.LogManager
 import org.lwjgl.opengl.Display
 import wtf.nebula.client.event.translate.ForgeEventListener
+import wtf.nebula.client.feature.alt.Alt
+import wtf.nebula.client.feature.alt.AltType
 import wtf.nebula.client.manager.InventoryManager
 import wtf.nebula.client.manager.RotationManager
 import wtf.nebula.client.manager.server.ServerManager

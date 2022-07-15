@@ -49,14 +49,9 @@ class Criticals : Module(ModuleCategory.COMBAT, "Lands critical hits") {
         }
     }
 
-    private fun position(y: Double, minY: Boolean = false) {
-        var start = mc.player.posY
-        if (minY) {
-            start = mc.player.entityBoundingBox.minY
-        }
-
+    private fun position(y: Double) {
         mc.player.connection.sendPacket(CPacketPlayer.Position(
-            mc.player.posX, start + y, mc.player.posZ, false))
+            mc.player.posX, mc.player.posY + y, mc.player.posZ, false))
     }
 
     enum class Mode {

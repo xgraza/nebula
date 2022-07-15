@@ -22,6 +22,7 @@ import wtf.nebula.util.rotation.Rotation
 class SelfFill : Module(ModuleCategory.COMBAT, "cringe") {
     val rotate by bool("Rotate", true)
     val swing by bool("Swing", true)
+    val flag by bool("Flag", true)
 
     private var pos = BlockPos.ORIGIN
     private var placing = false
@@ -53,6 +54,7 @@ class SelfFill : Module(ModuleCategory.COMBAT, "cringe") {
         }
 
         if (rotate) {
+            mc.player.connection.sendPacket(CPacketPlayer.Rotation(mc.player.rotationYaw, 90.0f, false))
             Nebula.rotationManager.rotation = Rotation(mc.player.rotationYaw, 90.0f)
         }
 
@@ -68,9 +70,6 @@ class SelfFill : Module(ModuleCategory.COMBAT, "cringe") {
             mc.player.connection.sendPacket(CPacketPlayer.Position(
                 mc.player.posX, mc.player.posY + offset, mc.player.posZ, false))
         }
-
-        mc.player.connection.sendPacket(CPacketPlayer.Position(
-            mc.player.posX, mc.player.posY + 1.5, mc.player.posZ, false))
 
         placing = true
 
@@ -92,6 +91,14 @@ class SelfFill : Module(ModuleCategory.COMBAT, "cringe") {
             else {
                 mc.player.connection.sendPacket(CPacketAnimation(hand))
             }
+        }
+
+        if (flag) {
+            mc.player.connection.sendPacket(
+                CPacketPlayer.Position(
+                    mc.player.posX, mc.player.posY + 1.6, mc.player.posZ, false
+                )
+            )
         }
 
         if (hand == EnumHand.MAIN_HAND) {
