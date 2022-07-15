@@ -9,10 +9,7 @@ import wtf.nebula.client.feature.module.ModuleCategory
 import wtf.nebula.client.feature.module.combat.*
 import wtf.nebula.client.feature.module.miscellaneous.*
 import wtf.nebula.client.feature.module.movement.*
-import wtf.nebula.client.feature.module.render.ClickGUI
-import wtf.nebula.client.feature.module.render.Colors
-import wtf.nebula.client.feature.module.render.Fullbright
-import wtf.nebula.client.feature.module.render.HUD
+import wtf.nebula.client.feature.module.render.*
 import wtf.nebula.client.feature.module.world.*
 import wtf.nebula.client.registry.Registry
 
@@ -53,6 +50,7 @@ class ModuleRegistry : Registry<Module>() {
         loadMember(Colors())
         loadMember(Fullbright())
         loadMember(HUD())
+        loadMember(NoRender())
 
         loadMember(Avoid())
         loadMember(BlockFly())

@@ -5,15 +5,34 @@ import me.bush.eventbuskotlin.EventListener
 import me.bush.eventbuskotlin.listener
 import net.minecraft.client.gui.GuiChat
 import wtf.nebula.client.Nebula
+import wtf.nebula.client.event.player.motion.update.PreMotionUpdate
 import wtf.nebula.client.event.render.RenderHUDEvent
 import wtf.nebula.client.feature.module.Module
 import wtf.nebula.client.feature.module.ModuleCategory
 import wtf.nebula.client.registry.impl.ModuleRegistry
+import kotlin.math.sqrt
 
 class HUD : Module(ModuleCategory.RENDER, "Renders an overlay of the vanilla HUD") {
     val watermark by bool("Watermark", true)
     val arraylist by bool("Arraylist", true)
     val coordinates by bool("Coordinates", true)
+    val speedCounter by bool("Speed", true)
+
+    private var speed = 0.0
+
+    override fun onDeactivated() {
+        super.onDeactivated()
+        speed = 0.0
+    }
+
+    @EventListener
+    private val preMotionUpdate = listener<PreMotionUpdate> {
+        val diffX = mc.player.posX - mc.player.lastTickPosX
+        val diffZ = mc.player.posZ - mc.player.lastTickPosZ
+
+        // line is from cosmos
+        speed = sqrt(diffX * diffX + diffZ * diffZ) / 1000 / (0.05 / 3600) * (50.0f / mc.timer.tickLength)
+    }
 
     @EventListener
     private val renderHUDEvent = listener<RenderHUDEvent> {
@@ -44,12 +63,12 @@ class HUD : Module(ModuleCategory.RENDER, "Renders an overlay of the vanilla HUD
                 }
         }
 
-        if (coordinates) {
-            var y = it.res.scaledHeight_double - mc.fontRenderer.FONT_HEIGHT - 2
-            if (mc.currentScreen is GuiChat) {
-                y -= 13
-            }
+        var y = it.res.scaledHeight_double - mc.fontRenderer.FONT_HEIGHT - 2
+        if (mc.currentScreen is GuiChat) {
+            y -= 13
+        }
 
+        if (coordinates) {
             val text = StringBuilder()
                 .append(ChatFormatting.GRAY.toString())
                 .append("XYZ: ")
@@ -64,6 +83,11 @@ class HUD : Module(ModuleCategory.RENDER, "Renders an overlay of the vanilla HUD
             text.append(String.format("%.1f", mc.player.posZ))
 
             mc.fontRenderer.drawStringWithShadow(text.toString(), 2.0f, y.toFloat(), -1)
+        }
+
+        if (speedCounter) {
+            val text = ChatFormatting.GRAY.toString() + "Speed: " + ChatFormatting.RESET.toString() + String.format("%.2f", speed)
+            mc.fontRenderer.drawStringWithShadow(text, (it.res.scaledWidth_double - mc.fontRenderer.getStringWidth(text) - 2).toFloat(), y.toFloat(), -1)
         }
     }
 

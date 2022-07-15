@@ -1,4 +1,4 @@
-package wtf.nebula.client.event
+package wtf.nebula.client.event.client.minecraft
 
 import me.bush.eventbuskotlin.Event
 import net.minecraft.client.gui.GuiScreen

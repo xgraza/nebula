@@ -11,6 +11,7 @@ import wtf.nebula.asm.transform.impl.network.NetworkManagerTransformer
 import wtf.nebula.asm.transform.impl.render.EntityRendererTransformer
 import wtf.nebula.asm.transform.impl.render.RenderPlayerTransformer
 import wtf.nebula.asm.transform.impl.render.gui.GuiIngameTransformer
+import wtf.nebula.asm.transform.impl.render.gui.GuiMultiplayerTransformer
 import wtf.nebula.asm.transform.impl.world.WorldTransformer
 import java.lang.reflect.Field
 import java.util.regex.Pattern
@@ -28,6 +29,7 @@ class TransformerManager {
         add(EntityPlayerSPTransformer())
         add(EntityTransformer())
         add(GuiIngameTransformer())
+        add(GuiMultiplayerTransformer())
         add(EntityRendererTransformer())
         add(RenderPlayerTransformer())
         add(WorldTransformer())

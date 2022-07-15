@@ -4,7 +4,7 @@ import com.mojang.realmsclient.gui.ChatFormatting
 import me.bush.eventbuskotlin.EventListener
 import me.bush.eventbuskotlin.listener
 import wtf.nebula.client.Nebula
-import wtf.nebula.client.event.ModuleToggledEvent
+import wtf.nebula.client.event.client.ModuleToggledEvent
 import wtf.nebula.client.event.tick.TickEvent
 import wtf.nebula.client.feature.module.Module
 import wtf.nebula.client.feature.module.ModuleCategory

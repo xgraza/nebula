@@ -4,7 +4,7 @@ import me.bush.eventbuskotlin.EventListener
 import me.bush.eventbuskotlin.listener
 import net.minecraft.client.gui.GuiGameOver
 import net.minecraft.network.play.client.CPacketClientStatus
-import wtf.nebula.client.event.GuiOpenedEvent
+import wtf.nebula.client.event.client.minecraft.GuiOpenedEvent
 import wtf.nebula.client.event.tick.TickEvent
 import wtf.nebula.client.feature.module.Module
 import wtf.nebula.client.feature.module.ModuleCategory

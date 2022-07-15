@@ -29,7 +29,7 @@ class Speed : Module(ModuleCategory.MOVEMENT, "vroom vroom") {
 
     override fun getDisplayInfo(): String {
         return when (mode) {
-            Mode.STRICT_STRAFE -> "Strict Strafe"
+            Mode.STRICT_STRAFE -> "Strafe Strict"
             Mode.YPORT -> "YPort"
             Mode.ONGROUND -> "OnGround"
             else -> Setting.formatEnum(mode)
@@ -44,7 +44,7 @@ class Speed : Module(ModuleCategory.MOVEMENT, "vroom vroom") {
         distance = 0.0
         boost = false
 
-        mc.timer.tickLength = 50.0f
+        Nebula.tickManager.speed = 1.0f
 
         lagTicks = 0
     }
@@ -67,7 +67,7 @@ class Speed : Module(ModuleCategory.MOVEMENT, "vroom vroom") {
                     StrafeStage.START -> {
                         if (mc.player.isMoving()) {
                             stage = StrafeStage.JUMP
-                            moveSpeed = (if (mode == Mode.STRAFE) 1.38 else 1.35) * MotionUtil.getBaseNCPSpeed() - 0.01
+                            moveSpeed = (if (mode == Mode.STRAFE) 1.37 else 1.35) * MotionUtil.getBaseNCPSpeed() - 0.01
                         }
 
                         Nebula.tickManager.reset()
@@ -81,13 +81,15 @@ class Speed : Module(ModuleCategory.MOVEMENT, "vroom vroom") {
                             it.y = mc.player.motionY
 
                             moveSpeed *= if (boost) {
-                                1.608
+                                if (mode == Mode.STRAFE) 1.623 else 1.614
                             } else {
-                                1.345
+                                if (mode == Mode.STRAFE) 1.358 else 1.345
                             }
 
                             if (timerBoost) {
-                                Nebula.tickManager.speed = 1.088f
+                                Nebula.tickManager.speed = if (boost) {
+                                    if (mode == Mode.STRICT_STRAFE) 1.090f else 1.098f
+                                } else 1.088f
                             }
                         }
                     }
@@ -144,6 +146,11 @@ class Speed : Module(ModuleCategory.MOVEMENT, "vroom vroom") {
     @EventListener
     private val setBackListener = listener<SetbackEvent> {
         mc.timer.tickLength = 50.0f
+
+        distance = 0.0
+        moveSpeed = 0.0
+        stage = StrafeStage.COLLIDE
+
         lagTicks = 10
     }
 

@@ -4,7 +4,7 @@ import com.mojang.realmsclient.gui.ChatFormatting
 import org.lwjgl.input.Keyboard
 import wtf.nebula.client.Nebula
 import wtf.nebula.client.config.ConfigurableFeature
-import wtf.nebula.client.event.ModuleToggledEvent
+import wtf.nebula.client.event.client.ModuleToggledEvent
 import wtf.nebula.util.animation.Animation
 import wtf.nebula.util.animation.Easing
 
