@@ -33,6 +33,7 @@ class ModuleRegistry : Registry<Module>() {
         loadMember(NoRotate())
         loadMember(Notifications())
         loadMember(PingSpoof())
+        loadMember(Refill())
         loadMember(ResetVL())
         loadMember(Respawn())
         loadMember(XCarry())
