@@ -17,17 +17,17 @@ class Timer : Module(ModuleCategory.WORLD, "Makes game go fast fast or slow slow
 
     override fun onDeactivated() {
         super.onDeactivated()
-        Nebula.tickManager.reset()
+        Nebula.serverManager.reset()
     }
 
     @EventListener
     private val tickListener = listener<TickEvent> {
         if (tpsSync) {
-            Nebula.tickManager.speed = 1.0f
+            Nebula.serverManager.speed = 1.0f
         }
 
         else {
-            Nebula.tickManager.speed = speed
+            Nebula.serverManager.speed = speed
         }
     }
 }

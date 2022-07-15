@@ -30,14 +30,14 @@ class Step : Module(ModuleCategory.MOVEMENT, "Steps up blocks") {
 
         mc.player.stepHeight = 0.6f
 
-        Nebula.tickManager.speed = 1.0f
+        Nebula.serverManager.speed = 1.0f
         timer = false
     }
 
     @EventListener
     private val tickListener = listener<TickEvent> {
         if (timer && mc.player.onGround) {
-            Nebula.tickManager.speed = 1.0f
+            Nebula.serverManager.speed = 1.0f
         }
 
         mc.player.stepHeight = height.toFloat()
@@ -57,7 +57,7 @@ class Step : Module(ModuleCategory.MOVEMENT, "Steps up blocks") {
         val packets = STEP_PACKETS[stepHeight] ?: return@listener
 
         if (useTimer) {
-            Nebula.tickManager.speed = 1.0f / (packets.size + 1.0f)
+            Nebula.serverManager.speed = 1.0f / (packets.size + 1.0f)
             timer = true
         }
 

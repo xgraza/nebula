@@ -8,11 +8,9 @@ import net.minecraftforge.fml.common.event.FMLPostInitializationEvent
 import org.apache.logging.log4j.LogManager
 import org.lwjgl.opengl.Display
 import wtf.nebula.client.event.translate.ForgeEventListener
-import wtf.nebula.client.feature.alt.Alt
-import wtf.nebula.client.feature.alt.AltType
 import wtf.nebula.client.manager.InventoryManager
 import wtf.nebula.client.manager.RotationManager
-import wtf.nebula.client.manager.TickManager
+import wtf.nebula.client.manager.server.ServerManager
 import wtf.nebula.client.manager.TotemPopManager
 import wtf.nebula.client.registry.RegistryContainer
 import wtf.nebula.client.registry.impl.CommandRegistry
@@ -34,7 +32,7 @@ class Nebula {
 
         val inventoryManager = InventoryManager()
         val rotationManager = RotationManager()
-        val tickManager = TickManager()
+        val serverManager = ServerManager()
         val totemPopManager = TotemPopManager()
     }
 
@@ -48,7 +46,7 @@ class Nebula {
         BUS.subscribe(ForgeEventListener())
         BUS.subscribe(inventoryManager)
         BUS.subscribe(rotationManager)
-        BUS.subscribe(tickManager)
+        BUS.subscribe(serverManager)
         BUS.subscribe(totemPopManager)
     }
 

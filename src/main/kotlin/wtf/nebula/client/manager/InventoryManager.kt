@@ -7,6 +7,8 @@ import net.minecraft.item.Item
 import net.minecraft.item.ItemBlock
 import net.minecraft.item.ItemStack
 import net.minecraft.network.play.client.CPacketHeldItemChange
+import net.minecraft.network.play.server.SPacketHeldItemChange
+import wtf.nebula.client.event.packet.PacketReceiveEvent
 import wtf.nebula.client.event.packet.PacketSendEvent
 import wtf.nebula.util.Globals
 import wtf.nebula.util.inventory.InventoryRegion
@@ -19,6 +21,13 @@ class InventoryManager : Globals {
     private val packetSendListener = listener<PacketSendEvent> {
         if (it.packet is CPacketHeldItemChange) {
             serverSlot = it.packet.slotId
+        }
+    }
+
+    @EventListener
+    private val packetReceiveListener = listener<PacketReceiveEvent> {
+        if (it.packet is SPacketHeldItemChange) {
+            serverSlot = it.packet.heldItemHotbarIndex
         }
     }
 

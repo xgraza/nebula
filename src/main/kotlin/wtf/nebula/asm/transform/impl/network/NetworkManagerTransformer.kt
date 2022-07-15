@@ -40,7 +40,7 @@ class NetworkManagerTransformer : ClassTransformer() {
         val instructions = InsnList()
 
         // our instruction call for NetworkManagerHook#channelRead0(packetIn)Z
-        instructions.add(VarInsnNode(ALOAD, 1))
+        instructions.add(VarInsnNode(ALOAD, 2))
         instructions.add(MethodInsnNode(
             INVOKESTATIC,
             Type.getInternalName(NetworkManagerHook::class.java),

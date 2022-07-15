@@ -46,6 +46,10 @@ class ForgeEventListener : Globals {
     @EventListener
     private val packetSendListener = listener<PacketSendEvent> {
 
+        if (nullCheck()) {
+            return@listener
+        }
+
         if (it.packet is CPacketEntityAction) {
             val packet = it.packet
 
@@ -95,6 +99,10 @@ class ForgeEventListener : Globals {
 
     @EventListener
     private val packetReceiveListener = listener<PacketReceiveEvent> {
+        if (nullCheck()) {
+            return@listener
+        }
+
         if (it.packet is SPacketPlayerPosLook) {
             Nebula.BUS.post(SetbackEvent())
         }
@@ -102,8 +110,6 @@ class ForgeEventListener : Globals {
         else if (it.packet is SPacketEntityStatus) {
             val packet = it.packet
             val entity = packet.getEntity(mc.world)
-
-            printChatMessage("" + packet.opCode)
 
             if (packet.opCode == 35.toByte() && entity is EntityPlayer) {
                 Nebula.BUS.post(TotemPopEvent(entity))
@@ -113,7 +119,7 @@ class ForgeEventListener : Globals {
         else if (it.packet is SPacketEntityMetadata) {
             val packet = it.packet
 
-            val entity = mc.world.getEntityByID(packet.entityId)
+            val entity = mc.world.getEntityByID(packet.entityId) ?: return@listener
             if (entity !is EntityPlayer) {
                 return@listener
             }

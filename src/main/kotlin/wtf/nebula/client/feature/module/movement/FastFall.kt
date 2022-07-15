@@ -2,7 +2,6 @@ package wtf.nebula.client.feature.module.movement
 
 import me.bush.eventbuskotlin.EventListener
 import me.bush.eventbuskotlin.listener
-import net.minecraft.network.play.client.CPacketPlayer
 import wtf.nebula.client.Nebula
 import wtf.nebula.client.config.setting.Setting
 import wtf.nebula.client.event.player.motion.MotionEvent
@@ -23,7 +22,7 @@ class FastFall : Module(ModuleCategory.MOVEMENT, "makes u fall fast - weirdo") {
 
     override fun onDeactivated() {
         super.onDeactivated()
-        Nebula.tickManager.speed = 1.0f
+        Nebula.serverManager.speed = 1.0f
     }
 
     @EventListener

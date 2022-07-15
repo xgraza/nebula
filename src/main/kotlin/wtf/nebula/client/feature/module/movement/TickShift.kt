@@ -25,11 +25,11 @@ class TickShift : Module(ModuleCategory.MOVEMENT, "legit just use timer lel") {
 
             if (boostTicks <= 0) {
                 boostTicks = 0
-                Nebula.tickManager.speed = 1.0f
+                Nebula.serverManager.speed = 1.0f
             }
 
             else {
-                Nebula.tickManager.speed = 1.0f + boost
+                Nebula.serverManager.speed = 1.0f + boost
             }
         }
 

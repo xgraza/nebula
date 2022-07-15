@@ -44,7 +44,7 @@ class Speed : Module(ModuleCategory.MOVEMENT, "vroom vroom") {
         distance = 0.0
         boost = false
 
-        Nebula.tickManager.speed = 1.0f
+        Nebula.serverManager.speed = 1.0f
 
         lagTicks = 0
     }
@@ -70,7 +70,7 @@ class Speed : Module(ModuleCategory.MOVEMENT, "vroom vroom") {
                             moveSpeed = (if (mode == Mode.STRAFE) 1.37 else 1.35) * MotionUtil.getBaseNCPSpeed() - 0.01
                         }
 
-                        Nebula.tickManager.reset()
+                        Nebula.serverManager.reset()
                     }
 
                     StrafeStage.JUMP -> {
@@ -87,7 +87,7 @@ class Speed : Module(ModuleCategory.MOVEMENT, "vroom vroom") {
                             }
 
                             if (timerBoost) {
-                                Nebula.tickManager.speed = if (boost) {
+                                Nebula.serverManager.speed = if (boost) {
                                     if (mode == Mode.STRICT_STRAFE) 1.090f else 1.098f
                                 } else 1.088f
                             }

@@ -26,6 +26,10 @@ class RotationManager : Globals {
 
     @EventListener
     private val preMotionUpdateListener = listener<PreMotionUpdate> {
+        if (nullCheck()) {
+            return@listener
+        }
+
         ++rotationTicks
         if (rotation.valid) {
             it.yaw = rotation.yaw
@@ -37,6 +41,10 @@ class RotationManager : Globals {
 
     @EventListener
     private val packetSendListener = listener<PacketSendEvent> {
+        if (nullCheck()) {
+            return@listener
+        }
+
         if (it.packet is CPacketPlayer && rotation.valid) {
             val packet = it.packet
             if (packet.rotating) {

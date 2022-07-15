@@ -45,7 +45,7 @@ class LongJump : Module(ModuleCategory.MOVEMENT, "Makes you go long asf aka best
 
     override fun onDeactivated() {
         super.onDeactivated()
-        Nebula.tickManager.speed = 1.0f
+        Nebula.serverManager.speed = 1.0f
 
         airTicks = 0
         groundTicks = 0
@@ -140,7 +140,7 @@ class LongJump : Module(ModuleCategory.MOVEMENT, "Makes you go long asf aka best
                     mc.player.motionY *= 0.99
                 }
 
-                Nebula.tickManager.speed = 0.8f
+                Nebula.serverManager.speed = 0.8f
 
                 if (Keyboard.isKeyDown(mc.gameSettings.keyBindForward.keyCode)) {
                     try {
@@ -159,7 +159,7 @@ class LongJump : Module(ModuleCategory.MOVEMENT, "Makes you go long asf aka best
             }
 
             else {
-                Nebula.tickManager.speed = 1.0f
+                Nebula.serverManager.speed = 1.0f
 
                 airTicks = 0
                 groundTicks++

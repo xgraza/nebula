@@ -3,6 +3,7 @@ package wtf.nebula.client.feature.module.render
 import com.mojang.realmsclient.gui.ChatFormatting
 import me.bush.eventbuskotlin.EventListener
 import me.bush.eventbuskotlin.listener
+import net.minecraft.client.Minecraft
 import net.minecraft.client.gui.GuiChat
 import wtf.nebula.client.Nebula
 import wtf.nebula.client.event.player.motion.update.PreMotionUpdate
@@ -17,6 +18,9 @@ class HUD : Module(ModuleCategory.RENDER, "Renders an overlay of the vanilla HUD
     val arraylist by bool("Arraylist", true)
     val coordinates by bool("Coordinates", true)
     val speedCounter by bool("Speed", true)
+    val fps by bool("FPS", true)
+    val tps by bool("TPS", true)
+    val ping by bool("Ping", true)
 
     private var speed = 0.0
 
@@ -88,6 +92,40 @@ class HUD : Module(ModuleCategory.RENDER, "Renders an overlay of the vanilla HUD
         if (speedCounter) {
             val text = ChatFormatting.GRAY.toString() + "Speed: " + ChatFormatting.RESET.toString() + String.format("%.2f", speed)
             mc.fontRenderer.drawStringWithShadow(text, (it.res.scaledWidth_double - mc.fontRenderer.getStringWidth(text) - 2).toFloat(), y.toFloat(), -1)
+
+            y -= (mc.fontRenderer.FONT_HEIGHT + 2)
+        }
+
+        if (tps) {
+            val text = ChatFormatting.GRAY.toString() + "TPS: " + ChatFormatting.RESET.toString() + String.format("%.1f", Nebula.serverManager.tpsMonitor.getMonitoredValue())
+            mc.fontRenderer.drawStringWithShadow(text, (it.res.scaledWidth_double - mc.fontRenderer.getStringWidth(text) - 2).toFloat(), y.toFloat(), -1)
+
+            y -= (mc.fontRenderer.FONT_HEIGHT + 2)
+        }
+
+        if (fps) {
+            val text = ChatFormatting.GRAY.toString() + "FPS: " + ChatFormatting.RESET.toString() + Minecraft.getDebugFPS()
+            mc.fontRenderer.drawStringWithShadow(text, (it.res.scaledWidth_double - mc.fontRenderer.getStringWidth(text) - 2).toFloat(), y.toFloat(), -1)
+
+            y -= (mc.fontRenderer.FONT_HEIGHT + 2)
+        }
+
+        if (ping) {
+            var ping = 0
+            for (info in mc.player.connection.playerInfoMap) {
+                if (info == null) {
+                    continue
+                }
+
+                if (info.gameProfile.name == mc.player.gameProfile.name) {
+                    ping = info.responseTime
+                }
+            }
+
+            val text = ChatFormatting.GRAY.toString() + "Ping: " + ChatFormatting.RESET.toString() + ping
+            mc.fontRenderer.drawStringWithShadow(text, (it.res.scaledWidth_double - mc.fontRenderer.getStringWidth(text) - 2).toFloat(), y.toFloat(), -1)
+
+            y -= (mc.fontRenderer.FONT_HEIGHT + 2)
         }
     }
 

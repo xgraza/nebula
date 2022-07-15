@@ -22,7 +22,7 @@ class TotemPopManager : Globals {
             (if (it.entityPlayer == mc.player) "You" else it.entityPlayer.name)
                         + " has popped "
                     + ChatFormatting.RED + popped + ChatFormatting.RESET
-                    + "totem" + (if (popped > 1) "s" else ""))
+                    + " totem" + (if (popped > 1) "s" else ""))
         }
     }
 
@@ -35,7 +35,7 @@ class TotemPopManager : Globals {
                 (if (it.entityPlayer == mc.player) "You have died" else it.entityPlayer.name + " has died")
                         + " after popping "
                         + ChatFormatting.RED + pops + ChatFormatting.RESET
-                        + "totem" + (if (pops > 1) "s" else ""))
+                        + " totem" + (if (pops > 1) "s" else ""))
 
             totemPops -= it.entityPlayer.entityId
         }
