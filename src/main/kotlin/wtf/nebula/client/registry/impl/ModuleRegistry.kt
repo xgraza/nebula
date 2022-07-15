@@ -22,6 +22,7 @@ class ModuleRegistry : Registry<Module>() {
 
     override fun load() {
         loadMember(Aura())
+        loadMember(AutoTotem())
         loadMember(BowRelease())
         loadMember(Criticals())
         loadMember(FastProjectile())
