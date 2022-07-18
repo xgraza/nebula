@@ -5,6 +5,7 @@ import net.minecraftforge.fml.common.asm.transformers.deobf.FMLDeobfuscatingRema
 import org.apache.logging.log4j.LogManager
 import wtf.nebula.asm.transform.impl.client.MinecraftTransformer
 import wtf.nebula.asm.transform.impl.client.input.KeyBindingTransformer
+import wtf.nebula.asm.transform.impl.client.input.PlayerControllerMPTransformer
 import wtf.nebula.asm.transform.impl.entity.EntityTransformer
 import wtf.nebula.asm.transform.impl.entity.player.EntityPlayerSPTransformer
 import wtf.nebula.asm.transform.impl.network.NetworkManagerTransformer
@@ -25,6 +26,7 @@ class TransformerManager {
     init {
         add(MinecraftTransformer())
         add(KeyBindingTransformer())
+        add(PlayerControllerMPTransformer())
         add(NetworkManagerTransformer())
         add(EntityPlayerSPTransformer())
         add(EntityTransformer())

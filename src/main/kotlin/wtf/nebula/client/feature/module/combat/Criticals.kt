@@ -2,6 +2,7 @@ package wtf.nebula.client.feature.module.combat
 
 import me.bush.eventbuskotlin.EventListener
 import me.bush.eventbuskotlin.listener
+import net.minecraft.entity.EntityLivingBase
 import net.minecraft.network.play.client.CPacketEntityAction
 import net.minecraft.network.play.client.CPacketPlayer
 import net.minecraft.network.play.client.CPacketUseEntity
@@ -25,13 +26,18 @@ class Criticals : Module(ModuleCategory.COMBAT, "Lands critical hits") {
 
             if (packet.action == CPacketUseEntity.Action.ATTACK) {
 
+                val entity = mc.world.getEntityByID(packet.entityId) ?: return@listener
+                if (entity !is EntityLivingBase) {
+                    return@listener
+                }
+
                 if (stopSprint && mc.player.isSprinting) {
                     mc.player.connection.sendPacket(CPacketEntityAction(mc.player, CPacketEntityAction.Action.STOP_SPRINTING))
                 }
 
                 when (mode) {
                     Mode.PACKET -> {
-                        position(0.0624)
+                        position(0.11)
                         position(0.0)
                     }
 

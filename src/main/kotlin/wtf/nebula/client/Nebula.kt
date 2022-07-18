@@ -10,6 +10,7 @@ import org.lwjgl.opengl.Display
 import wtf.nebula.client.event.translate.ForgeEventListener
 import wtf.nebula.client.feature.alt.Alt
 import wtf.nebula.client.feature.alt.AltType
+import wtf.nebula.client.manager.FriendManager
 import wtf.nebula.client.manager.InventoryManager
 import wtf.nebula.client.manager.RotationManager
 import wtf.nebula.client.manager.server.ServerManager
@@ -32,6 +33,7 @@ class Nebula {
         val logger = LogManager.getLogger(NAME)
         val BUS = EventBus(Config(logger, annotationRequired = true))
 
+        val friendManager = FriendManager()
         val inventoryManager = InventoryManager()
         val rotationManager = RotationManager()
         val serverManager = ServerManager()

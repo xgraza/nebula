@@ -8,6 +8,7 @@ import net.minecraft.util.math.AxisAlignedBB
 import org.lwjgl.opengl.GL11.*
 import wtf.nebula.client.feature.module.render.Colors
 import wtf.nebula.util.render.ColorUtil.setColor
+import java.awt.Color
 
 object RenderUtil {
     fun rect(x: Double, y: Double, width: Double, height: Double, color: Int) {
@@ -48,22 +49,45 @@ object RenderUtil {
 
     fun renderBoxEsp(box: AxisAlignedBB, color: Int, filled: Boolean = true, outlined: Boolean = true) {
         GlStateManager.pushMatrix()
+
+        GlStateManager.clear(256)
+
         GlStateManager.disableTexture2D()
+        GlStateManager.disableLighting()
+
         GlStateManager.enableBlend()
         GlStateManager.tryBlendFuncSeparate(770, 771, 0, 1)
 
-        val (r, g, b, a) = color.toColor()
+        GlStateManager.disableDepth();
+        GlStateManager.depthMask(false);
+
+        val colorArr = ColorUtil.getColor(color)
 
         if (filled) {
-            RenderGlobal.renderFilledBox(box, r.toFloat(), g.toFloat(), b.toFloat(), a.toFloat())
+            RenderGlobal.renderFilledBox(box, colorArr[0], colorArr[1], colorArr[2], colorArr[3])
         }
 
         if (outlined) {
-            RenderGlobal.drawSelectionBoundingBox(box, r.toFloat(), g.toFloat(), b.toFloat(), a.toFloat())
+            glEnable(GL_LINE_SMOOTH)
+            glHint(GL_LINE_SMOOTH_HINT, GL_NICEST)
+
+            GlStateManager.glLineWidth(1.5f)
+
+            RenderGlobal.drawSelectionBoundingBox(box, colorArr[0], colorArr[1], colorArr[2], colorArr[3])
+
+            GlStateManager.glLineWidth(1.0f)
+
+            glDisable(GL_LINE_SMOOTH)
         }
 
+        GlStateManager.enableDepth()
+        GlStateManager.depthMask(true)
+
         GlStateManager.disableBlend()
+
         GlStateManager.enableTexture2D()
+        GlStateManager.enableLighting()
+
         GlStateManager.popMatrix()
     }
 

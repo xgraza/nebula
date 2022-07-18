@@ -4,10 +4,7 @@ import wtf.nebula.client.config.setting.BindSetting
 import wtf.nebula.client.config.setting.NumberSetting
 import wtf.nebula.client.config.setting.Setting
 import wtf.nebula.client.feature.guis.common.Component
-import wtf.nebula.client.feature.guis.feature.setting.BindComponent
-import wtf.nebula.client.feature.guis.feature.setting.BooleanComponent
-import wtf.nebula.client.feature.guis.feature.setting.EnumComponent
-import wtf.nebula.client.feature.guis.feature.setting.NumberComponent
+import wtf.nebula.client.feature.guis.feature.setting.*
 import wtf.nebula.client.feature.module.Module
 import wtf.nebula.client.feature.module.render.Colors
 import wtf.nebula.util.render.RenderUtil
@@ -31,6 +28,10 @@ class ModuleComponent(val module: Module) : Component(module.name) {
 
                 else if (it.value is Enum<*>) {
                     children += EnumComponent(it as Setting<Enum<*>>)
+                }
+
+                else if (it.value is Color) {
+                    children += ColorComponent(it as Setting<Color>)
                 }
             }
         }

@@ -4,6 +4,7 @@ import wtf.nebula.client.config.setting.BindSetting
 import wtf.nebula.client.config.setting.NumberSetting
 import wtf.nebula.client.config.setting.Setting
 import wtf.nebula.client.feature.ToggleFeature
+import java.awt.Color
 
 open class ConfigurableFeature : ToggleFeature() {
     val settingsByName = mutableMapOf<String, Setting<*>>()
@@ -40,6 +41,10 @@ open class ConfigurableFeature : ToggleFeature() {
         val setting = NumberSetting(name, value, range.start, range.endInclusive)
         loadSetting(setting)
         return setting
+    }
+
+    protected fun color(name: String, value: Color): Setting<Color> {
+        return setting(name, value)
     }
 
     protected fun <T : Any> setting(name: String, value: T): Setting<T> {

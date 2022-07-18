@@ -7,6 +7,8 @@ import me.bush.eventbuskotlin.listener
 import net.minecraft.network.play.client.CPacketChatMessage
 import wtf.nebula.client.event.packet.PacketSendEvent
 import wtf.nebula.client.feature.command.Command
+import wtf.nebula.client.feature.command.impl.FakePlayer
+import wtf.nebula.client.feature.command.impl.Friend
 import wtf.nebula.client.feature.command.impl.Toggle
 import wtf.nebula.client.registry.Registry
 
@@ -38,6 +40,8 @@ class CommandRegistry : Registry<Command>() {
             }
         }
 
+        loadMember(FakePlayer())
+        loadMember(Friend())
         loadMember(Toggle())
     }
 
@@ -65,7 +69,12 @@ class CommandRegistry : Registry<Command>() {
             val msg = it.packet.message
             if (msg.startsWith(prefix)) {
                 it.cancel()
-                dispatcher.execute(dispatcher.parse(msg.substring(prefix.length), SINGLE_SUCCESS))
+
+                try {
+                    dispatcher.execute(dispatcher.parse(msg.substring(prefix.length), SINGLE_SUCCESS))
+                } catch (e: Exception) {
+                    e.message?.let { it1 -> printChatMessage(it1) }
+                }
             }
         }
     }

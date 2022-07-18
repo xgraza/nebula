@@ -1,9 +1,7 @@
 package wtf.nebula.asm.transform.impl.render
 
-import jdk.internal.org.objectweb.asm.Type
 import org.objectweb.asm.Opcodes
 import org.objectweb.asm.tree.*
-import wtf.nebula.asm.hooks.EntityPlayerSPHook
 import wtf.nebula.asm.hooks.EntityRendererHook
 import wtf.nebula.asm.transform.api.ClassInjection
 import wtf.nebula.asm.transform.api.ClassTransformer
@@ -51,6 +49,20 @@ class EntityRendererTransformer : ClassTransformer() {
 
         val label = LabelNode()
 
+        instructions.add(JumpInsnNode(Opcodes.IFEQ, label))
+        instructions.add(InsnNode(Opcodes.RETURN))
+        instructions.add(label)
+
+        node.instructions.insert(instructions)
+    }
+
+    @Injection(name = "drawNameplate", descriptor = "(Lnet/minecraft/client/gui/FontRenderer;Ljava/lang/String;FFFIFFZZ)V")
+    fun drawNameplate(node: MethodNode) {
+        val instructions = InsnList()
+
+        instructions.add(invokeStatic(EntityRendererHook::class.java, "shouldRenderTag", "()Z"))
+
+        val label = LabelNode()
         instructions.add(JumpInsnNode(Opcodes.IFEQ, label))
         instructions.add(InsnNode(Opcodes.RETURN))
         instructions.add(label)

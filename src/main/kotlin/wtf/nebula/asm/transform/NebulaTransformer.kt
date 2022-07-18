@@ -32,6 +32,8 @@ class NebulaTransformer : IClassTransformer {
                 val inject = it.getAnnotation(Injection::class.java)
 
                 classNode.methods.forEach { methodNode ->
+                    methodNode.access
+
                     var name = methodNode.name
                     var desc = methodNode.desc
 

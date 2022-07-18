@@ -73,10 +73,13 @@ class Step : Module(ModuleCategory.MOVEMENT, "Steps up blocks") {
 
     companion object {
         val STEP_PACKETS = mapOf(
-            0.75 to arrayOf(0.42, 0.753, 0.654),
-            0.8125 to arrayOf(0.42, 0.753, 0.654),
+            0.75 to arrayOf(0.39, 0.753, 0.75),
+            0.8125 to arrayOf(0.39, 0.7, 0.8125),
             0.875 to arrayOf(0.39, 0.7, 0.875),
             1.0 to arrayOf(0.42, 0.753, 1.0),
+
+            // im gonna work on strict 1.5 step later, i'll keep old ncp here for now tho
+            // 1.5 to arrayOf(0.42, 0.753, 1.0, 1.16, 1.22, 1.25, 1.28, 1.32),
             1.5 to arrayOf(0.42, 0.75, 1.0, 1.16, 1.23, 1.2, 1.5),
             2.0 to arrayOf(0.42, 0.78, 0.63, 0.51, 0.9, 1.21, 1.45, 1.43),
             2.5 to arrayOf(0.425, 0.821, 0.699, 0.599, 1.022, 1.372, 1.652, 1.869, 2.019, 1.907)

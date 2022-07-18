@@ -4,6 +4,7 @@ import wtf.nebula.client.Nebula;
 import wtf.nebula.client.event.render.HurtCameraRenderEvent;
 import wtf.nebula.client.event.render.RenderItemActivationEvent;
 import wtf.nebula.client.event.render.RenderWorldEvent;
+import wtf.nebula.client.registry.impl.ModuleRegistry;
 
 public class EntityRendererHook {
     public static void renderWorld() {
@@ -20,5 +21,9 @@ public class EntityRendererHook {
         RenderItemActivationEvent event = new RenderItemActivationEvent();
         Nebula.Companion.getBUS().post(event);
         return event.getCancelled();
+    }
+
+    public static boolean shouldRenderTag() {
+        return ModuleRegistry.Companion.getINSTANCE().isOn("Nametags");
     }
 }

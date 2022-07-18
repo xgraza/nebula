@@ -55,6 +55,10 @@ class NoSlow : Module(ModuleCategory.MOVEMENT, "Makes you not slow") {
         if (mc.player.isHandActive && !mc.player.isRiding) {
             it.movementInput.moveForward *= 5.0f
             it.movementInput.moveStrafe *= 5.0f
+
+            if (mode == Mode.STRICT) {
+                mc.player.connection.sendPacket(CPacketHeldItemChange(mc.player.inventory.currentItem))
+            }
         }
     }
 

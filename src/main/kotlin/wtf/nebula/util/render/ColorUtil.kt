@@ -2,7 +2,9 @@ package wtf.nebula.util.render
 
 import org.lwjgl.opengl.GL11.glColor4f
 import java.awt.Color
+import java.awt.Color.*
 import kotlin.math.ceil
+
 
 fun Int.toColor(): Color {
     val rgba = ColorUtil.getColor(this)
@@ -21,6 +23,10 @@ object ColorUtil {
         val green = (color shr 8 and 255).toFloat() / 255.0f
         val blue = (color and 255).toFloat() / 255.0f
         return floatArrayOf(red, green, blue, alpha)
+    }
+
+    fun getColor(r: Int, g: Int, b: Int, a: Int): Int {
+        return (r shl 16) + (g shl 8) + b + (a shl 24)
     }
 
     fun setColor(color: Int) {

@@ -22,13 +22,16 @@ class ModuleRegistry : Registry<Module>() {
 
     override fun load() {
         loadMember(Aura())
+        loadMember(AutoCrystal())
         loadMember(AutoTotem())
         loadMember(BowRelease())
         loadMember(Criticals())
         loadMember(FastProjectile())
+        loadMember(FeetTrap())
         loadMember(SelfFill())
 
         loadMember(AntiAim())
+        loadMember(MiddleClick())
         loadMember(NoFML())
         loadMember(NoRotate())
         loadMember(Notifications())
@@ -53,11 +56,15 @@ class ModuleRegistry : Registry<Module>() {
         loadMember(Colors())
         loadMember(Fullbright())
         loadMember(HUD())
+        loadMember(Nametags())
         loadMember(NoRender())
+        // loadMember(TestColorPicker())
 
+        loadMember(AutoTool())
         loadMember(Avoid())
         loadMember(BlockFly())
         loadMember(FastPlace())
+        loadMember(PacketMine())
         loadMember(Timer())
         loadMember(Yaw())
 
@@ -92,6 +99,16 @@ class ModuleRegistry : Registry<Module>() {
                 }
             }
         }
+    }
+
+    fun isOn(name: String): Boolean {
+        for (r in registers) {
+            if (r.name.equals(name, ignoreCase = true)) {
+                return r.toggled
+            }
+        }
+
+        return false
     }
 
     companion object {

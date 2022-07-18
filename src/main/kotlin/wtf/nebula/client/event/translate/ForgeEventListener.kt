@@ -12,9 +12,12 @@ import net.minecraftforge.client.event.PlayerSPPushOutOfBlocksEvent
 import net.minecraftforge.common.MinecraftForge
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent
 import net.minecraftforge.fml.common.gameevent.InputEvent.KeyInputEvent
+import net.minecraftforge.fml.common.gameevent.InputEvent.MouseInputEvent
 import org.lwjgl.input.Keyboard
+import org.lwjgl.input.Mouse
 import wtf.nebula.asm.hooks.EntityPlayerSPHook
 import wtf.nebula.client.Nebula
+import wtf.nebula.client.event.input.MiddleClickEvent
 import wtf.nebula.client.event.input.MovementInputEvent
 import wtf.nebula.client.event.packet.PacketReceiveEvent
 import wtf.nebula.client.event.packet.PacketSendEvent
@@ -36,6 +39,18 @@ class ForgeEventListener : Globals {
                 Keyboard.getEventKey(), Keyboard.getEventKeyState()
             )
         )
+    }
+
+    @SubscribeEvent
+    fun onMouseInput(event: MouseInputEvent) {
+        val mouseButtonDown = Mouse.getEventButton()
+        if (mouseButtonDown == -1) {
+            return
+        }
+
+        if (mouseButtonDown == 2 && !Mouse.getEventButtonState()) {
+            Nebula.BUS.post(MiddleClickEvent())
+        }
     }
 
     @SubscribeEvent
